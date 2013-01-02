@@ -1,0 +1,9 @@
+/0.all_stuff.bat
+/1.compile.bat
+/2.package_deploy.bat
+/3.sign_app.bat
+/4.install.bat
+/bin-debug
+/bin-release
+/.idea
+/Kontomierz.iml

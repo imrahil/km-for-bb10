@@ -1,6 +1,6 @@
-km-for-bb10
-===========
+Klient serwisu Kontomierz dla BlackBerry 10
+Copyright (c) 2013 pauluZ
 
-Client for money and bank accounts service
+Wersje:
+0.0.1 - init
 
-test
