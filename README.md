@@ -4,3 +4,4 @@ Copyright (c) 2013 pauluZ
 Wersje:
 0.0.1 - init
 
+End.
