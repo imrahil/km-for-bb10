@@ -7,7 +7,7 @@
  */
 package com.pauluz.bbapps.kontomierz.controller.bootstraps
 {
-    import com.pauluz.bbapps.kontomierz.signals.signaltons.ProvideLoginStatusSignal;
+    import com.pauluz.bbapps.kontomierz.signals.signaltons.*;
 
     import org.robotlegs.core.IInjector;
 
@@ -16,6 +16,8 @@ package com.pauluz.bbapps.kontomierz.controller.bootstraps
         public function BootstrapSignaltons(injector:IInjector)
         {
             injector.mapSingleton(ProvideLoginStatusSignal);
+            injector.mapSingleton(LoginSuccessfulSignal);
+            injector.mapSingleton(ErrorSignal);
         }
     }
 }

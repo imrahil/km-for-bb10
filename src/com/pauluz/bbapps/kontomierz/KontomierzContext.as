@@ -13,7 +13,7 @@ package com.pauluz.bbapps.kontomierz
     import com.pauluz.bbapps.kontomierz.controller.bootstraps.BootstrapSignaltons;
     import com.pauluz.bbapps.kontomierz.controller.bootstraps.BootstrapViewMediators;
     import com.pauluz.bbapps.kontomierz.signals.RequestLoginStatusSignal;
-    import com.pauluz.bbapps.kontomierz.view.MainView;
+    import com.pauluz.bbapps.kontomierz.view.RootView;
 
     import flash.display.DisplayObjectContainer;
 
@@ -42,12 +42,14 @@ package com.pauluz.bbapps.kontomierz
 
             var signal:Signal = this.injector.getInstance(RequestLoginStatusSignal);
             signal.dispatch();
+
+            super.startup();
         }
 
         protected function addRootView():void
         {
-            var mainView:MainView = new MainView();
-            contextView.addChild(mainView);
+            var rootView:RootView = new RootView();
+            contextView.addChild(rootView);
         }
     }
 }

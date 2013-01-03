@@ -7,8 +7,8 @@
  */
 package com.pauluz.bbapps.kontomierz.controller.bootstraps
 {
-    import com.pauluz.bbapps.kontomierz.view.MainView;
-    import com.pauluz.bbapps.kontomierz.view.mediators.MainViewMediator;
+    import com.pauluz.bbapps.kontomierz.view.*;
+    import com.pauluz.bbapps.kontomierz.view.mediators.*;
 
     import org.robotlegs.core.IMediatorMap;
 
@@ -16,6 +16,7 @@ package com.pauluz.bbapps.kontomierz.controller.bootstraps
     {
         public function BootstrapViewMediators(mediatorMap:IMediatorMap)
         {
+            mediatorMap.mapView(RootView, RootViewMediator);
             mediatorMap.mapView(MainView, MainViewMediator);
         }
     }

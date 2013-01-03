@@ -7,4 +7,5 @@ Ikonka aplikacji - http://www.iconfinder.com/icondetails/49718/256/money_piggyba
 Wersje:
 0.0.1 - init
 
-End.
+TODO:
+- zamienic LoginDialog i PasswordChangeDialog na ekrany - popupy sieja bledami i wogole sa malo przyjazne

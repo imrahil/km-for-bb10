@@ -7,8 +7,8 @@
  */
 package com.pauluz.bbapps.kontomierz.controller.bootstraps
 {
-    import com.pauluz.bbapps.kontomierz.services.IKontomierzService;
-    import com.pauluz.bbapps.kontomierz.services.KontomierzService;
+    import com.pauluz.bbapps.kontomierz.services.*;
+    import com.pauluz.bbapps.kontomierz.services.helpers.*;
 
     import org.robotlegs.core.IInjector;
 
@@ -17,6 +17,7 @@ package com.pauluz.bbapps.kontomierz.controller.bootstraps
         public function BootstrapServices(injector:IInjector)
         {
             injector.mapSingletonOf(IKontomierzService, KontomierzService);
+            injector.mapSingletonOf(IResultParser, KontomierzJSONResultParser);
         }
     }
 }

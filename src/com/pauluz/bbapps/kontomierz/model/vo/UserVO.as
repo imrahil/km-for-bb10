@@ -18,5 +18,7 @@ package com.pauluz.bbapps.kontomierz.model.vo
         public var email:String;
         public var password:String;
         public var confirmPassword:String;
+
+        public var rememberMe:Boolean;
     }
 }
