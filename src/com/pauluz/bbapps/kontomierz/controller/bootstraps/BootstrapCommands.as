@@ -7,8 +7,8 @@
  */
 package com.pauluz.bbapps.kontomierz.controller.bootstraps
 {
-    import com.pauluz.bbapps.kontomierz.controller.ProvideLoginStatusCommand;
-    import com.pauluz.bbapps.kontomierz.signals.RequestLoginStatusSignal;
+    import com.pauluz.bbapps.kontomierz.controller.*;
+    import com.pauluz.bbapps.kontomierz.signals.*;
 
     import org.robotlegs.core.ISignalCommandMap;
 
@@ -17,6 +17,9 @@ package com.pauluz.bbapps.kontomierz.controller.bootstraps
         public function BootstrapCommands(commandMap:ISignalCommandMap)
         {
             commandMap.mapSignalClass(RequestLoginStatusSignal, ProvideLoginStatusCommand);
+            commandMap.mapSignalClass(LoginSignal, LoginCommand);
+            commandMap.mapSignalClass(RegisterSignal, RegisterCommand);
+            commandMap.mapSignalClass(LogoutSignal, LogoutCommand);
         }
     }
 }

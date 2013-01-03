@@ -13,5 +13,8 @@ package com.pauluz.bbapps.kontomierz.constants
 
         public static const KONTOMIERZ_SO_NAME:String = "kontomierzApiKeySharedObject";
 
+        public static const LOGIN_STATUS_NEW:String         = "userLoggedOut";
+        public static const LOGIN_STATUS_REMEMBERED:String  = "userRemembered";
+
     }
 }

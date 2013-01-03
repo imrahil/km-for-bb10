@@ -11,6 +11,16 @@ package com.pauluz.bbapps.kontomierz.model
 
     public class KontomierzModel extends Actor implements IKontomierzModel
     {
+        private var _apiKey:String = "";
 
+        public function get apiKey():String
+        {
+            return _apiKey;
+        }
+
+        public function set apiKey(value:String):void
+        {
+            _apiKey = value;
+        }
     }
 }

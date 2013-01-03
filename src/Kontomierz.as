@@ -22,7 +22,7 @@ package
 
         public function Kontomierz()
         {
-            CONFIG::debugMode
+//            CONFIG::debugMode
             {
                 var logTarget:TraceTarget = new TraceTarget();
                 logTarget.level = LogEventLevel.ALL;
