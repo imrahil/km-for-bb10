@@ -18,6 +18,8 @@ package com.pauluz.bbapps.kontomierz.controller.bootstraps
         {
             mediatorMap.mapView(RootView, RootViewMediator);
             mediatorMap.mapView(MainView, MainViewMediator);
+
+            mediatorMap.mapView(LoginView, LoginViewMediator);
         }
     }
 }

@@ -25,5 +25,15 @@ package com.pauluz.bbapps.kontomierz.utils
 
             return format;
         }
+
+        public static function setErrorFormat(format:TextFormat):TextFormat
+        {
+            format.size = 45;
+            format.color = 0xFF0000;
+            format.italic = true;
+            format.font = "Slate Pro Light";
+
+            return format;
+        }
     }
 }

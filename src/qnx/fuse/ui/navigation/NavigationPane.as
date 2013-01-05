@@ -31,17 +31,17 @@ package qnx.fuse.ui.navigation
 
         public function get stack():Vector.<Page>
         {
-            return( __stack );
+            return __stack;
         }
 
         public function get top():Page
         {
-            return( __stack[ __stack.length - 1 ] );
+            return __stack[__stack.length - 1];
         }
 
         public function get backButtonsVisible():Boolean
         {
-            return( __backButtonsVisible );
+            return __backButtonsVisible;
         }
 
         public function set backButtonsVisible(value:Boolean):void

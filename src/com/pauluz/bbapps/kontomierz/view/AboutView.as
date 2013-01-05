@@ -8,27 +8,28 @@
 package com.pauluz.bbapps.kontomierz.view
 {
     import com.pauluz.bbapps.kontomierz.constants.ApplicationConstants;
+    import com.pauluz.bbapps.kontomierz.utils.ContainerHelper;
+    import com.pauluz.bbapps.kontomierz.utils.LogUtil;
     import com.pauluz.bbapps.kontomierz.utils.TextFormatUtil;
 
     import flash.desktop.NativeApplication;
-    import flash.display.Graphics;
-    import flash.display.Sprite;
     import flash.events.MouseEvent;
     import flash.net.SharedObject;
-    import flash.net.URLRequest;
-    import flash.net.navigateToURL;
+
+    import mx.logging.ILogger;
 
     import qnx.fuse.ui.buttons.LabelButton;
     import qnx.fuse.ui.core.Container;
     import qnx.fuse.ui.core.SizeOptions;
     import qnx.fuse.ui.layouts.Align;
     import qnx.fuse.ui.layouts.gridLayout.GridData;
-    import qnx.fuse.ui.layouts.gridLayout.GridLayout;
     import qnx.fuse.ui.navigation.TitlePage;
     import qnx.fuse.ui.text.Label;
 
     public class AboutView extends TitlePage
     {
+        private var logger:ILogger;
+
         public function AboutView()
         {
             super();
@@ -37,51 +38,42 @@ package com.pauluz.bbapps.kontomierz.view
             var ns:Namespace = app_xml.namespace();
 
             title = "Kontomierz dla BB10 - v." + app_xml.ns::versionNumber;
+
+            logger = LogUtil.getLogger(this);
+            logger.debug(": constructor");
         }
 
         override protected function onAdded():void
         {
             super.onAdded();
 
-            var container:Container = new Container();
-            var layout:GridLayout = new GridLayout();
-            layout.paddingLeft = 50;
-            layout.paddingRight = 50;
-            layout.paddingTop = 50;
-            layout.paddingBottom = 30;
-            container.layout = layout;
+            logger.debug(": onAdded");
 
-            var s:Sprite = new Sprite();
-            var g:Graphics = s.graphics;
-            g.beginFill(0x0c151c);
-            g.drawRect(0, 0, 10, 10);
-            g.endFill();
+            var container:Container = ContainerHelper.createContainer();
 
-            container.background = s;
+            var gridData:GridData = new GridData();
+            gridData.setOptions(SizeOptions.RESIZE_BOTH);
+            container.layoutData = gridData;
 
             var infoLabel:Label = new Label();
             infoLabel.maxLines = 0;
-            infoLabel.text = "Author: Paweł Szczepanek\n" +
-                    "Email: pawel.szczepanek@gmail.com\n\n" +
+            infoLabel.text = "Author:\nPaweł Szczepanek\n\n" +
+                    "Email:\npawel.szczepanek@gmail.com\n\n" +
                     "Website:\nhttp://www.pauluz.pl/";
 
             infoLabel.format = TextFormatUtil.setFormat(infoLabel.format);
-
-            var labelData:GridData = new GridData();
-            labelData.setOptions(SizeOptions.RESIZE_BOTH);
-            infoLabel.layoutData = labelData;
-
             container.addChild(infoLabel);
 
             var visitBtn:LabelButton = new LabelButton();
             visitBtn.label = "Visit website";
             visitBtn.addEventListener(MouseEvent.CLICK, onVisitBtnClick);
 
-            var visitBtnData:GridData = new GridData();
-            visitBtnData.setOptions(SizeOptions.GROW_VERTICAL);
-            visitBtnData.hAlign = Align.CENTER;
-            visitBtnData.vAlign = Align.BEGIN;
-            visitBtn.layoutData = visitBtnData;
+            var visitBtnGrid:GridData = new GridData();
+            visitBtnGrid.setOptions(SizeOptions.RESIZE_BOTH);
+            visitBtnGrid.hAlign = Align.CENTER;
+            visitBtnGrid.vAlign = Align.END;
+            visitBtnGrid.marginTop = 100;
+            visitBtn.layoutData = visitBtnGrid;
 
             container.addChild(visitBtn);
 
@@ -90,10 +82,10 @@ package com.pauluz.bbapps.kontomierz.view
 
         private static function onVisitBtnClick(event:MouseEvent):void
         {
+            // FIXME - zamienic!
 //            navigateToURL(new URLRequest("http://www.pauluz.pl"));
             var sessionSO:SharedObject = SharedObject.getLocal(ApplicationConstants.KONTOMIERZ_SO_NAME);
             sessionSO.clear();
-
         }
     }
 }

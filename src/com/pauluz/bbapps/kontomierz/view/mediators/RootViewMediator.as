@@ -53,8 +53,6 @@ package com.pauluz.bbapps.kontomierz.view.mediators
 
         /** variables **/
         private var logger:ILogger;
-        private var email:String;
-        private var dialogType:String;
 
         /** 
          * CONSTRUCTOR 
@@ -75,43 +73,38 @@ package com.pauluz.bbapps.kontomierz.view.mediators
         {
             logger.debug(": onRegister");
 
-            addToSignal(provideLoginStatusSignal, onLoginStatus);
+            addToSignal(provideLoginStatusSignal, startupLoginStatus);
+            addToSignal(loginSignal, onLoginSignal);
             addToSignal(errorSignal, onErrorSignal);
             addToSignal(loginSuccessfulSignal, onLoginSuccessfulSignal);
-
-            addToSignal(view.loginSignal, onViewLoginSignal);
-            addToSignal(view.registerSignal, onViewRegisterSignal);
-            addToSignal(view.errorSignal, onViewErrorSignal);
         }
 
         /** methods **/
-        private function onLoginStatus(status:String):void
+        private function startupLoginStatus(status:String):void
         {
-            logger.debug(": onLoginStatus");
+            logger.debug(":startupLoginStatuss");
 
             if (status == ApplicationConstants.LOGIN_STATUS_NEW)
             {
-                view.addLoginDialog();
+                view.addLoginView();
             }
             else
             {
                 view.addMainView();
             }
+        }
 
-//            var user:UserVO = new UserVO();
-//            user.email = "kontomierz@imrahil.com";
-//            user.password = "kontomierz";
-//            user.rememberMe = false;
-//
-//            onViewLoginSignal(user);
+        private function onLoginSignal(user:UserVO):void
+        {
+            logger.debug(": onLoginSignal");
+
+             view.addSpinnerView();
         }
 
         private function onErrorSignal(error:ErrorVO):void
         {
             logger.debug(": onErrorSignal");
 
-            email = error.email;
-            dialogType = error.dialogType;
             view.showError(error.message);
         }
 
@@ -123,37 +116,14 @@ package com.pauluz.bbapps.kontomierz.view.mediators
         }
 
         // view signals
-        private function onViewLoginSignal(user:UserVO):void
-        {
-            logger.debug(": onViewLoginSignal");
 
-            loginSignal.dispatch(user);
-
-            view.addSpinner();
-        }
-
-        private function onViewRegisterSignal(user:UserVO):void
-        {
-            logger.debug(": onViewRegisterSignal");
-
-            registerSignal.dispatch(user);
-
-            view.addSpinner();
-        }
-
-        private function onViewErrorSignal():void
-        {
-            logger.debug(": onViewErrorSignal");
-
-            switch (dialogType)
-            {
-                case ApplicationConstants.DIALOG_TYPE_LOGIN:
-                    view.addLoginDialog(email)
-                    break;
-                case ApplicationConstants.DIALOG_TYPE_REGISTER:
-                    view.addRegisterDialog(email)
-                    break;
-            }
-        }
+//        private function onViewRegisterSignal(user:UserVO):void
+//        {
+//            logger.debug(": onViewRegisterSignal");
+//
+//            registerSignal.dispatch(user);
+//
+//            view.addSpinnerView();
+//        }
     }
 }
