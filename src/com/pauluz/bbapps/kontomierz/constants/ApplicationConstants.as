@@ -21,5 +21,7 @@ package com.pauluz.bbapps.kontomierz.constants
         public static const DIALOG_TYPE_LOGIN:String  = "dialogTypeLogin";
         public static const DIALOG_TYPE_REGISTER:String  = "dialogTypeRegister";
 
+        public static const WALLET_ACCOUNT_NAME:String  = "Wallets";
+
     }
 }

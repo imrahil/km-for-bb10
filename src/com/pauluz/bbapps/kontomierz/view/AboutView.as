@@ -19,10 +19,12 @@ package com.pauluz.bbapps.kontomierz.view
     import mx.logging.ILogger;
 
     import qnx.fuse.ui.buttons.LabelButton;
+    import qnx.fuse.ui.core.Action;
     import qnx.fuse.ui.core.Container;
     import qnx.fuse.ui.core.SizeOptions;
     import qnx.fuse.ui.layouts.Align;
     import qnx.fuse.ui.layouts.gridLayout.GridData;
+    import qnx.fuse.ui.navigation.NavigationPaneProperties;
     import qnx.fuse.ui.navigation.TitlePage;
     import qnx.fuse.ui.text.Label;
 
@@ -41,6 +43,15 @@ package com.pauluz.bbapps.kontomierz.view
 
             logger = LogUtil.getLogger(this);
             logger.debug(": constructor");
+        }
+
+        override protected function init():void
+        {
+            super.init();
+
+            var prop:NavigationPaneProperties = new NavigationPaneProperties();
+            prop.backButton = new Action("Ustawienia");
+            paneProperties = prop;
         }
 
         override protected function onAdded():void

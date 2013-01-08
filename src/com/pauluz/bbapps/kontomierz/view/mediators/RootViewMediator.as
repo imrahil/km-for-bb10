@@ -105,7 +105,7 @@ package com.pauluz.bbapps.kontomierz.view.mediators
         {
             logger.debug(": onErrorSignal");
 
-            view.showError(error.message);
+            view.showError(error.message, error.popScreen);
         }
 
         private function onLoginSuccessfulSignal():void

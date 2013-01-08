@@ -15,6 +15,7 @@ package com.pauluz.bbapps.kontomierz.view
 
     import mx.logging.ILogger;
 
+    import qnx.fuse.ui.navigation.NavigationPane;
     import qnx.fuse.ui.navigation.Page;
     import qnx.fuse.ui.navigation.Tab;
     import qnx.fuse.ui.navigation.TabbedPane;
@@ -48,8 +49,19 @@ package com.pauluz.bbapps.kontomierz.view
 
             var tabs:Vector.<Tab> = new Vector.<Tab>();
 
-            tabs.push(ContainerHelper.createTab("O programie", new Resources.ICON_ABOUT(), AboutView));
-            tabs.push(ContainerHelper.createTab("O programie", new Resources.ICON_ABOUT(), AboutView));
+            tabs.push(ContainerHelper.createTab("Konta", new Resources.ICON_ACCOUNTS(), AccountListView));
+            tabs.push(ContainerHelper.createTab("Portfel", new Resources.ICON_WALLET(), EmptyView));
+            tabs.push(ContainerHelper.createTab("Dodaj", new Resources.ICON_ADD(), EmptyView));
+            tabs.push(ContainerHelper.createTab("Budżety", new Resources.ICON_BUDGETS(), EmptyView));
+            tabs.push(ContainerHelper.createTab("Płatności", new Resources.ICON_SCHEDULES(), EmptyView));
+            tabs.push(ContainerHelper.createTab("Kategorie", new Resources.ICON_CATEGORIES(), EmptyView));
+            tabs.push(ContainerHelper.createTab("Tagi", new Resources.ICON_TAGS(), EmptyView));
+
+            var info:NavigationPane = new NavigationPane();
+            info.push(new SettingsView());
+            var infoTab:Tab = new Tab("Ustawienia", new Resources.ICON_SETTINGS());
+            infoTab.content = info;
+            tabs.push(infoTab);
 
             tabbedPane.tabs = tabs;
             tabbedPane.activeTab = tabs[0];

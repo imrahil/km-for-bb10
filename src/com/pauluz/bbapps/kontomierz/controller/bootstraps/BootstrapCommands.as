@@ -20,6 +20,8 @@ package com.pauluz.bbapps.kontomierz.controller.bootstraps
             commandMap.mapSignalClass(LoginSignal, LoginCommand);
             commandMap.mapSignalClass(RegisterSignal, RegisterCommand);
             commandMap.mapSignalClass(LogoutSignal, LogoutCommand);
+
+            commandMap.mapSignalClass(GetAllAccountsSignal, GetAllAccountsCommand);
         }
     }
 }

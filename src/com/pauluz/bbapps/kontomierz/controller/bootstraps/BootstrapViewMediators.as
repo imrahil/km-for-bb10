@@ -20,6 +20,9 @@ package com.pauluz.bbapps.kontomierz.controller.bootstraps
             mediatorMap.mapView(MainView, MainViewMediator);
 
             mediatorMap.mapView(LoginView, LoginViewMediator);
+            mediatorMap.mapView(AccountListView, AccountListViewMediator);
+            mediatorMap.mapView(SettingsView, SettingsViewMediator);
+            mediatorMap.mapView(EmptyView, EmptyViewMediator);
         }
     }
 }

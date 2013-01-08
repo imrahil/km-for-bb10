@@ -16,14 +16,12 @@ package com.pauluz.bbapps.kontomierz.model.vo
     public class ErrorVO
     {
         public var message:String;
-        public var email:String;
-        public var dialogType:String;
+        public var popScreen:Boolean;
 
-        public function ErrorVO(message:String, email:String, dialogType:String)
+        public function ErrorVO(message:String, popScreen:Boolean = false)
         {
             this.message = message;
-            this.email = email;
-            this.dialogType = dialogType;
+            this.popScreen = popScreen;
         }
     }
 }

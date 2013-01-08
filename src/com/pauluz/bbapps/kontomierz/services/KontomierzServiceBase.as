@@ -14,6 +14,7 @@ package com.pauluz.bbapps.kontomierz.services
     import com.pauluz.bbapps.kontomierz.services.helpers.IResultParser;
     import com.pauluz.bbapps.kontomierz.signals.signaltons.ErrorSignal;
     import com.pauluz.bbapps.kontomierz.signals.signaltons.LoginSuccessfulSignal;
+    import com.pauluz.bbapps.kontomierz.signals.signaltons.ProvideAllAccountsDataSignal;
     import com.pauluz.bbapps.kontomierz.utils.LogUtil;
 
     import flash.events.ErrorEvent;
@@ -24,9 +25,13 @@ package com.pauluz.bbapps.kontomierz.services
     import flash.net.SharedObject;
     import flash.net.URLLoader;
 
+    import mx.collections.ArrayCollection;
+
     import mx.logging.ILogger;
 
     import org.robotlegs.mvcs.Actor;
+
+    import qnx.ui.data.DataProvider;
 
     public class KontomierzServiceBase extends Actor implements IKontomierzService
     {
@@ -35,8 +40,6 @@ package com.pauluz.bbapps.kontomierz.services
 
         protected var rememberMe:Boolean;
         protected var responseStatus:int;
-        protected var email:String;
-        protected var dialogType:String;
 
         /** MODEL **/
         [Inject]
@@ -52,6 +55,9 @@ package com.pauluz.bbapps.kontomierz.services
         /** NOTIFICATION SIGNALS */
         [Inject]
         public var loginSuccessfulSignal:LoginSuccessfulSignal;
+
+        [Inject]
+        public var provideAllAccountsDataSignal:ProvideAllAccountsDataSignal;
 
         [Inject]
         public var errorSignal:ErrorSignal;
@@ -73,13 +79,36 @@ package com.pauluz.bbapps.kontomierz.services
             throw new Error("Override this method!");
         }
 
-        protected function handleLoginComplete(event:Event):void
+        public function getAllAccounts(apiKey:String):void
         {
-            logger.debug(": handleLoginComplete");
+            throw new Error("Override this method!");
+        }
+
+        public function createWallet(name:String, balance:Number, currency:String, liquid:Boolean, apiKey:String):void
+        {
+            throw new Error("Override this method!");
+        }
+
+        public function updateWallet(id:int, name:String, balance:Number, currency:String, liquid:Boolean, apiKey:String):void
+        {
+            throw new Error("Override this method!");
+        }
+
+        public function deleteWallet(id:int, apiKey:String):void
+        {
+            throw new Error("Override this method!");
+        }
+
+        /********************
+         *     HANDLERS
+         ********************/
+        protected function loginCompleteHandler(event:Event):void
+        {
+            logger.debug(": loginCompleteHandlere");
 
             var loader:URLLoader = event.currentTarget as URLLoader;
 
-            loader.removeEventListener(Event.COMPLETE, handleLoginComplete);
+            loader.removeEventListener(Event.COMPLETE, loginCompleteHandler);
             removeLoaderListeners(loader);
 
             if (responseStatus == 200)
@@ -106,9 +135,23 @@ package com.pauluz.bbapps.kontomierz.services
             {
                 logger.debug(": handleLoginComplete - status: 401");
 
-                var error:ErrorVO = new ErrorVO("Nieprawidłowy e-mail lub hasło.", email, dialogType);
+                var error:ErrorVO = new ErrorVO("Nieprawidłowy e-mail lub hasło.", true);
                 errorSignal.dispatch(error);
             }
+        }
+
+        protected function getAllAccountsCompleteHandler(event:Event):void
+        {
+            logger.debug(": getAllAccountsCompleteHandler");
+
+            var loader:URLLoader = event.currentTarget as URLLoader;
+
+            loader.removeEventListener(Event.COMPLETE, loginCompleteHandler);
+            removeLoaderListeners(loader);
+
+            var accountsData:DataProvider = _parser.parseAllAccountsResponse(loader.data as String);
+
+            provideAllAccountsDataSignal.dispatch(accountsData);
         }
 
         protected function addLoaderListeners(loader:URLLoader):void
@@ -135,7 +178,7 @@ package com.pauluz.bbapps.kontomierz.services
 
             removeLoaderListeners(event.currentTarget as URLLoader);
 
-            var error:ErrorVO = new ErrorVO(event.text, email, dialogType);
+            var error:ErrorVO = new ErrorVO(event.text);
             errorSignal.dispatch(error);
         }
 

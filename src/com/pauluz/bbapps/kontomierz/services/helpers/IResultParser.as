@@ -7,9 +7,12 @@
  */
 package com.pauluz.bbapps.kontomierz.services.helpers
 {
+    import qnx.ui.data.DataProvider;
+
     public interface IResultParser
     {
         function parseLoginRegisterResponse(result:String):String;
 
+        function parseAllAccountsResponse(result:String):DataProvider;
     }
 }

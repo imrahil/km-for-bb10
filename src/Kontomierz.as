@@ -15,6 +15,8 @@ package
     import mx.logging.LogEventLevel;
     import mx.logging.targets.TraceTarget;
 
+    import qnx.fuse.ui.theme.ThemeGlobals;
+
     [SWF(height="1280", width="768", backgroundColor="#0D1722", frameRate="30")]
     public class Kontomierz extends Sprite
     {
@@ -22,6 +24,8 @@ package
 
         public function Kontomierz()
         {
+            ThemeGlobals.injectCSS( "CellRenderer{ mouseChildren:false; opaqueBackground:#FAFAFA;}" );
+
 //            CONFIG::debugMode
             {
                 var logTarget:TraceTarget = new TraceTarget();

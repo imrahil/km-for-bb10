@@ -37,8 +37,6 @@ package com.pauluz.bbapps.kontomierz.services
 
             // save value for future
             rememberMe = user.rememberMe;
-            email = user.email;
-            dialogType = ApplicationConstants.DIALOG_TYPE_LOGIN;
 
             var loader:URLLoader = new URLLoader();
             var urlRequest:URLRequest = new URLRequest();
@@ -51,7 +49,7 @@ package com.pauluz.bbapps.kontomierz.services
             variables.password = user.password;
             urlRequest.data = variables;
 
-            loader.addEventListener(Event.COMPLETE, handleLoginComplete);
+            loader.addEventListener(Event.COMPLETE, loginCompleteHandler);
             addLoaderListeners(loader);
 
             loader.load(urlRequest);
@@ -64,9 +62,6 @@ package com.pauluz.bbapps.kontomierz.services
         {
             logger.debug(": register service call");
 
-            email = user.email;
-            dialogType = ApplicationConstants.DIALOG_TYPE_REGISTER;
-
             var loader:URLLoader = new URLLoader();
             var urlRequest:URLRequest = new URLRequest();
 
@@ -78,10 +73,44 @@ package com.pauluz.bbapps.kontomierz.services
             variables.password = user.password;
             urlRequest.data = variables;
 
-            loader.addEventListener(Event.COMPLETE, handleLoginComplete);
+            loader.addEventListener(Event.COMPLETE, loginCompleteHandler);
             addLoaderListeners(loader);
 
             loader.load(urlRequest);
+        }
+
+
+        override public function getAllAccounts(apiKey:String):void
+        {
+            logger.debug(": getAllAccounts service call");
+
+            var loader:URLLoader = new URLLoader();
+            var urlRequest:URLRequest = new URLRequest();
+
+            urlRequest.url = ApplicationConstants.KONTOMIERZ_API_ENDPOINT + "user_accounts" + ApplicationConstants.KONTOMIERZ_API_FORMAT_JSON + "?api_key=" + apiKey;
+
+            loader.addEventListener(Event.COMPLETE, getAllAccountsCompleteHandler);
+            addLoaderListeners(loader);
+
+            loader.load(urlRequest);
+        }
+
+        override public function createWallet(name:String, balance:Number, currency:String, liquid:Boolean, apiKey:String):void
+        {
+            logger.debug(": createWallet service call");
+
+        }
+
+        override public function updateWallet(id:int, name:String, balance:Number, currency:String, liquid:Boolean, apiKey:String):void
+        {
+            logger.debug(": updateWallet service call");
+
+        }
+
+        override public function deleteWallet(id:int, apiKey:String):void
+        {
+            logger.debug(": deleteWallet service call");
+
         }
     }
 }

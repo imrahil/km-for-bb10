@@ -182,9 +182,12 @@ package com.pauluz.bbapps.kontomierz.view
             navigationPane.push(spinnerView);
         }
 
-        public function showError(message:String):void
+        public function showError(message:String, popScreen:Boolean):void
         {
-            navigationPane.popAndDelete();
+            if (popScreen)
+            {
+                navigationPane.popAndDelete();
+            }
 
             var errorDialog:AlertDialog = new AlertDialog();
             errorDialog.title = "Błąd";
