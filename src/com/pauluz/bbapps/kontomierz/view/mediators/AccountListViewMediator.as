@@ -9,9 +9,9 @@ package com.pauluz.bbapps.kontomierz.view.mediators
 {
     import com.pauluz.bbapps.kontomierz.model.vo.AccountVO;
     import com.pauluz.bbapps.kontomierz.signals.GetAllAccountsSignal;
-    import com.pauluz.bbapps.kontomierz.signals.SaveSelectedAccountSignal;
+    import com.pauluz.bbapps.kontomierz.signals.StoreSelectedAccountSignal;
     import com.pauluz.bbapps.kontomierz.signals.signaltons.ProvideAllAccountsDataSignal;
-    import com.pauluz.bbapps.kontomierz.signals.signaltons.SelectedAccountSavedSuccessfulSignal;
+    import com.pauluz.bbapps.kontomierz.signals.signaltons.SelectedAccountSuccessfulStoreSignal;
     import com.pauluz.bbapps.kontomierz.utils.LogUtil;
     import com.pauluz.bbapps.kontomierz.view.AccountListView;
 
@@ -36,7 +36,7 @@ package com.pauluz.bbapps.kontomierz.view.mediators
          public var provideAllAccountsDataSignal:ProvideAllAccountsDataSignal;
 
          [Inject]
-         public var selectedAccountSavedSuccessfulSignal:SelectedAccountSavedSuccessfulSignal;
+         public var selectedAccountSuccessfulStoreSignal:SelectedAccountSuccessfulStoreSignal;
 
         /**
          * SIGNAL -> COMMAND
@@ -45,7 +45,7 @@ package com.pauluz.bbapps.kontomierz.view.mediators
         public var getAllAccountSignal:GetAllAccountsSignal;
 
         [Inject]
-        public var saveSelectedAccountSignal:SaveSelectedAccountSignal;
+        public var storeSelectedAccountSignal:StoreSelectedAccountSignal;
 
         /** variables **/
         private var logger:ILogger;
@@ -70,10 +70,10 @@ package com.pauluz.bbapps.kontomierz.view.mediators
             logger.debug(": onRegister");
 
             addToSignal(view.viewAddedSignal, onViewAdded);
-            addToSignal(view.saveSelectedAccount, onSaveSelectedAccount);
+            addToSignal(view.storeSelectedAccount, onStoreSelectedAccount);
 
             addOnceToSignal(provideAllAccountsDataSignal, onAccountsData);
-            addToSignal(selectedAccountSavedSuccessfulSignal, onSuccessfulAccountSave);
+            addToSignal(selectedAccountSuccessfulStoreSignal, onAccountSuccessfulStore);
         }
 
         private function onViewAdded():void
@@ -83,11 +83,11 @@ package com.pauluz.bbapps.kontomierz.view.mediators
             getAllAccountSignal.dispatch();
         }
 
-        private function onSaveSelectedAccount(account:AccountVO):void
+        private function onStoreSelectedAccount(account:AccountVO):void
         {
-            logger.debug(": onSaveSelectedAccount");
+            logger.debug(": onStoreSelectedAccount");
 
-            saveSelectedAccountSignal.dispatch(account);
+            storeSelectedAccountSignal.dispatch(account);
         }
 
         /** methods **/
@@ -101,13 +101,13 @@ package com.pauluz.bbapps.kontomierz.view.mediators
             }
         }
 
-        private function onSuccessfulAccountSave(account:AccountVO):void
+        private function onAccountSuccessfulStore(account:AccountVO):void
         {
-            logger.debug(": onSuccessfulAccountSave");
+            logger.debug(": onAccountSuccessfulStore");
 
             if (view)
             {
-                view.addTransactionView(account.displayName);
+                view.addTransactionView(account.displayName + " " + account.balance);
             }
         }
     }

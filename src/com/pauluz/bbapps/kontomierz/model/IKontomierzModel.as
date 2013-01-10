@@ -1,6 +1,7 @@
 package com.pauluz.bbapps.kontomierz.model
 {
     import com.pauluz.bbapps.kontomierz.model.vo.AccountVO;
+    import com.pauluz.bbapps.kontomierz.model.vo.TransactionVO;
 
     public interface IKontomierzModel
     {
@@ -9,5 +10,8 @@ package com.pauluz.bbapps.kontomierz.model
 
         function get selectedAccount():AccountVO;
         function set selectedAccount(value:AccountVO):void;
+
+        function get selectedTransaction():TransactionVO;
+        function set selectedTransaction(value:TransactionVO):void;
     }
 }

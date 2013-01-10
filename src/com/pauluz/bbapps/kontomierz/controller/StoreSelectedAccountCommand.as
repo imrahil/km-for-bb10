@@ -9,11 +9,11 @@ package com.pauluz.bbapps.kontomierz.controller
 {
     import com.pauluz.bbapps.kontomierz.model.IKontomierzModel;
     import com.pauluz.bbapps.kontomierz.model.vo.AccountVO;
-    import com.pauluz.bbapps.kontomierz.signals.signaltons.SelectedAccountSavedSuccessfulSignal;
+    import com.pauluz.bbapps.kontomierz.signals.signaltons.SelectedAccountSuccessfulStoreSignal;
 
     import org.robotlegs.mvcs.SignalCommand;
 
-    public final class SaveSelectedAccountCommand extends SignalCommand 
+    public final class StoreSelectedAccountCommand extends SignalCommand
     {
         /** PARAMETERS **/
         [Inject]
@@ -24,16 +24,16 @@ package com.pauluz.bbapps.kontomierz.controller
         public var model:IKontomierzModel;
 
         [Inject]
-        public var selectedAccountSavedSuccessfulSignal:SelectedAccountSavedSuccessfulSignal;
+        public var selectedAccountSuccessfulStoreSignal:SelectedAccountSuccessfulStoreSignal;
 
         /**
-         * Method handle the logic for <code>SaveSelectedAccountCommand</code>
+         * Method handle the logic for <code>StoreSelectedAccountCommand</code>
          */        
         override public function execute():void    
         {
             model.selectedAccount = account;
 
-            selectedAccountSavedSuccessfulSignal.dispatch(account);
+            selectedAccountSuccessfulStoreSignal.dispatch(account);
         }
     }
 }

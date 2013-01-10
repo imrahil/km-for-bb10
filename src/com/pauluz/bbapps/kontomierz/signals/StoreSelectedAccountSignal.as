@@ -11,9 +11,9 @@ package com.pauluz.bbapps.kontomierz.signals
 
     import org.osflash.signals.Signal;
 
-    public class SaveSelectedAccountSignal extends Signal
+    public class StoreSelectedAccountSignal extends Signal
     {
-        public function SaveSelectedAccountSignal()
+        public function StoreSelectedAccountSignal()
         {
             super(AccountVO);
         }

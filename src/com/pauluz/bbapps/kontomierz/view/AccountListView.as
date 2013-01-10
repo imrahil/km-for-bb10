@@ -28,7 +28,7 @@ package com.pauluz.bbapps.kontomierz.view
         public var accountList:List;
 
         public var viewAddedSignal:Signal = new Signal();
-        public var saveSelectedAccount:Signal = new Signal(AccountVO);
+        public var storeSelectedAccount:Signal = new Signal(AccountVO);
 
         public function AccountListView()
         {
@@ -63,7 +63,7 @@ package com.pauluz.bbapps.kontomierz.view
 
         private function listClicked(event:ListEvent):void
         {
-            saveSelectedAccount.dispatch(event.data as AccountVO);
+            storeSelectedAccount.dispatch(event.data as AccountVO);
         }
 
         public function addTransactionView(title:String):void

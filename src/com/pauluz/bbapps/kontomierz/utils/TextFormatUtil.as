@@ -7,6 +7,7 @@
  */
 package com.pauluz.bbapps.kontomierz.utils
 {
+    import qnx.fuse.ui.text.TextAlign;
     import qnx.fuse.ui.text.TextFormat;
 
     public class TextFormatUtil
@@ -16,12 +17,23 @@ package com.pauluz.bbapps.kontomierz.utils
             super();
         }
 
-        public static function setFormat(format:TextFormat):TextFormat
+        public static function setFormat(format:TextFormat, fontSize:int = 54):TextFormat
         {
-            format.size = 54;
+            format.size = fontSize;
             format.color = 0xFAFAFA;
             format.italic = true;
             format.font = "Slate Pro Light";
+
+            return format;
+        }
+
+        public static function setFormatAlignRight(format:TextFormat):TextFormat
+        {
+            format.size = 50;
+            format.color = 0xFAFAFA;
+            format.italic = true;
+            format.font = "Slate Pro Light";
+            format.align = TextAlign.RIGHT;
 
             return format;
         }

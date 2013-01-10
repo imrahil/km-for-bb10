@@ -265,13 +265,13 @@ package qnx.fuse.ui.navigation
         {
             if (pane.stack.length > 1)
             {
-                pane.top.height = height;
                 pane.top.width = width;
+                pane.top.height = height;
             }
             else if (pane.stack.length == 1)
             {
-                pane.stack[ 0 ].height = getContentHeight();
-                pane.stack[ 0 ].width = width;
+                pane.stack[0].width = width;
+                pane.stack[0].height = getContentHeight();
             }
         }
 
@@ -289,7 +289,6 @@ package qnx.fuse.ui.navigation
                 __activePane.height = getContentHeight();
             }
         }
-
 
         override public function onActionSelected(action:ActionBase):void
         {
@@ -317,10 +316,10 @@ package qnx.fuse.ui.navigation
         {
             if (__activePane)
             {
-                return(__activePane.getActionsToDisplayOnBar());
+                return __activePane.getActionsToDisplayOnBar();
             }
 
-            return(super.getActionsToDisplayOnBar());
+            return super.getActionsToDisplayOnBar();
         }
     }
 }

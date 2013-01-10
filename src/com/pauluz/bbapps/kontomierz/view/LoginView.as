@@ -27,6 +27,7 @@ package com.pauluz.bbapps.kontomierz.view
     import qnx.fuse.ui.core.SizeOptions;
     import qnx.fuse.ui.layouts.gridLayout.GridData;
     import qnx.fuse.ui.layouts.gridLayout.GridLayout;
+    import qnx.fuse.ui.listClasses.ScrollDirection;
     import qnx.fuse.ui.navigation.TitlePage;
     import qnx.fuse.ui.skins.SkinStates;
     import qnx.fuse.ui.text.KeyboardType;
@@ -66,6 +67,11 @@ package com.pauluz.bbapps.kontomierz.view
             var labelButton:LabelButton;
 
             var container:Container = ContainerHelper.createContainer();
+            container.scrollDirection = ScrollDirection.VERTICAL;
+
+            var gridData:GridData = new GridData();
+            gridData.setOptions(SizeOptions.RESIZE_BOTH);
+            container.layoutData = gridData;
 
             // LABEL EMAIL
             textLabel = new Label();

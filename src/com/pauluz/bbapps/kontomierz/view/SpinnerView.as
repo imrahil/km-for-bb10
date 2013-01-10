@@ -7,7 +7,6 @@
  */
 package com.pauluz.bbapps.kontomierz.view
 {
-    import com.pauluz.bbapps.kontomierz.model.vo.UserVO;
     import com.pauluz.bbapps.kontomierz.utils.LogUtil;
 
     import flash.display.Graphics;
@@ -15,28 +14,16 @@ package com.pauluz.bbapps.kontomierz.view
 
     import mx.logging.ILogger;
 
-    import org.osflash.signals.Signal;
-
-    import qnx.fuse.ui.buttons.CheckBox;
     import qnx.fuse.ui.core.Container;
     import qnx.fuse.ui.layouts.Align;
     import qnx.fuse.ui.layouts.gridLayout.GridData;
     import qnx.fuse.ui.layouts.gridLayout.GridLayout;
     import qnx.fuse.ui.navigation.Page;
     import qnx.fuse.ui.progress.ActivityIndicator;
-    import qnx.fuse.ui.text.Label;
-    import qnx.fuse.ui.text.TextInput;
 
     public class SpinnerView extends Page
     {
         private var logger:ILogger;
-
-        public var loginSignal:Signal = new Signal(UserVO);
-
-        private var emailTextInput:TextInput;
-        private var passwordTextInput:TextInput;
-        private var rememberMeCheckbox:CheckBox;
-        private var errorLabel:Label;
 
         public function SpinnerView():void
         {

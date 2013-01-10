@@ -15,7 +15,6 @@ package com.pauluz.bbapps.kontomierz.view
 
     import mx.logging.ILogger;
 
-    import qnx.fuse.ui.navigation.NavigationPane;
     import qnx.fuse.ui.navigation.Page;
     import qnx.fuse.ui.navigation.Tab;
     import qnx.fuse.ui.navigation.TabbedPane;

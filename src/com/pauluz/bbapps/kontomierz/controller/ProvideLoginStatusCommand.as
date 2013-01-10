@@ -25,7 +25,7 @@ package com.pauluz.bbapps.kontomierz.controller
         public var provideLoginStatusSignal:ProvideLoginStatusSignal;
 
         /**
-         * Method handle the logic for <code>StartupCommand</code>
+         * Method handle the logic for <code>ProvideLoginStatusCommand</code>
          */        
         override public function execute():void    
         {

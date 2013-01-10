@@ -33,7 +33,7 @@ package qnx.fuse.ui.navigation
 
         public function get paneProperties():PaneProperties
         {
-            return( __paneProperties );
+            return __paneProperties;
         }
 
         public function set paneProperties(value:PaneProperties):void
@@ -118,10 +118,10 @@ package qnx.fuse.ui.navigation
         {
             if (actionBar && contains(actionBar))
             {
-                return(actionBar.y);
+                return actionBar.y;
             }
 
-            return( height );
+            return height;
         }
 
         override protected function updateDisplayList(unscaledWidth:Number, unscaledHeight:Number):void
@@ -168,15 +168,15 @@ package qnx.fuse.ui.navigation
             {
                 var navPane:NavigationPane = parent as NavigationPane;
 
-                return(navPane);
+                return navPane;
             }
 
-            return(null);
+            return null;
         }
 
         public function getActionsToDisplayOnBar():Vector.<Action>
         {
-            return(new Vector.<Action>());
+            return new Vector.<Action>();
         }
     }
 }

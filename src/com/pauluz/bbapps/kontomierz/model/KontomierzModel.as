@@ -8,6 +8,7 @@
 package com.pauluz.bbapps.kontomierz.model
 {
     import com.pauluz.bbapps.kontomierz.model.vo.AccountVO;
+    import com.pauluz.bbapps.kontomierz.model.vo.TransactionVO;
 
     import org.robotlegs.mvcs.*;
 
@@ -15,6 +16,7 @@ package com.pauluz.bbapps.kontomierz.model
     {
         private var _apiKey:String = "";
         private var _selectedAccount:AccountVO;
+        private var _selectedTransaction:TransactionVO;
 
         public function get apiKey():String
         {
@@ -37,6 +39,16 @@ package com.pauluz.bbapps.kontomierz.model
         public function set selectedAccount(value:AccountVO):void
         {
             _selectedAccount = value;
+        }
+
+        public function get selectedTransaction():TransactionVO
+        {
+            return _selectedTransaction;
+        }
+
+        public function set selectedTransaction(value:TransactionVO):void
+        {
+            _selectedTransaction = value;
         }
     }
 }

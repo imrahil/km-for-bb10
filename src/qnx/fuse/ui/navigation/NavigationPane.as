@@ -125,7 +125,7 @@ package qnx.fuse.ui.navigation
 
             for (var i:int = 0; i < __stack.length; i++)
             {
-                __stack[ i ].width = unscaledWidth;
+                __stack[i].width = unscaledWidth;
                 //TODO height gets set by the parent most likely.
                 //Need to add case where it is not and set the height as well.
             }

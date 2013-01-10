@@ -16,3 +16,4 @@ Wersje:
 * przy pierwszym starcie odczyt z sieci lub przy jej braku z danych lokalnych (sqlite?)
 * przy kolejnych odczytach brac dane z sqlite, a z sieci dopiero na akcje "Odswiez" wywolana przez uzytkownika
 * wykresy!
+* wyszukiwanie po kategorii i dacie prosto ze szczegolow wybranej transakcji

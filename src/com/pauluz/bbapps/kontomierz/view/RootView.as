@@ -25,6 +25,7 @@ package com.pauluz.bbapps.kontomierz.view
         private var logger:ILogger;
 
         private var navigationPane:NavigationPane;
+        private var mainView:MainView;
 
         public function RootView()
         {
@@ -43,21 +44,29 @@ package com.pauluz.bbapps.kontomierz.view
             stage.align = StageAlign.TOP_LEFT;
             stage.scaleMode = StageScaleMode.NO_SCALE;
 
-            navigationPane = new NavigationPane();
-            addChild(navigationPane);
-
-            navigationPane.width = stage.stageWidth;
-            navigationPane.height = stage.stageHeight;
-
             stage.addEventListener(Event.RESIZE, stageResize);
         }
 
         private function stageResize(event:Event):void
         {
-            logger.debug(": stageResize");
+            logger.debug(": rootView resize");
 
-            navigationPane.width = stage.stageWidth;
-            navigationPane.height = stage.stageHeight;
+            if (mainView)
+            {
+                mainView.width = stage.stageWidth;
+                mainView.height = stage.stageHeight;
+            }
+            else if (navigationPane)
+            {
+                navigationPane.width = stage.stageWidth;
+                navigationPane.height = stage.stageHeight;
+
+                for (var i:int = 0; i < navigationPane.stack.length; i++)
+                {
+                    navigationPane.stack[i].width = navigationPane.width;
+                    navigationPane.stack[i].height = navigationPane.height;
+                }
+            }
         }
 
         // *******************
@@ -67,8 +76,11 @@ package com.pauluz.bbapps.kontomierz.view
         {
             logger.debug(": addMainView");
 
-            var mainView:MainView = new MainView();
-            navigationPane.push(mainView);
+            mainView = new MainView();
+            addChild(mainView);
+
+            mainView.width = stage.stageWidth;
+            mainView.height = stage.stageHeight;
         }
 
         // *******************
@@ -77,6 +89,12 @@ package com.pauluz.bbapps.kontomierz.view
         public function addLoginView():void
         {
             logger.debug(": addLoginView");
+
+            navigationPane = new NavigationPane();
+            addChild(navigationPane);
+
+            navigationPane.width = stage.stageWidth;
+            navigationPane.height = stage.stageHeight;
 
             var loginView:LoginView = new LoginView();
             navigationPane.push(loginView);
@@ -89,14 +107,11 @@ package com.pauluz.bbapps.kontomierz.view
         {
             logger.debug(": removeAllPages");
 
-            navigationPane.popAndDelete();
+            if (mainView)
+            {
+                removeChild(mainView);
+                mainView = null;
 
-            if (navigationPane.stack.length > 1)
-            {
-                navigationPane.popAndDelete();
-            }
-            else
-            {
                 addLoginView();
             }
         }

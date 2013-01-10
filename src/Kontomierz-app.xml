@@ -2,13 +2,13 @@
 <application xmlns="http://ns.adobe.com/air/application/3.1">
     <id>com.pauluz.bbapps.Kontomierz</id>
     <filename>Kontomierz</filename>
-    <name>Wydatki</name>
+    <name>Wydatki kontomierz.pl</name>
     <versionNumber>0.0.2</versionNumber>
     <copyright>Copyright © 2013 Pawel Szczepanek</copyright>
 
     <initialWindow>
         <content>Kontomierz.swf</content>
-        <autoOrients>false</autoOrients>
+        <autoOrients>true</autoOrients>
         <fullScreen>false</fullScreen>
         <visible>true</visible>
     </initialWindow>

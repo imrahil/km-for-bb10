@@ -7,6 +7,9 @@
  */
 package com.pauluz.bbapps.kontomierz.view.mediators
 {
+    import com.pauluz.bbapps.kontomierz.model.vo.TransactionVO;
+    import com.pauluz.bbapps.kontomierz.signals.RequestSelectedTransactionSignal;
+    import com.pauluz.bbapps.kontomierz.signals.signaltons.ProvideSelectedTransactionSignal;
     import com.pauluz.bbapps.kontomierz.utils.LogUtil;
     import com.pauluz.bbapps.kontomierz.view.SingleTransactionView;
 
@@ -25,11 +28,14 @@ package com.pauluz.bbapps.kontomierz.view.mediators
         /**
          * SIGNALTONS
          */
-
+        [Inject]
+        public var provideSelectedTransactionSignal:ProvideSelectedTransactionSignal;
 
         /**
          * SIGNAL -> COMMAND
          */
+        [Inject]
+        public var requestSelectedTransactionSignal:RequestSelectedTransactionSignal;
 
         /** variables **/
         private var logger:ILogger;
@@ -53,11 +59,26 @@ package com.pauluz.bbapps.kontomierz.view.mediators
         {
             logger.debug(": onRegister");
             
+            addToSignal(view.viewAddedSignal, onViewAdded);
+
+            addOnceToSignal(provideSelectedTransactionSignal, onDetailsData);
         }
 
-        /** methods **/
+        private function onViewAdded():void
+        {
+            logger.debug(": onViewAdded");
 
-        /** eventHandlers **/
+            requestSelectedTransactionSignal.dispatch();
+        }
 
+        private function onDetailsData(transaction:TransactionVO):void
+        {
+            logger.debug(": onDetailsData");
+
+            if (view)
+            {
+                view.showDetails(transaction);
+            }
+        }
     }
 }
