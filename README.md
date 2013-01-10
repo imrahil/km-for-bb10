@@ -2,6 +2,7 @@
 Copyright (c) 2013 pauluZ
 
 *Ikonki menusow* - Subway Icons Set - [http://subway.pixle.pl/](http://subway.pixle.pl/)
+
 *Ikonka aplikacji* - [http://www.iconfinder.com/icondetails/49718](http://www.iconfinder.com/icondetails/49718/256/money_piggybank_pink_icon)
 
 Wersje:
