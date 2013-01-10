@@ -62,7 +62,7 @@ package com.pauluz.bbapps.kontomierz.view.mediators
             
             addToSignal(view.viewAddedSignal, onViewAdded);
 
-            provideAllTransactionsSignal.add(onTransactionsData);
+            addOnceToSignal(provideAllTransactionsSignal, onTransactionsData);
         }
 
         private function onViewAdded():void

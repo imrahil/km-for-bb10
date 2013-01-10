@@ -72,8 +72,8 @@ package com.pauluz.bbapps.kontomierz.view.mediators
             addToSignal(view.viewAddedSignal, onViewAdded);
             addToSignal(view.saveSelectedAccount, onSaveSelectedAccount);
 
-            provideAllAccountsDataSignal.add(onAccountsData);
-            selectedAccountSavedSuccessfulSignal.add(onSuccessfulAccountSave);
+            addOnceToSignal(provideAllAccountsDataSignal, onAccountsData);
+            addToSignal(selectedAccountSavedSuccessfulSignal, onSuccessfulAccountSave);
         }
 
         private function onViewAdded():void
