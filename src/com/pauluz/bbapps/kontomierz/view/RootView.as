@@ -74,7 +74,7 @@ package com.pauluz.bbapps.kontomierz.view
         // *******************
         //     LOGIN VIEW
         // *******************
-        public function addLoginView(email:String = ""):void
+        public function addLoginView():void
         {
             logger.debug(": addLoginView");
 
@@ -82,9 +82,28 @@ package com.pauluz.bbapps.kontomierz.view
             navigationPane.push(loginView);
         }
 
+        // *******************
+        //     LOGOUT
+        // *******************
+        public function removeAllPages():void
+        {
+            logger.debug(": removeAllPages");
+
+            navigationPane.popAndDelete();
+
+            if (navigationPane.stack.length > 1)
+            {
+                navigationPane.popAndDelete();
+            }
+            else
+            {
+                addLoginView();
+            }
+        }
+
 
         // *******************
-        //   register dialog
+        //   REGISTER DIALOG
         // *******************
         public function addRegisterDialog(email:String = ""):void
         {

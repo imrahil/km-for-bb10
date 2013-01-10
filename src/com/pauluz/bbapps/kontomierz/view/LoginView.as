@@ -13,8 +13,9 @@ package com.pauluz.bbapps.kontomierz.view
     import com.pauluz.bbapps.kontomierz.utils.StringHelper;
     import com.pauluz.bbapps.kontomierz.utils.TextFormatUtil;
 
+    import flash.events.KeyboardEvent;
     import flash.events.MouseEvent;
-    import flash.text.SoftKeyboardType;
+    import flash.ui.Keyboard;
 
     import mx.logging.ILogger;
 
@@ -28,6 +29,7 @@ package com.pauluz.bbapps.kontomierz.view
     import qnx.fuse.ui.layouts.gridLayout.GridLayout;
     import qnx.fuse.ui.navigation.TitlePage;
     import qnx.fuse.ui.skins.SkinStates;
+    import qnx.fuse.ui.text.KeyboardType;
     import qnx.fuse.ui.text.Label;
     import qnx.fuse.ui.text.ReturnKeyType;
     import qnx.fuse.ui.text.TextInput;
@@ -76,8 +78,9 @@ package com.pauluz.bbapps.kontomierz.view
             emailTextInput.prompt = "Podaj swój e-mail";
             emailTextInput.spellCheck = false;
             emailTextInput.autoCorrect = false;
-            emailTextInput.softKeyboardType = SoftKeyboardType.EMAIL;
+            emailTextInput.softKeyboardType = KeyboardType.EMAIL;
             emailTextInput.returnKeyLabel = ReturnKeyType.NEXT;
+            emailTextInput.addEventListener(KeyboardEvent.KEY_UP, onEmailKeyUp);
             container.addChild(emailTextInput);
 
             // LABEL HASŁO
@@ -92,7 +95,9 @@ package com.pauluz.bbapps.kontomierz.view
             passwordTextInput.displayAsPassword = true;
             passwordTextInput.spellCheck = false;
             passwordTextInput.autoCorrect = false;
+            passwordTextInput.softKeyboardType = KeyboardType.PASSWORD;
             passwordTextInput.returnKeyLabel = ReturnKeyType.SUBMIT;
+            passwordTextInput.addEventListener(KeyboardEvent.KEY_UP, onPasswordKeyUp);
             container.addChild(passwordTextInput);
 
             // CHECKBOX ZAPAMIETAJ MNIE
@@ -143,7 +148,30 @@ package com.pauluz.bbapps.kontomierz.view
             content = container;
         }
 
+        private function onEmailKeyUp(event:KeyboardEvent):void
+        {
+            if (event.keyCode == Keyboard.ENTER)
+            {
+                stage.focus = passwordTextInput;
+            }
+        }
+
+        private function onPasswordKeyUp(event:KeyboardEvent):void
+        {
+            if (event.keyCode == Keyboard.ENTER)
+            {
+                stage.focus = null;
+
+                zaloguj();
+            }
+        }
+
         private function onZalogujClick(event:MouseEvent):void
+        {
+            zaloguj();
+        }
+
+        private function zaloguj():void
         {
             var email:String = StringHelper.trim(emailTextInput.text);
             var password:String = StringHelper.trim(passwordTextInput.text);
@@ -170,6 +198,9 @@ package com.pauluz.bbapps.kontomierz.view
                 user.rememberMe = rememberMeCheckbox.selected;
 
                 loginSignal.dispatch(user);
+
+                emailTextInput.text = "";
+                passwordTextInput.text = "";
             }
         }
     }

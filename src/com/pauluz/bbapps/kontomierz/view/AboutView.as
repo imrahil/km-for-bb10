@@ -7,14 +7,14 @@
  */
 package com.pauluz.bbapps.kontomierz.view
 {
-    import com.pauluz.bbapps.kontomierz.constants.ApplicationConstants;
     import com.pauluz.bbapps.kontomierz.utils.ContainerHelper;
     import com.pauluz.bbapps.kontomierz.utils.LogUtil;
     import com.pauluz.bbapps.kontomierz.utils.TextFormatUtil;
 
     import flash.desktop.NativeApplication;
     import flash.events.MouseEvent;
-    import flash.net.SharedObject;
+    import flash.net.URLRequest;
+    import flash.net.navigateToURL;
 
     import mx.logging.ILogger;
 
@@ -93,10 +93,7 @@ package com.pauluz.bbapps.kontomierz.view
 
         private static function onVisitBtnClick(event:MouseEvent):void
         {
-            // FIXME - zamienic!
-//            navigateToURL(new URLRequest("http://www.pauluz.pl"));
-            var sessionSO:SharedObject = SharedObject.getLocal(ApplicationConstants.KONTOMIERZ_SO_NAME);
-            sessionSO.clear();
+            navigateToURL(new URLRequest("http://www.pauluz.pl"));
         }
     }
 }

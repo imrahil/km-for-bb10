@@ -36,7 +36,7 @@ package qnx.fuse.ui.navigation
 
         public function get actions():Vector.<Action>
         {
-            return( __actions );
+            return __actions;
         }
 
         public function set actions(value:Vector.<Action>):void
@@ -49,7 +49,7 @@ package qnx.fuse.ui.navigation
 
         public function get content():UIComponent
         {
-            return(__content);
+            return __content;
         }
 
         public function set content(value:UIComponent):void
@@ -73,7 +73,7 @@ package qnx.fuse.ui.navigation
 
         public function get titleBar():TitleBar
         {
-            return( __titleBar );
+            return __titleBar;
         }
 
         public function set titleBar(value:TitleBar):void
@@ -212,7 +212,7 @@ package qnx.fuse.ui.navigation
                 return(actions);
             }
 
-            return (super.getActionsToDisplayOnBar());
+            return super.getActionsToDisplayOnBar();
         }
 
 

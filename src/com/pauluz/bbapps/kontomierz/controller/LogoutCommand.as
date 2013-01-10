@@ -7,7 +7,10 @@
  */
 package com.pauluz.bbapps.kontomierz.controller 
 {
+    import com.pauluz.bbapps.kontomierz.constants.ApplicationConstants;
     import com.pauluz.bbapps.kontomierz.model.IKontomierzModel;
+
+    import flash.net.SharedObject;
 
     import org.robotlegs.mvcs.SignalCommand;
 
@@ -22,6 +25,10 @@ package com.pauluz.bbapps.kontomierz.controller
          */        
         override public function execute():void    
         {
+            var sessionSO:SharedObject = SharedObject.getLocal(ApplicationConstants.KONTOMIERZ_SO_NAME);
+            sessionSO.clear();
+
+            model.apiKey = "";
         }
     }
 }

@@ -18,10 +18,10 @@ package com.pauluz.bbapps.kontomierz.model
 
         public function get apiKey():String
         {
-//            return _apiKey;
+            return _apiKey;
 
             // DEMO USER
-            return "e7cOI9zZTbprBddSHHnlniLsAvzBpfhqTIjeUid2be0fjb2REaWnudZqGSgxz1Lz";;
+//            return "e7cOI9zZTbprBddSHHnlniLsAvzBpfhqTIjeUid2be0fjb2REaWnudZqGSgxz1Lz";;
         }
 
         public function set apiKey(value:String):void

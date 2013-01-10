@@ -11,6 +11,7 @@ package com.pauluz.bbapps.kontomierz.view.mediators
     import com.pauluz.bbapps.kontomierz.model.vo.ErrorVO;
     import com.pauluz.bbapps.kontomierz.model.vo.UserVO;
     import com.pauluz.bbapps.kontomierz.signals.LoginSignal;
+    import com.pauluz.bbapps.kontomierz.signals.LogoutSignal;
     import com.pauluz.bbapps.kontomierz.signals.RegisterSignal;
     import com.pauluz.bbapps.kontomierz.signals.signaltons.ErrorSignal;
     import com.pauluz.bbapps.kontomierz.signals.signaltons.LoginSuccessfulSignal;
@@ -38,6 +39,9 @@ package com.pauluz.bbapps.kontomierz.view.mediators
 
         [Inject]
         public var errorSignal:ErrorSignal;
+
+        [Inject]
+        public var logoutSignal:LogoutSignal;
 
         /**
          * SIGNAL -> COMMAND
@@ -77,6 +81,7 @@ package com.pauluz.bbapps.kontomierz.view.mediators
             addToSignal(loginSignal, onLoginSignal);
             addToSignal(errorSignal, onErrorSignal);
             addToSignal(loginSuccessfulSignal, onLoginSuccessfulSignal);
+            addToSignal(logoutSignal, onLogout);
         }
 
         /** methods **/
@@ -113,6 +118,13 @@ package com.pauluz.bbapps.kontomierz.view.mediators
             logger.debug(": onLoginSuccessfulSignal");
 
             view.addMainView();
+        }
+
+        private function onLogout():void
+        {
+            logger.debug(": onLogout");
+
+            view.removeAllPages();
         }
 
         // view signals

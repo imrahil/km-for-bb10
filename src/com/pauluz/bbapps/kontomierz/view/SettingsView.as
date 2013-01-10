@@ -11,7 +11,11 @@ package com.pauluz.bbapps.kontomierz.view
     import com.pauluz.bbapps.kontomierz.utils.ContainerHelper;
     import com.pauluz.bbapps.kontomierz.utils.LogUtil;
 
+    import flash.events.MouseEvent;
+
     import mx.logging.ILogger;
+
+    import org.osflash.signals.Signal;
 
     import qnx.fuse.ui.actionbar.ActionPlacement;
     import qnx.fuse.ui.buttons.LabelButton;
@@ -26,6 +30,8 @@ package com.pauluz.bbapps.kontomierz.view
     {
         private var logger:ILogger;
         private var aboutAction:Action;
+
+        public var logoutSignal:Signal = new Signal();
 
         public function SettingsView()
         {
@@ -69,7 +75,7 @@ package com.pauluz.bbapps.kontomierz.view
             gridDataHolder = new GridData();
             gridDataHolder.setOptions(SizeOptions.RESIZE_HORIZONTAL);
             labelButton.layoutData = gridDataHolder;
-//            button.addEventListener(MouseEvent.CLICK, onZalogujClick);
+//            labelButton.addEventListener(MouseEvent.CLICK, onZalogujClick);
             container.addChild(labelButton);
 
             labelButton = new LabelButton();
@@ -77,10 +83,23 @@ package com.pauluz.bbapps.kontomierz.view
             gridDataHolder = new GridData();
             gridDataHolder.setOptions(SizeOptions.RESIZE_HORIZONTAL);
             labelButton.layoutData = gridDataHolder;
-//            button.addEventListener(MouseEvent.CLICK, onZalogujClick);
+//            labelButton.addEventListener(MouseEvent.CLICK, onZalogujClick);
+            container.addChild(labelButton);
+
+            labelButton = new LabelButton();
+            labelButton.label = "Wyloguj";
+            gridDataHolder = new GridData();
+            gridDataHolder.setOptions(SizeOptions.RESIZE_HORIZONTAL);
+            labelButton.layoutData = gridDataHolder;
+            labelButton.addEventListener(MouseEvent.CLICK, onWylogujClick);
             container.addChild(labelButton);
 
             content = container;
+        }
+
+        private function onWylogujClick(event:MouseEvent):void
+        {
+            logoutSignal.dispatch();
         }
 
         override public function onActionSelected(action:ActionBase):void

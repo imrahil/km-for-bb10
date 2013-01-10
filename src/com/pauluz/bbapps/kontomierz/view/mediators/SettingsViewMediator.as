@@ -7,14 +7,15 @@
  */
 package com.pauluz.bbapps.kontomierz.view.mediators
 {
+    import com.pauluz.bbapps.kontomierz.signals.LogoutSignal;
     import com.pauluz.bbapps.kontomierz.utils.LogUtil;
+    import com.pauluz.bbapps.kontomierz.view.SettingsView;
 
     import mx.logging.ILogger;
-    
-    import com.pauluz.bbapps.kontomierz.view.SettingsView;
-    import org.robotlegs.mvcs.Mediator;
 
-    public class SettingsViewMediator extends Mediator
+    import org.robotlegs.mvcs.SignalMediator;
+
+    public class SettingsViewMediator extends SignalMediator
     {
         /**
          * VIEW
@@ -30,6 +31,8 @@ package com.pauluz.bbapps.kontomierz.view.mediators
         /**
          * SIGNAL -> COMMAND
          */
+        [Inject]
+        public var logoutSignal:LogoutSignal;
 
         /** variables **/
         private var logger:ILogger;
@@ -52,12 +55,13 @@ package com.pauluz.bbapps.kontomierz.view.mediators
         override public function onRegister():void
         {
             logger.debug(": onRegister");
-            
+
+            addToSignal(view.logoutSignal, onLogout);
         }
 
-        /** methods **/
-
-        /** eventHandlers **/
-
+        private function onLogout():void
+        {
+            logoutSignal.dispatch();
+        }
     }
 }
