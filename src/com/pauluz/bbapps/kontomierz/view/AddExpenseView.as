@@ -18,15 +18,15 @@ package com.pauluz.bbapps.kontomierz.view
     import qnx.fuse.ui.navigation.TitlePage;
     import qnx.fuse.ui.text.Label;
 
-    public class ChartsView extends TitlePage
+    public class AddExpenseView extends TitlePage
     {
         private var logger:ILogger;
 
-        public function ChartsView()
+        public function AddExpenseView()
         {
             super();
 
-            title = "Wykresy";
+            title = "Dodaj wydatek";
 
             logger = LogUtil.getLogger(this);
             logger.debug(": constructor");
@@ -39,11 +39,6 @@ package com.pauluz.bbapps.kontomierz.view
             logger.debug(": onAdded");
 
             var container:Container = ContainerHelper.createContainer();
-
-            var textLabel:Label = new Label();
-            textLabel.text = "Już niedługo...";
-            textLabel.format = TextFormatUtil.setFormat(textLabel.format);
-            container.addChild(textLabel);
 
             content = container;
         }

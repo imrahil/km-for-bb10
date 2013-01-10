@@ -18,15 +18,15 @@ package com.pauluz.bbapps.kontomierz.view
     import qnx.fuse.ui.navigation.TitlePage;
     import qnx.fuse.ui.text.Label;
 
-    public class ChartsView extends TitlePage
+    public class CategoriesView extends TitlePage
     {
         private var logger:ILogger;
 
-        public function ChartsView()
+        public function CategoriesView()
         {
             super();
 
-            title = "Wykresy";
+            title = "Kategorie";
 
             logger = LogUtil.getLogger(this);
             logger.debug(": constructor");

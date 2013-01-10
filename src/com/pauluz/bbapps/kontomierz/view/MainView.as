@@ -50,11 +50,11 @@ package com.pauluz.bbapps.kontomierz.view
 
             tabs.push(ContainerHelper.createNavPane("Konta", new Resources.ICON_ACCOUNTS(), AccountListView));
             tabs.push(ContainerHelper.createTab("Portfel", new Resources.ICON_WALLET(), WalletView));
-            tabs.push(ContainerHelper.createTab("Dodaj", new Resources.ICON_ADD(), EmptyView));
+            tabs.push(ContainerHelper.createTab("Dodaj", new Resources.ICON_ADD(), AddExpenseView));
             tabs.push(ContainerHelper.createTab("Budżety", new Resources.ICON_BUDGETS(), EmptyView));
             tabs.push(ContainerHelper.createTab("Płatności", new Resources.ICON_SCHEDULES(), EmptyView));
-            tabs.push(ContainerHelper.createTab("Kategorie", new Resources.ICON_CATEGORIES(), EmptyView));
-            tabs.push(ContainerHelper.createTab("Tagi", new Resources.ICON_TAGS(), EmptyView));
+            tabs.push(ContainerHelper.createTab("Kategorie", new Resources.ICON_CATEGORIES(), CategoriesView));
+            tabs.push(ContainerHelper.createTab("Tagi", new Resources.ICON_TAGS(), TagsView));
             tabs.push(ContainerHelper.createTab("Wykresy", new Resources.ICON_CHARTS(), ChartsView));
             tabs.push(ContainerHelper.createNavPane("Ustawienia", new Resources.ICON_SETTINGS(), SettingsView));
 
