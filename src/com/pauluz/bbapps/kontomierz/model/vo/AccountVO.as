@@ -17,13 +17,13 @@ package com.pauluz.bbapps.kontomierz.model.vo
     {
         public var id:int;
         public var balance:Number = 0;
-        public var bank_name:String;
-        public var bank_plugin_name:String;
-        public var currency_balance:Number = 0;
-        public var currency_name:String;
-        public var display_name:String;
-        public var iban:String;
-        public var iban_checksum:String;
+        public var bankName:String = "";
+        public var bankPluginName:String = "";
+        public var currencyBalance:Number = 0;
+        public var currencyName:String = "";
+        public var displayName:String = "";
+        public var iban:String = "";
+        public var ibanChecksum:String = "";
         public var is_default_wallet:Boolean;
     }
 }

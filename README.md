@@ -8,4 +8,7 @@ Wersje:
 0.0.1 - init
 
 TODO:
-- zamienic LoginDialog i PasswordChangeDialog na ekrany - popupy sieja bledami i wogole sa malo przyjazne
+- dodac zapis danych lokalnie - tak zeby nie wymagane bylo polaczenie z internetem (przy braku synchronizacji -> zablokowac edycje i dodawanie)
+- przy pierwszym starcie odczyt z sieci lub przy jej braku z danych lokalnych (sqlite?)
+- przy kolejnych odczytach brac dane z sqlite, a z sieci dopiero na akcje "Odswiez" wywolana przez uzytkownika
+- wykresy!

@@ -112,5 +112,24 @@ package com.pauluz.bbapps.kontomierz.services
             logger.debug(": deleteWallet service call");
 
         }
+
+        override public function getAllTransactions(accountId:int, apiKey:String):void
+        {
+            logger.debug(": getAllTransactions service call");
+
+            var loader:URLLoader = new URLLoader();
+            var urlRequest:URLRequest = new URLRequest();
+
+            var url:String = ApplicationConstants.KONTOMIERZ_API_ENDPOINT + "money_transactions" + ApplicationConstants.KONTOMIERZ_API_FORMAT_JSON;
+            url += "?user_account_id=" + accountId;
+            url += "&start_on=01-01-2012";
+            url += "&api_key=" + apiKey;
+            urlRequest.url = url;
+
+            loader.addEventListener(Event.COMPLETE, getAllTransactionsCompleteHandler);
+            addLoaderListeners(loader);
+
+            loader.load(urlRequest);
+        }
     }
 }

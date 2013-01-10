@@ -7,11 +7,14 @@
  */
 package com.pauluz.bbapps.kontomierz.utils
 {
+    import com.pauluz.bbapps.kontomierz.constants.Resources;
+
     import flash.display.Graphics;
     import flash.display.Sprite;
 
     import qnx.fuse.ui.core.Container;
     import qnx.fuse.ui.layouts.gridLayout.GridLayout;
+    import qnx.fuse.ui.navigation.NavigationPane;
     import qnx.fuse.ui.navigation.Tab;
 
     public class ContainerHelper
@@ -43,7 +46,17 @@ package com.pauluz.bbapps.kontomierz.utils
             var tab:Tab = new Tab(label, icon);
             tab.content = new content();
 
-            return(tab);
+            return tab;
+        }
+
+        public static function createNavPane(label:String, icon:Object, content:Class):Tab
+        {
+            var navPane:NavigationPane = new NavigationPane();
+            navPane.push(new content());
+            var navTab:Tab = new Tab(label, icon);
+            navTab.content = navPane;
+
+            return(navTab);
         }
     }
 }

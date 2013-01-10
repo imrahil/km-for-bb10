@@ -22,6 +22,8 @@ package com.pauluz.bbapps.kontomierz.controller.bootstraps
             commandMap.mapSignalClass(LogoutSignal, LogoutCommand);
 
             commandMap.mapSignalClass(GetAllAccountsSignal, GetAllAccountsCommand);
+            commandMap.mapSignalClass(SaveSelectedAccountSignal, SaveSelectedAccountCommand);
+            commandMap.mapSignalClass(GetAllTransactionsSignal, GetAllTransactionsCommand);
         }
     }
 }

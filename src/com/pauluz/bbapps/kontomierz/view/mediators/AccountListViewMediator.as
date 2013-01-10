@@ -7,18 +7,21 @@
  */
 package com.pauluz.bbapps.kontomierz.view.mediators
 {
+    import com.pauluz.bbapps.kontomierz.model.vo.AccountVO;
     import com.pauluz.bbapps.kontomierz.signals.GetAllAccountsSignal;
+    import com.pauluz.bbapps.kontomierz.signals.SaveSelectedAccountSignal;
     import com.pauluz.bbapps.kontomierz.signals.signaltons.ProvideAllAccountsDataSignal;
+    import com.pauluz.bbapps.kontomierz.signals.signaltons.SelectedAccountSavedSuccessfulSignal;
     import com.pauluz.bbapps.kontomierz.utils.LogUtil;
+    import com.pauluz.bbapps.kontomierz.view.AccountListView;
 
     import mx.logging.ILogger;
-    
-    import com.pauluz.bbapps.kontomierz.view.AccountListView;
-    import org.robotlegs.mvcs.Mediator;
+
+    import org.robotlegs.mvcs.SignalMediator;
 
     import qnx.ui.data.DataProvider;
 
-    public class AccountListViewMediator extends Mediator
+    public class AccountListViewMediator extends SignalMediator
     {
         /**
          * VIEW
@@ -32,11 +35,17 @@ package com.pauluz.bbapps.kontomierz.view.mediators
          [Inject]
          public var provideAllAccountsDataSignal:ProvideAllAccountsDataSignal;
 
+         [Inject]
+         public var selectedAccountSavedSuccessfulSignal:SelectedAccountSavedSuccessfulSignal;
+
         /**
          * SIGNAL -> COMMAND
          */
         [Inject]
         public var getAllAccountSignal:GetAllAccountsSignal;
+
+        [Inject]
+        public var saveSelectedAccountSignal:SaveSelectedAccountSignal;
 
         /** variables **/
         private var logger:ILogger;
@@ -60,8 +69,25 @@ package com.pauluz.bbapps.kontomierz.view.mediators
         {
             logger.debug(": onRegister");
 
-            getAllAccountSignal.dispatch();
+            addToSignal(view.viewAddedSignal, onViewAdded);
+            addToSignal(view.saveSelectedAccount, onSaveSelectedAccount);
+
             provideAllAccountsDataSignal.add(onAccountsData);
+            selectedAccountSavedSuccessfulSignal.add(onSuccessfulAccountSave);
+        }
+
+        private function onViewAdded():void
+        {
+            logger.debug(": onViewAdded");
+
+            getAllAccountSignal.dispatch();
+        }
+
+        private function onSaveSelectedAccount(account:AccountVO):void
+        {
+            logger.debug(": onSaveSelectedAccount");
+
+            saveSelectedAccountSignal.dispatch(account);
         }
 
         /** methods **/
@@ -72,6 +98,16 @@ package com.pauluz.bbapps.kontomierz.view.mediators
             if (view && view.accountList)
             {
                 view.accountList.dataProvider = data;
+            }
+        }
+
+        private function onSuccessfulAccountSave(account:AccountVO):void
+        {
+            logger.debug(": onSuccessfulAccountSave");
+
+            if (view)
+            {
+                view.addTransactionView(account.displayName);
             }
         }
     }

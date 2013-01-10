@@ -8,6 +8,7 @@
 package com.pauluz.bbapps.kontomierz.view.components
 {
     import com.pauluz.bbapps.kontomierz.model.vo.AccountVO;
+    import com.pauluz.bbapps.kontomierz.model.vo.TransactionVO;
 
     import flashx.textLayout.formats.TextAlign;
 
@@ -15,11 +16,11 @@ package com.pauluz.bbapps.kontomierz.view.components
     import qnx.fuse.ui.text.Label;
     import qnx.fuse.ui.text.TextFormat;
 
-    public class AccountListCellRenderer extends CellRenderer
+    public class TransactionListCellRenderer extends CellRenderer
     {
         private var balance:Label;
 
-        public function AccountListCellRenderer()
+        public function TransactionListCellRenderer()
         {
             super();
         }
@@ -44,13 +45,13 @@ package com.pauluz.bbapps.kontomierz.view.components
 
             if (value)
             {
-                var account:AccountVO = value as AccountVO;
-                this.setLabel(account.displayName);
+                var transaction:TransactionVO = value as TransactionVO;
+                this.setLabel(transaction.description);
 
                 if (balance)
                 {
-                    var balanceLabel:String = account.currencyBalance.toString().replace(".", ",");
-                    balance.text = balanceLabel + " " + account.currencyName;
+                    var balanceLabel:String = transaction.currencyAmount.toString().replace(".", ",");
+                    balance.text = balanceLabel + " " + transaction.currencyName;
                 }
             }
         }

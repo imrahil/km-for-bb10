@@ -7,37 +7,43 @@
  */
 package com.pauluz.bbapps.kontomierz.view
 {
-    import com.pauluz.bbapps.kontomierz.model.vo.AccountVO;
     import com.pauluz.bbapps.kontomierz.utils.LogUtil;
-    import com.pauluz.bbapps.kontomierz.view.components.AccountListCellRenderer;
+    import com.pauluz.bbapps.kontomierz.view.components.TransactionListCellRenderer;
 
     import mx.logging.ILogger;
 
     import org.osflash.signals.Signal;
 
+    import qnx.fuse.ui.core.Action;
     import qnx.fuse.ui.core.SizeOptions;
-    import qnx.fuse.ui.events.ListEvent;
     import qnx.fuse.ui.layouts.Align;
     import qnx.fuse.ui.layouts.gridLayout.GridData;
     import qnx.fuse.ui.listClasses.List;
+    import qnx.fuse.ui.navigation.NavigationPaneProperties;
     import qnx.fuse.ui.navigation.TitlePage;
 
-    public class AccountListView extends TitlePage
+    public class AllTransactionsView extends TitlePage
     {
         private var logger:ILogger;
-        public var accountList:List;
+        public var transactionsList:List;
 
         public var viewAddedSignal:Signal = new Signal();
-        public var saveSelectedAccount:Signal = new Signal(AccountVO);
 
-        public function AccountListView()
+        public function AllTransactionsView()
         {
             super();
 
-            title = "Konta";
-
             logger = LogUtil.getLogger(this);
             logger.debug(": constructor");
+        }
+
+        override protected function init():void
+        {
+            super.init();
+
+            var prop:NavigationPaneProperties = new NavigationPaneProperties();
+            prop.backButton = new Action("Konta");
+            paneProperties = prop;
         }
 
         override protected function onAdded():void
@@ -46,32 +52,23 @@ package com.pauluz.bbapps.kontomierz.view
 
             logger.debug(": onAdded");
 
-            accountList = new List();
-            accountList.cellRenderer = AccountListCellRenderer;
-            accountList.addEventListener(ListEvent.ITEM_CLICKED, listClicked);
+            transactionsList = new List();
+            transactionsList.cellRenderer = TransactionListCellRenderer;
+//            transactionsList.addEventListener(ListEvent.ITEM_CLICKED, listClicked);
 
             var listData:GridData = new GridData();
             listData.hAlign = Align.FILL;
             listData.setOptions(SizeOptions.RESIZE_BOTH);
 
-            accountList.layoutData = listData;
+            transactionsList.layoutData = listData;
 
-            content.addChild(accountList);
+            content.addChild(transactionsList);
 
             viewAddedSignal.dispatch();
         }
 
-        private function listClicked(event:ListEvent):void
-        {
-            saveSelectedAccount.dispatch(event.data as AccountVO);
-        }
-
-        public function addTransactionView(title:String):void
-        {
-            var transactionView:AllTransactionsView = new AllTransactionsView();
-            transactionView.title = title;
-
-            pushPage(transactionView);
-        }
+//        private function listClicked(event:ListEvent):void
+//        {
+//        }
     }
 }

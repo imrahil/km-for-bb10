@@ -15,6 +15,7 @@ package com.pauluz.bbapps.kontomierz.services
     import com.pauluz.bbapps.kontomierz.signals.signaltons.ErrorSignal;
     import com.pauluz.bbapps.kontomierz.signals.signaltons.LoginSuccessfulSignal;
     import com.pauluz.bbapps.kontomierz.signals.signaltons.ProvideAllAccountsDataSignal;
+    import com.pauluz.bbapps.kontomierz.signals.signaltons.ProvideAllTransactionsSignal;
     import com.pauluz.bbapps.kontomierz.utils.LogUtil;
 
     import flash.events.ErrorEvent;
@@ -60,6 +61,9 @@ package com.pauluz.bbapps.kontomierz.services
         public var provideAllAccountsDataSignal:ProvideAllAccountsDataSignal;
 
         [Inject]
+        public var provideAllTransactionsSignal:ProvideAllTransactionsSignal;
+
+        [Inject]
         public var errorSignal:ErrorSignal;
 
         /** Constructor */
@@ -95,6 +99,11 @@ package com.pauluz.bbapps.kontomierz.services
         }
 
         public function deleteWallet(id:int, apiKey:String):void
+        {
+            throw new Error("Override this method!");
+        }
+
+        public function getAllTransactions(accountId:int, apiKey:String):void
         {
             throw new Error("Override this method!");
         }
@@ -146,12 +155,36 @@ package com.pauluz.bbapps.kontomierz.services
 
             var loader:URLLoader = event.currentTarget as URLLoader;
 
-            loader.removeEventListener(Event.COMPLETE, loginCompleteHandler);
+            loader.removeEventListener(Event.COMPLETE, getAllAccountsCompleteHandler);
             removeLoaderListeners(loader);
 
-            var accountsData:DataProvider = _parser.parseAllAccountsResponse(loader.data as String);
+            if (responseStatus == 200)
+            {
+                var accountsData:DataProvider = _parser.parseAllAccountsResponse(loader.data as String);
 
-            provideAllAccountsDataSignal.dispatch(accountsData);
+                provideAllAccountsDataSignal.dispatch(accountsData);
+            }
+            else
+            {
+                logger.debug(": getAllAccountsCompleteHandler - status: " + responseStatus);
+
+                var error:ErrorVO = new ErrorVO("Wystąpił błąd: " + responseStatus);
+                errorSignal.dispatch(error);
+            }
+        }
+
+        protected function getAllTransactionsCompleteHandler(event:Event):void
+        {
+            logger.debug(": getAllTransactionsCompleteHandler");
+
+            var loader:URLLoader = event.currentTarget as URLLoader;
+
+            loader.removeEventListener(Event.COMPLETE, getAllTransactionsCompleteHandler);
+            removeLoaderListeners(loader);
+
+            var transactionsData:DataProvider = _parser.parseAllTransactionsResponse(loader.data as String);
+
+            provideAllTransactionsSignal.dispatch(transactionsData);
         }
 
         protected function addLoaderListeners(loader:URLLoader):void

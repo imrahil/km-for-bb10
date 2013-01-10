@@ -49,19 +49,15 @@ package com.pauluz.bbapps.kontomierz.view
 
             var tabs:Vector.<Tab> = new Vector.<Tab>();
 
-            tabs.push(ContainerHelper.createTab("Konta", new Resources.ICON_ACCOUNTS(), AccountListView));
-            tabs.push(ContainerHelper.createTab("Portfel", new Resources.ICON_WALLET(), EmptyView));
+            tabs.push(ContainerHelper.createNavPane("Konta", new Resources.ICON_ACCOUNTS(), AccountListView));
+            tabs.push(ContainerHelper.createTab("Portfel", new Resources.ICON_WALLET(), WalletView));
             tabs.push(ContainerHelper.createTab("Dodaj", new Resources.ICON_ADD(), EmptyView));
             tabs.push(ContainerHelper.createTab("Budżety", new Resources.ICON_BUDGETS(), EmptyView));
             tabs.push(ContainerHelper.createTab("Płatności", new Resources.ICON_SCHEDULES(), EmptyView));
             tabs.push(ContainerHelper.createTab("Kategorie", new Resources.ICON_CATEGORIES(), EmptyView));
             tabs.push(ContainerHelper.createTab("Tagi", new Resources.ICON_TAGS(), EmptyView));
-
-            var info:NavigationPane = new NavigationPane();
-            info.push(new SettingsView());
-            var infoTab:Tab = new Tab("Ustawienia", new Resources.ICON_SETTINGS());
-            infoTab.content = info;
-            tabs.push(infoTab);
+            tabs.push(ContainerHelper.createTab("Wykresy", new Resources.ICON_CHARTS(), ChartsView));
+            tabs.push(ContainerHelper.createNavPane("Ustawienia", new Resources.ICON_SETTINGS(), SettingsView));
 
             tabbedPane.tabs = tabs;
             tabbedPane.activeTab = tabs[0];

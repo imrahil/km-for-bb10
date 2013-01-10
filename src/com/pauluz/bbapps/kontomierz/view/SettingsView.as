@@ -8,13 +8,18 @@
 package com.pauluz.bbapps.kontomierz.view
 {
     import com.pauluz.bbapps.kontomierz.constants.Resources;
+    import com.pauluz.bbapps.kontomierz.utils.ContainerHelper;
     import com.pauluz.bbapps.kontomierz.utils.LogUtil;
 
     import mx.logging.ILogger;
 
     import qnx.fuse.ui.actionbar.ActionPlacement;
+    import qnx.fuse.ui.buttons.LabelButton;
     import qnx.fuse.ui.core.Action;
     import qnx.fuse.ui.core.ActionBase;
+    import qnx.fuse.ui.core.Container;
+    import qnx.fuse.ui.core.SizeOptions;
+    import qnx.fuse.ui.layouts.gridLayout.GridData;
     import qnx.fuse.ui.navigation.TitlePage;
 
     public class SettingsView extends TitlePage
@@ -49,6 +54,33 @@ package com.pauluz.bbapps.kontomierz.view
 
             logger.debug(": onAdded");
 
+            var container:Container = ContainerHelper.createContainer();
+            var labelButton:LabelButton;
+            var gridDataHolder:GridData;
+
+//            var containerData:GridData = new GridData();
+//            containerData.hAlign = Align.BEGIN;
+//            containerData.vAlign = Align.BEGIN;
+//            containerData.setOptions(SizeOptions.RESIZE_BOTH);
+//            container.layoutData = containerData;
+
+            labelButton = new LabelButton();
+            labelButton.label = "Zmiana e-maila";
+            gridDataHolder = new GridData();
+            gridDataHolder.setOptions(SizeOptions.RESIZE_HORIZONTAL);
+            labelButton.layoutData = gridDataHolder;
+//            button.addEventListener(MouseEvent.CLICK, onZalogujClick);
+            container.addChild(labelButton);
+
+            labelButton = new LabelButton();
+            labelButton.label = "Zmiana hasła";
+            gridDataHolder = new GridData();
+            gridDataHolder.setOptions(SizeOptions.RESIZE_HORIZONTAL);
+            labelButton.layoutData = gridDataHolder;
+//            button.addEventListener(MouseEvent.CLICK, onZalogujClick);
+            container.addChild(labelButton);
+
+            content = container;
         }
 
         override public function onActionSelected(action:ActionBase):void

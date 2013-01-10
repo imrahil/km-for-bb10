@@ -20,7 +20,8 @@ package com.pauluz.bbapps.kontomierz.services
         function updateWallet(id:int, name:String, balance:Number, currency:String, liquid:Boolean, apiKey:String):void
         function deleteWallet(id:int, apiKey:String):void
 
-//        function getAllTransactions(...):void;
+        function getAllTransactions(accountId:int, apiKey:String):void;
+
 //        function getTransactionDetails(id:int):void;
 //        function createTransaction(...):void;
 //        function updateTransaction(id:int, ...):void;

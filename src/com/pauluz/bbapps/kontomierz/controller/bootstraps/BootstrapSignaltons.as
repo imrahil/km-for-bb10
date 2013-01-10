@@ -20,6 +20,9 @@ package com.pauluz.bbapps.kontomierz.controller.bootstraps
             injector.mapSingleton(ErrorSignal);
 
             injector.mapSingleton(ProvideAllAccountsDataSignal);
+            injector.mapSingleton(ProvideAllTransactionsSignal);
+
+            injector.mapSingleton(SelectedAccountSavedSuccessfulSignal);
         }
     }
 }

@@ -30,6 +30,9 @@ package com.pauluz.bbapps.kontomierz.constants
         [Embed(source="/assets/images/menuicons/icon_tags.png")]
         public static const ICON_TAGS:Class;
 
+        [Embed(source="/assets/images/menuicons/icon_charts.png")]
+        public static const ICON_CHARTS:Class;
+
         [Embed(source="/assets/images/menuicons/icon_settings.png")]
         public static const ICON_SETTINGS:Class;
 
