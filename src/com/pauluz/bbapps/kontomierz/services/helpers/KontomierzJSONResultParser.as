@@ -78,6 +78,31 @@ package com.pauluz.bbapps.kontomierz.services.helpers
             return output;
         }
 
+        public function parseAllAccountsResponseAndFindDefaultWalletId(result:String):int
+        {
+            logger.debug(": parseAllAccountsResponseAndFindDefaultWalletId");
+
+            var resultObject:Object = JSON.parse(result);
+
+            if (resultObject && resultObject is Array && resultObject.length > 0)
+            {
+                for each (var item:Object in resultObject)
+                {
+                    if (item && item.user_account)
+                    {
+                        var rawAccount:Object = item.user_account;
+
+                        if (rawAccount.bank_plugin_name == ApplicationConstants.WALLET_ACCOUNT_NAME && rawAccount.is_default_wallet)
+                        {
+                            return rawAccount.id;
+                        }
+                    }
+                }
+            }
+
+            return -1;
+        }
+
         public function parseAllTransactionsResponse(result:String):DataProvider
         {
             logger.debug(": parseAllTransactionsResponse");

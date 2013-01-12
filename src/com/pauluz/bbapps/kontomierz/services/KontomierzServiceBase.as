@@ -12,6 +12,7 @@ package com.pauluz.bbapps.kontomierz.services
     import com.pauluz.bbapps.kontomierz.model.vo.ErrorVO;
     import com.pauluz.bbapps.kontomierz.model.vo.UserVO;
     import com.pauluz.bbapps.kontomierz.services.helpers.IResultParser;
+    import com.pauluz.bbapps.kontomierz.signals.StoreDefaultWalletIdSignal;
     import com.pauluz.bbapps.kontomierz.signals.signaltons.ErrorSignal;
     import com.pauluz.bbapps.kontomierz.signals.signaltons.LoginSuccessfulSignal;
     import com.pauluz.bbapps.kontomierz.signals.signaltons.ProvideAllAccountsDataSignal;
@@ -62,6 +63,9 @@ package com.pauluz.bbapps.kontomierz.services
 
         [Inject]
         public var provideAllTransactionsSignal:ProvideAllTransactionsSignal;
+
+        [Inject]
+        public var storeDefaultWalletIdSignal:StoreDefaultWalletIdSignal;
 
         [Inject]
         public var errorSignal:ErrorSignal;
@@ -161,8 +165,10 @@ package com.pauluz.bbapps.kontomierz.services
             if (responseStatus == 200)
             {
                 var accountsData:DataProvider = _parser.parseAllAccountsResponse(loader.data as String);
-
                 provideAllAccountsDataSignal.dispatch(accountsData);
+
+                var defaultWalletId:int = _parser.parseAllAccountsResponseAndFindDefaultWalletId(loader.data as String);
+                storeDefaultWalletIdSignal.dispatch(defaultWalletId);
             }
             else
             {

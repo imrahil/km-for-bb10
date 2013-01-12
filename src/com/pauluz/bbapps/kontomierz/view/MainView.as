@@ -49,7 +49,7 @@ package com.pauluz.bbapps.kontomierz.view
             var tabs:Vector.<Tab> = new Vector.<Tab>();
 
             tabs.push(ContainerHelper.createNavPane("Konta", new Resources.ICON_ACCOUNTS(), AccountListView));
-            tabs.push(ContainerHelper.createTab("Portfel", new Resources.ICON_WALLET(), WalletView));
+            tabs.push(ContainerHelper.createNavPane("Portfel", new Resources.ICON_WALLET(), WalletView));
             tabs.push(ContainerHelper.createTab("Dodaj", new Resources.ICON_ADD(), AddExpenseView));
             tabs.push(ContainerHelper.createTab("Budżety", new Resources.ICON_BUDGETS(), EmptyView));
             tabs.push(ContainerHelper.createTab("Płatności", new Resources.ICON_SCHEDULES(), EmptyView));

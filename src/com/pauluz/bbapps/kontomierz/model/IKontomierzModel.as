@@ -13,5 +13,8 @@ package com.pauluz.bbapps.kontomierz.model
 
         function get selectedTransaction():TransactionVO;
         function set selectedTransaction(value:TransactionVO):void;
+
+        function get defaultWalletId():int;
+        function set defaultWalletId(value:int):void;
     }
 }

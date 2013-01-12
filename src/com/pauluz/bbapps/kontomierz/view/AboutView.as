@@ -24,6 +24,7 @@ package com.pauluz.bbapps.kontomierz.view
     import qnx.fuse.ui.core.SizeOptions;
     import qnx.fuse.ui.layouts.Align;
     import qnx.fuse.ui.layouts.gridLayout.GridData;
+    import qnx.fuse.ui.listClasses.ScrollDirection;
     import qnx.fuse.ui.navigation.NavigationPaneProperties;
     import qnx.fuse.ui.navigation.TitlePage;
     import qnx.fuse.ui.text.Label;
@@ -72,8 +73,16 @@ package com.pauluz.bbapps.kontomierz.view
                     "Email:\npawel.szczepanek@gmail.com\n\n" +
                     "Website:\nhttp://www.pauluz.pl/";
 
-            infoLabel.format = TextFormatUtil.setFormat(infoLabel.format);
+            infoLabel.format = TextFormatUtil.setFormat(infoLabel.format, 45);
             container.addChild(infoLabel);
+
+            var descLabel:Label = new Label();
+            descLabel.maxLines = 0;
+            descLabel.text = "Wydatki to nieoficjalna aplikacja serwisu Kontomierz.pl\n\n" +
+                    "Żadne Twoje dane nie są przechwytywane i wysyłane bez Twojej wiedzy.";
+
+            descLabel.format = TextFormatUtil.setFormat(descLabel.format, 35);
+            container.addChild(descLabel);
 
             var visitBtn:LabelButton = new LabelButton();
             visitBtn.label = "Visit website";

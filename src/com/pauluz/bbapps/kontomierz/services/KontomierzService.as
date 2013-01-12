@@ -122,7 +122,7 @@ package com.pauluz.bbapps.kontomierz.services
 
             var url:String = ApplicationConstants.KONTOMIERZ_API_ENDPOINT + "money_transactions" + ApplicationConstants.KONTOMIERZ_API_FORMAT_JSON;
             url += "?user_account_id=" + accountId;
-            url += "&start_on=01-01-2012";
+            url += "&start_on=01-01-2011";
             url += "&api_key=" + apiKey;
             urlRequest.url = url;
 

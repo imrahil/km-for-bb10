@@ -17,6 +17,7 @@ package com.pauluz.bbapps.kontomierz.model
         private var _apiKey:String = "";
         private var _selectedAccount:AccountVO;
         private var _selectedTransaction:TransactionVO;
+        private var _defaultWalletId:int;
 
         public function get apiKey():String
         {
@@ -49,6 +50,16 @@ package com.pauluz.bbapps.kontomierz.model
         public function set selectedTransaction(value:TransactionVO):void
         {
             _selectedTransaction = value;
+        }
+
+        public function get defaultWalletId():int
+        {
+            return _defaultWalletId;
+        }
+
+        public function set defaultWalletId(value:int):void
+        {
+            _defaultWalletId = value;
         }
     }
 }
