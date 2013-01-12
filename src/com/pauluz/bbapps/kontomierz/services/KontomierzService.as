@@ -149,5 +149,24 @@ package com.pauluz.bbapps.kontomierz.services
 
             loader.load(urlRequest);
         }
+
+        override public function getAllTransactionsForCategory(categoryId:int, apiKey:String):void
+        {
+            logger.debug(": getAllTransactionsForCategory service call");
+
+            var loader:URLLoader = new URLLoader();
+            var urlRequest:URLRequest = new URLRequest();
+
+            var url:String = ApplicationConstants.KONTOMIERZ_API_ENDPOINT + "money_transactions" + ApplicationConstants.KONTOMIERZ_API_FORMAT_JSON;
+            url += "?category_id=" + categoryId;
+            url += "&start_on=01-01-2011";
+            url += "&api_key=" + apiKey;
+            urlRequest.url = url;
+
+            loader.addEventListener(Event.COMPLETE, getAllTransactionsCompleteHandler);
+            addLoaderListeners(loader);
+
+            loader.load(urlRequest);
+        }
     }
 }

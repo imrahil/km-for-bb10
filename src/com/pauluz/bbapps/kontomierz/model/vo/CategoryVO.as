@@ -20,9 +20,6 @@ package com.pauluz.bbapps.kontomierz.model.vo
         public var position:int;
         public var color:String;
 
-//        public var subCategories:Array;
-//        public var parent:CategoryVO;
-
         public function get label():String
         {
             return name;

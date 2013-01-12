@@ -9,6 +9,7 @@ package com.pauluz.bbapps.kontomierz.view
 {
     import com.pauluz.bbapps.kontomierz.model.vo.CategoryVO;
     import com.pauluz.bbapps.kontomierz.utils.LogUtil;
+    import com.pauluz.bbapps.kontomierz.view.components.CustomSectionHeaderRenderer;
 
     import mx.logging.ILogger;
 
@@ -47,8 +48,8 @@ package com.pauluz.bbapps.kontomierz.view
             logger.debug(": onAdded");
 
             categoriesList = new SectionList();
-//            categoriesList.headerHeight = 110;
-//            transactionsList.cellRenderer = TransactionListCellRenderer;
+            categoriesList.headerHeight = 80;
+            categoriesList.headerSkin = CustomSectionHeaderRenderer;
             categoriesList.addEventListener(ListEvent.ITEM_CLICKED, categoryListClicked);
 
             var listData:GridData = new GridData();
@@ -65,6 +66,14 @@ package com.pauluz.bbapps.kontomierz.view
         private function categoryListClicked(event:ListEvent):void
         {
             storeSelectedCategory.dispatch(event.data as CategoryVO);
+        }
+
+        public function addCategoryTransactionsView(title:String):void
+        {
+            var categoryTransactionsView:CategoryAllTransactionsView = new CategoryAllTransactionsView();
+            categoryTransactionsView.title = title;
+
+            pushPage(categoryTransactionsView);
         }
     }
 }

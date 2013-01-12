@@ -9,7 +9,9 @@ package com.pauluz.bbapps.kontomierz.view.mediators
 {
     import com.pauluz.bbapps.kontomierz.model.vo.CategoryVO;
     import com.pauluz.bbapps.kontomierz.signals.GetAllCategoriesSignal;
+    import com.pauluz.bbapps.kontomierz.signals.StoreSelectedCategorySignal;
     import com.pauluz.bbapps.kontomierz.signals.signaltons.ProvideAllCategoriesSignal;
+    import com.pauluz.bbapps.kontomierz.signals.signaltons.SelectedCategorySuccessfulStoreSignal;
     import com.pauluz.bbapps.kontomierz.utils.LogUtil;
 
     import mx.logging.ILogger;
@@ -34,13 +36,16 @@ package com.pauluz.bbapps.kontomierz.view.mediators
         public var provideAllCategoriesSignal:ProvideAllCategoriesSignal;
 
         [Inject]
-//        public var selectedCategorySuccessfulStoreSignal:SelectedCategorySuccessfulStoreSignal;
+        public var selectedCategorySuccessfulStoreSignal:SelectedCategorySuccessfulStoreSignal;
 
         /**
          * SIGNAL -> COMMAND
          */
         [Inject]
         public var getAllCategoriesSignal:GetAllCategoriesSignal;
+
+        [Inject]
+        public var storeSelectedCategorySignal:StoreSelectedCategorySignal;
 
         /** variables **/
         private var logger:ILogger;
@@ -68,7 +73,7 @@ package com.pauluz.bbapps.kontomierz.view.mediators
             addToSignal(view.storeSelectedCategory, onStoreSelectedCategory);
 
             addOnceToSignal(provideAllCategoriesSignal, onCategoriesData);
-//            addToSignal(selectedCategorySuccessfulStoreSignal, onCategorySuccessfulStore);
+            addToSignal(selectedCategorySuccessfulStoreSignal, onCategorySuccessfulStore);
         }
 
         private function onViewAdded():void
@@ -80,18 +85,28 @@ package com.pauluz.bbapps.kontomierz.view.mediators
 
         private function onStoreSelectedCategory(category:CategoryVO):void
         {
-            logger.debug(": onStoreSelectedTransaction");
+            logger.debug(": onStoreSelectedCategory");
 
-//            storeSelectedCategorySignal.dispatch(category);
+            storeSelectedCategorySignal.dispatch(category);
         }
 
         private function onCategoriesData(data:SectionDataProvider):void
         {
-            logger.debug(": onTransactionsData");
+            logger.debug(": onCategoriesData");
 
             if (view && view.categoriesList)
             {
                 view.categoriesList.dataProvider = data;
+            }
+        }
+
+        private function onCategorySuccessfulStore(category:CategoryVO):void
+        {
+            logger.debug(": onCategorySuccessfulStore");
+
+            if (view)
+            {
+                view.addCategoryTransactionsView(category.name);
             }
         }
     }

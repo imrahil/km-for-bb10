@@ -21,8 +21,8 @@ package com.pauluz.bbapps.kontomierz.services
         function deleteWallet(id:int, apiKey:String):void
 
         function getAllTransactions(accountId:int, apiKey:String):void;
+        function getAllTransactionsForCategory(categoryId:int, apiKey:String):void;
 
-//        function getTransactionDetails(id:int):void;
 //        function createTransaction(...):void;
 //        function updateTransaction(id:int, ...):void;
 //        function deleteTransaction(id:int):void;

@@ -122,6 +122,11 @@ package com.pauluz.bbapps.kontomierz.services
             throw new Error("Override this method!");
         }
 
+        public function getAllTransactionsForCategory(categoryId:int, apiKey:String):void
+        {
+            throw new Error("Override this method!");
+        }
+
         /********************
          *     HANDLERS
          ********************/

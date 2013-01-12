@@ -16,24 +16,29 @@ package com.pauluz.bbapps.kontomierz.controller.bootstraps
     {
         public function BootstrapCommands(commandMap:ISignalCommandMap)
         {
+            // login, logout, register
             commandMap.mapSignalClass(RequestLoginStatusSignal, ProvideLoginStatusCommand);
             commandMap.mapSignalClass(LoginSignal, LoginCommand);
             commandMap.mapSignalClass(RegisterSignal, RegisterCommand);
             commandMap.mapSignalClass(LogoutSignal, LogoutCommand);
 
-            commandMap.mapSignalClass(GetAllCategoriesSignal, GetAllCategoriesCommand);
-
+            // accounts
             commandMap.mapSignalClass(GetAllAccountsSignal, GetAllAccountsCommand);
             commandMap.mapSignalClass(StoreSelectedAccountSignal, StoreSelectedAccountCommand);
 
-            commandMap.mapSignalClass(StoreDefaultWalletIdSignal, StoreDefaultWalletIdCommand);
-
+            // transactions
             commandMap.mapSignalClass(GetAllTransactionsSignal, GetAllTransactionsCommand);
             commandMap.mapSignalClass(StoreSelectedTransactionSignal, StoreSelectedTransactionCommand);
-
             commandMap.mapSignalClass(RequestSelectedTransactionSignal, ProvideSelectedTransactionCommand);
 
+            // wallet
             commandMap.mapSignalClass(GetAllWalletTransactionsSignal, GetAllWalletTransactionsCommand);
+            commandMap.mapSignalClass(StoreDefaultWalletIdSignal, StoreDefaultWalletIdCommand);
+
+            // categories
+            commandMap.mapSignalClass(GetAllCategoriesSignal, GetAllCategoriesCommand);
+            commandMap.mapSignalClass(StoreSelectedCategorySignal, StoreSelectedCategoryCommand);
+            commandMap.mapSignalClass(GetAllCategoryTransactionsSignal, GetAllCategoryTransactionsCommand);
         }
     }
 }

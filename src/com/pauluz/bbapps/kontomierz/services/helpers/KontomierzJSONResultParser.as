@@ -171,10 +171,7 @@ package com.pauluz.bbapps.kontomierz.services.helpers
                             subCategory.name = subItem.name;
                             subCategory.position = subItem.position;
                             subCategory.color = subItem.color;
-//                            subCategory.parent = category;
 
-//                            subItem.addite
-//                            category.subCategories.push(subCategory);
                             output.addChildToItem(subCategory, category);
                         }
                     }
