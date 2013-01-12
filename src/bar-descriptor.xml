@@ -5,6 +5,6 @@
         <image>kontomierz-icon.png</image>
     </icon>
 
-    <splashscreen>kontomierz-splash.png</splashscreen>
+    <splashscreen>kontomierz-splash-portrait.png</splashscreen>
     <buildId>1</buildId>
 </qnx>
