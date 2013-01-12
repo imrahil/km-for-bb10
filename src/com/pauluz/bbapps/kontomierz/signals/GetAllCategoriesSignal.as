@@ -9,9 +9,9 @@ package com.pauluz.bbapps.kontomierz.signals
 {
     import org.osflash.signals.Signal;
 
-    public class FetchCategoriesSignal extends Signal
+    public class GetAllCategoriesSignal extends Signal
     {
-        public function FetchCategoriesSignal()
+        public function GetAllCategoriesSignal()
         {
             super();
         }

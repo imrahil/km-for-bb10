@@ -75,6 +75,7 @@ package com.pauluz.bbapps.kontomierz.view.mediators
             addOnceToSignal(provideAllTransactionsSignal, onTransactionsData);
             addToSignal(selectedTransactionSuccessfulStoreSignal, onTransactionSuccessfulStore);
         }
+
         private function onViewAdded():void
         {
             logger.debug(": onViewAdded");

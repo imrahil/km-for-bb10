@@ -7,12 +7,17 @@
  */
 package com.pauluz.bbapps.kontomierz.view.mediators
 {
+    import com.pauluz.bbapps.kontomierz.model.vo.CategoryVO;
+    import com.pauluz.bbapps.kontomierz.signals.GetAllCategoriesSignal;
+    import com.pauluz.bbapps.kontomierz.signals.signaltons.ProvideAllCategoriesSignal;
     import com.pauluz.bbapps.kontomierz.utils.LogUtil;
 
     import mx.logging.ILogger;
     
     import com.pauluz.bbapps.kontomierz.view.CategoriesView;
     import org.robotlegs.mvcs.SignalMediator;
+
+    import qnx.ui.data.SectionDataProvider;
 
     public class CategoriesViewMediator extends SignalMediator
     {
@@ -25,11 +30,17 @@ package com.pauluz.bbapps.kontomierz.view.mediators
         /**
          * SIGNALTONS
          */
+        [Inject]
+        public var provideAllCategoriesSignal:ProvideAllCategoriesSignal;
 
+        [Inject]
+//        public var selectedCategorySuccessfulStoreSignal:SelectedCategorySuccessfulStoreSignal;
 
         /**
          * SIGNAL -> COMMAND
          */
+        [Inject]
+        public var getAllCategoriesSignal:GetAllCategoriesSignal;
 
         /** variables **/
         private var logger:ILogger;
@@ -52,12 +63,36 @@ package com.pauluz.bbapps.kontomierz.view.mediators
         override public function onRegister():void
         {
             logger.debug(": onRegister");
-            
+
+            addToSignal(view.viewAddedSignal, onViewAdded);
+            addToSignal(view.storeSelectedCategory, onStoreSelectedCategory);
+
+            addOnceToSignal(provideAllCategoriesSignal, onCategoriesData);
+//            addToSignal(selectedCategorySuccessfulStoreSignal, onCategorySuccessfulStore);
         }
 
-        /** methods **/
+        private function onViewAdded():void
+        {
+            logger.debug(": onViewAdded");
 
-        /** eventHandlers **/
+            getAllCategoriesSignal.dispatch();
+        }
 
+        private function onStoreSelectedCategory(category:CategoryVO):void
+        {
+            logger.debug(": onStoreSelectedTransaction");
+
+//            storeSelectedCategorySignal.dispatch(category);
+        }
+
+        private function onCategoriesData(data:SectionDataProvider):void
+        {
+            logger.debug(": onTransactionsData");
+
+            if (view && view.categoriesList)
+            {
+                view.categoriesList.dataProvider = data;
+            }
+        }
     }
 }

@@ -9,6 +9,7 @@ package com.pauluz.bbapps.kontomierz.services.helpers
 {
     import com.pauluz.bbapps.kontomierz.constants.ApplicationConstants;
     import com.pauluz.bbapps.kontomierz.model.vo.AccountVO;
+    import com.pauluz.bbapps.kontomierz.model.vo.CategoryVO;
     import com.pauluz.bbapps.kontomierz.model.vo.TransactionVO;
     import com.pauluz.bbapps.kontomierz.utils.LogUtil;
 
@@ -16,6 +17,7 @@ package com.pauluz.bbapps.kontomierz.services.helpers
     import mx.logging.ILogger;
 
     import qnx.ui.data.DataProvider;
+    import qnx.ui.data.SectionDataProvider;
 
     public class KontomierzJSONResultParser implements IResultParser
     {
@@ -132,6 +134,49 @@ package com.pauluz.bbapps.kontomierz.services.helpers
                         transaction.tagString = rawTransaction.tag_string;
 
                         output.addItem(transaction);
+                    }
+                }
+            }
+
+            return output;
+        }
+
+        public function parseAllCategoriesResponse(result:String):SectionDataProvider
+        {
+            logger.debug(": parseAllCategoriesResponse");
+
+            var output:SectionDataProvider = new SectionDataProvider();
+            var resultObject:Object = JSON.parse(result);
+
+            if (resultObject && resultObject.category_groups && resultObject.category_groups is Array && resultObject.category_groups.length > 0)
+            {
+                for each (var item:Object in resultObject.category_groups)
+                {
+                    var category:CategoryVO = new CategoryVO();
+
+                    category.id = item.id;
+                    category.name = item.name;
+                    category.position = item.position;
+                    category.color = item.color;
+
+                    output.addItem(category);
+
+                    if (item.categories && item.categories is Array && item.categories.length > 0)
+                    {
+                        for each (var subItem:Object in item.categories)
+                        {
+                            var subCategory:CategoryVO = new CategoryVO();
+
+                            subCategory.id = subItem.id;
+                            subCategory.name = subItem.name;
+                            subCategory.position = subItem.position;
+                            subCategory.color = subItem.color;
+//                            subCategory.parent = category;
+
+//                            subItem.addite
+//                            category.subCategories.push(subCategory);
+                            output.addChildToItem(subCategory, category);
+                        }
                     }
                 }
             }

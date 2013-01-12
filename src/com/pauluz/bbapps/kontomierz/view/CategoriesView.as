@@ -7,20 +7,28 @@
  */
 package com.pauluz.bbapps.kontomierz.view
 {
-    import com.pauluz.bbapps.kontomierz.utils.ContainerHelper;
+    import com.pauluz.bbapps.kontomierz.model.vo.CategoryVO;
     import com.pauluz.bbapps.kontomierz.utils.LogUtil;
-    import com.pauluz.bbapps.kontomierz.utils.TextFormatUtil;
 
     import mx.logging.ILogger;
 
-    import qnx.fuse.ui.core.Container;
+    import org.osflash.signals.Signal;
 
+    import qnx.fuse.ui.core.SizeOptions;
+    import qnx.fuse.ui.events.ListEvent;
+    import qnx.fuse.ui.layouts.Align;
+    import qnx.fuse.ui.layouts.gridLayout.GridData;
+    import qnx.fuse.ui.listClasses.SectionList;
     import qnx.fuse.ui.navigation.TitlePage;
-    import qnx.fuse.ui.text.Label;
 
     public class CategoriesView extends TitlePage
     {
         private var logger:ILogger;
+
+        public var categoriesList:SectionList;
+
+        public var viewAddedSignal:Signal = new Signal();
+        public var storeSelectedCategory:Signal = new Signal(CategoryVO);
 
         public function CategoriesView()
         {
@@ -38,14 +46,25 @@ package com.pauluz.bbapps.kontomierz.view
 
             logger.debug(": onAdded");
 
-            var container:Container = ContainerHelper.createContainer();
+            categoriesList = new SectionList();
+//            categoriesList.headerHeight = 110;
+//            transactionsList.cellRenderer = TransactionListCellRenderer;
+            categoriesList.addEventListener(ListEvent.ITEM_CLICKED, categoryListClicked);
 
-            var textLabel:Label = new Label();
-            textLabel.text = "Już niedługo...";
-            textLabel.format = TextFormatUtil.setFormat(textLabel.format);
-            container.addChild(textLabel);
+            var listData:GridData = new GridData();
+            listData.hAlign = Align.FILL;
+            listData.setOptions(SizeOptions.RESIZE_BOTH);
 
-            content = container;
+            categoriesList.layoutData = listData;
+
+            content.addChild(categoriesList);
+
+            viewAddedSignal.dispatch();
+        }
+
+        private function categoryListClicked(event:ListEvent):void
+        {
+            storeSelectedCategory.dispatch(event.data as CategoryVO);
         }
     }
 }

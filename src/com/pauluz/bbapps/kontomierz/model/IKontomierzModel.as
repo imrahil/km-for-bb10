@@ -1,7 +1,6 @@
 package com.pauluz.bbapps.kontomierz.model
 {
-    import com.pauluz.bbapps.kontomierz.model.vo.AccountVO;
-    import com.pauluz.bbapps.kontomierz.model.vo.TransactionVO;
+    import com.pauluz.bbapps.kontomierz.model.vo.*;
 
     public interface IKontomierzModel
     {
@@ -16,5 +15,8 @@ package com.pauluz.bbapps.kontomierz.model
 
         function get defaultWalletId():int;
         function set defaultWalletId(value:int):void;
+
+        function get selectedCategory():CategoryVO;
+        function set selectedCategory(value:CategoryVO):void;
     }
 }

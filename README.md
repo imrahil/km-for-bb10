@@ -7,6 +7,7 @@ Copyright (c) 2013 pauluZ
 
 Wersje:
 
+* 0.0.4 - dodane wyswietlanie listy kategorii
 * 0.0.3 - dodane wczytywanie transakcji dla portfela
 * 0.0.2 - logowanie, zapamietywanie sesji, wczytywanie listy kont, wczytywanie transakcji dla wybranego konta
 * 0.0.1 - init

@@ -8,6 +8,7 @@
 package com.pauluz.bbapps.kontomierz.model
 {
     import com.pauluz.bbapps.kontomierz.model.vo.AccountVO;
+    import com.pauluz.bbapps.kontomierz.model.vo.CategoryVO;
     import com.pauluz.bbapps.kontomierz.model.vo.TransactionVO;
 
     import org.robotlegs.mvcs.*;
@@ -18,6 +19,7 @@ package com.pauluz.bbapps.kontomierz.model
         private var _selectedAccount:AccountVO;
         private var _selectedTransaction:TransactionVO;
         private var _defaultWalletId:int;
+        private var _selectedCategory:CategoryVO;
 
         public function get apiKey():String
         {
@@ -60,6 +62,16 @@ package com.pauluz.bbapps.kontomierz.model
         public function set defaultWalletId(value:int):void
         {
             _defaultWalletId = value;
+        }
+
+        public function get selectedCategory():CategoryVO
+        {
+            return _selectedCategory;
+        }
+
+        public function set selectedCategory(value:CategoryVO):void
+        {
+            _selectedCategory = value;
         }
     }
 }

@@ -131,5 +131,23 @@ package com.pauluz.bbapps.kontomierz.services
 
             loader.load(urlRequest);
         }
+
+        override public function getAllCategories(apiKey:String):void
+        {
+            logger.debug(": getAllTransactions service call");
+
+            var loader:URLLoader = new URLLoader();
+            var urlRequest:URLRequest = new URLRequest();
+
+            var url:String = ApplicationConstants.KONTOMIERZ_API_ENDPOINT + "categories" + ApplicationConstants.KONTOMIERZ_API_FORMAT_JSON;
+            url += "?direction=withdrawal&in_wallet=true";
+            url += "&api_key=" + apiKey;
+            urlRequest.url = url;
+
+            loader.addEventListener(Event.COMPLETE, getAllCategoriesCompleteHandler);
+            addLoaderListeners(loader);
+
+            loader.load(urlRequest);
+        }
     }
 }

@@ -16,6 +16,7 @@ package com.pauluz.bbapps.kontomierz.services
     import com.pauluz.bbapps.kontomierz.signals.signaltons.ErrorSignal;
     import com.pauluz.bbapps.kontomierz.signals.signaltons.LoginSuccessfulSignal;
     import com.pauluz.bbapps.kontomierz.signals.signaltons.ProvideAllAccountsDataSignal;
+    import com.pauluz.bbapps.kontomierz.signals.signaltons.ProvideAllCategoriesSignal;
     import com.pauluz.bbapps.kontomierz.signals.signaltons.ProvideAllTransactionsSignal;
     import com.pauluz.bbapps.kontomierz.utils.LogUtil;
 
@@ -34,6 +35,7 @@ package com.pauluz.bbapps.kontomierz.services
     import org.robotlegs.mvcs.Actor;
 
     import qnx.ui.data.DataProvider;
+    import qnx.ui.data.SectionDataProvider;
 
     public class KontomierzServiceBase extends Actor implements IKontomierzService
     {
@@ -63,6 +65,9 @@ package com.pauluz.bbapps.kontomierz.services
 
         [Inject]
         public var provideAllTransactionsSignal:ProvideAllTransactionsSignal;
+
+        [Inject]
+        public var provideAllCategoriesSignal:ProvideAllCategoriesSignal;
 
         [Inject]
         public var storeDefaultWalletIdSignal:StoreDefaultWalletIdSignal;
@@ -108,6 +113,11 @@ package com.pauluz.bbapps.kontomierz.services
         }
 
         public function getAllTransactions(accountId:int, apiKey:String):void
+        {
+            throw new Error("Override this method!");
+        }
+
+        public function getAllCategories(apiKey:String):void
         {
             throw new Error("Override this method!");
         }
@@ -191,6 +201,20 @@ package com.pauluz.bbapps.kontomierz.services
             var transactionsData:DataProvider = _parser.parseAllTransactionsResponse(loader.data as String);
 
             provideAllTransactionsSignal.dispatch(transactionsData);
+        }
+
+        protected function getAllCategoriesCompleteHandler(event:Event):void
+        {
+            logger.debug(": getAllCategoriesCompleteHandler");
+
+            var loader:URLLoader = event.currentTarget as URLLoader;
+
+            loader.removeEventListener(Event.COMPLETE, getAllCategoriesCompleteHandler);
+            removeLoaderListeners(loader);
+
+            var categoriesData:SectionDataProvider = _parser.parseAllCategoriesResponse(loader.data as String);
+
+            provideAllCategoriesSignal.dispatch(categoriesData);
         }
 
         protected function addLoaderListeners(loader:URLLoader):void

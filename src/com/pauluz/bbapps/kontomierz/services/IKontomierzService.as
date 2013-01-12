@@ -27,7 +27,7 @@ package com.pauluz.bbapps.kontomierz.services
 //        function updateTransaction(id:int, ...):void;
 //        function deleteTransaction(id:int):void;
 
-//        function getAllCategories(direction:String, inWallet:Boolean):void;
+        function getAllCategories(apiKey:String):void;
 //        function getAllTags():void;
 
     }
