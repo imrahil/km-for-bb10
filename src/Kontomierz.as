@@ -26,7 +26,7 @@ package
         {
             ThemeGlobals.injectCSS( "CellRenderer{ mouseChildren:false; opaqueBackground:#FAFAFA;}" );
 
-//            CONFIG::debugMode
+            CONFIG::debugMode
             {
                 var logTarget:TraceTarget = new TraceTarget();
                 logTarget.level = LogEventLevel.ALL;
