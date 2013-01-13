@@ -26,7 +26,7 @@ package com.pauluz.bbapps.kontomierz.controller.bootstraps
             mediatorMap.mapView(SingleTransactionView, SingleTransactionViewMediator);
 
             mediatorMap.mapView(WalletView, WalletViewMediator);
-            mediatorMap.mapView(AddExpenseView, AddExpenseViewMediator);
+            mediatorMap.mapView(AddTransactionView, AddTransactionViewMediator);
 
             mediatorMap.mapView(CategoriesView, CategoriesViewMediator);
             mediatorMap.mapView(CategoryAllTransactionsView, CategoryAllTransactionsMediator);

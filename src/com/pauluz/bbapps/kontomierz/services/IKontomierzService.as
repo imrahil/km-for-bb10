@@ -7,6 +7,7 @@
  */
 package com.pauluz.bbapps.kontomierz.services
 {
+    import com.pauluz.bbapps.kontomierz.model.vo.TransactionVO;
     import com.pauluz.bbapps.kontomierz.model.vo.UserVO;
 
     public interface IKontomierzService
@@ -23,7 +24,7 @@ package com.pauluz.bbapps.kontomierz.services
         function getAllTransactions(accountId:int, apiKey:String):void;
         function getAllTransactionsForCategory(categoryId:int, apiKey:String):void;
 
-//        function createTransaction(...):void;
+        function createTransaction(transaction:TransactionVO, apiKey:String):void;
 //        function updateTransaction(id:int, ...):void;
 //        function deleteTransaction(id:int):void;
 

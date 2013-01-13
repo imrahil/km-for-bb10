@@ -21,6 +21,7 @@ package com.pauluz.bbapps.kontomierz.controller.bootstraps
 
             injector.mapSingleton(ProvideAllAccountsDataSignal);
             injector.mapSingleton(ProvideAllTransactionsSignal);
+            injector.mapSingleton(TransactionSuccessfulySavedSignal);
 
             injector.mapSingleton(SelectedAccountSuccessfulStoreSignal);
             injector.mapSingleton(SelectedTransactionSuccessfulStoreSignal);

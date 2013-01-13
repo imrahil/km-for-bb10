@@ -8,6 +8,7 @@
 package com.pauluz.bbapps.kontomierz.view
 {
     import com.pauluz.bbapps.kontomierz.model.vo.TransactionVO;
+    import com.pauluz.bbapps.kontomierz.utils.ContainerHelper;
     import com.pauluz.bbapps.kontomierz.utils.LogUtil;
     import com.pauluz.bbapps.kontomierz.view.components.TransactionListCellRenderer;
 
@@ -15,6 +16,8 @@ package com.pauluz.bbapps.kontomierz.view
     import mx.logging.ILogger;
 
     import org.osflash.signals.Signal;
+
+    import qnx.fuse.ui.core.Container;
 
     import qnx.fuse.ui.core.SizeOptions;
 
@@ -25,11 +28,14 @@ package com.pauluz.bbapps.kontomierz.view
     import qnx.fuse.ui.listClasses.List;
 
     import qnx.fuse.ui.navigation.TitlePage;
+    import qnx.ui.data.DataProvider;
 
     public class WalletView extends TitlePage
     {
         private var logger:ILogger;
-        public var transactionsList:List;
+
+        private var container:Container;
+        private var transactionsList:List;
 
         public var viewAddedSignal:Signal = new Signal();
         public var storeSelectedTransaction:Signal = new Signal(TransactionVO);
@@ -50,6 +56,8 @@ package com.pauluz.bbapps.kontomierz.view
 
             logger.debug(": onAdded");
 
+            container = ContainerHelper.createEmptyContainer(0xFFFFFF);
+
             transactionsList = new List();
             transactionsList.cellRenderer = TransactionListCellRenderer;
             transactionsList.addEventListener(ListEvent.ITEM_CLICKED, transactionListClicked);
@@ -60,7 +68,9 @@ package com.pauluz.bbapps.kontomierz.view
 
             transactionsList.layoutData = listData;
 
-            content.addChild(transactionsList);
+            container.addChild(transactionsList);
+
+            content = ContainerHelper.createSpinner();
 
             viewAddedSignal.dispatch();
         }
@@ -74,6 +84,12 @@ package com.pauluz.bbapps.kontomierz.view
         {
             var detailView:SingleTransactionView = new SingleTransactionView();
             pushPage(detailView);
+        }
+
+        public function addData(data:DataProvider):void
+        {
+            content = container;
+            transactionsList.dataProvider = data;
         }
     }
 }

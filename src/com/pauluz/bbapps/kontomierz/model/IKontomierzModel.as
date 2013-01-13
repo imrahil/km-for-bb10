@@ -2,6 +2,8 @@ package com.pauluz.bbapps.kontomierz.model
 {
     import com.pauluz.bbapps.kontomierz.model.vo.*;
 
+    import qnx.ui.data.SectionDataProvider;
+
     public interface IKontomierzModel
     {
         function get apiKey():String;
@@ -15,6 +17,9 @@ package com.pauluz.bbapps.kontomierz.model
 
         function get defaultWalletId():int;
         function set defaultWalletId(value:int):void;
+
+        function get categoriesList():SectionDataProvider;
+        function set categoriesList(value:SectionDataProvider):void;
 
         function get selectedCategory():CategoryVO;
         function set selectedCategory(value:CategoryVO):void;

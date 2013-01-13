@@ -7,27 +7,27 @@
  */
 package com.pauluz.bbapps.kontomierz.view.mediators
 {
-    import com.pauluz.bbapps.kontomierz.model.vo.CategoryVO;
+    import com.pauluz.bbapps.kontomierz.model.vo.TransactionVO;
+    import com.pauluz.bbapps.kontomierz.signals.AddTransactionSignal;
     import com.pauluz.bbapps.kontomierz.signals.GetAllCategoriesSignal;
-    import com.pauluz.bbapps.kontomierz.signals.StoreSelectedCategorySignal;
     import com.pauluz.bbapps.kontomierz.signals.signaltons.ProvideAllCategoriesSignal;
-    import com.pauluz.bbapps.kontomierz.signals.signaltons.SelectedCategorySuccessfulStoreSignal;
+    import com.pauluz.bbapps.kontomierz.signals.signaltons.TransactionSuccessfulySavedSignal;
     import com.pauluz.bbapps.kontomierz.utils.LogUtil;
 
     import mx.logging.ILogger;
     
-    import com.pauluz.bbapps.kontomierz.view.CategoriesView;
+    import com.pauluz.bbapps.kontomierz.view.AddTransactionView;
     import org.robotlegs.mvcs.SignalMediator;
 
     import qnx.ui.data.SectionDataProvider;
 
-    public class CategoriesViewMediator extends SignalMediator
+    public class AddTransactionViewMediator extends SignalMediator
     {
         /**
          * VIEW
          */
         [Inject]
-        public var view:CategoriesView;
+        public var view:AddTransactionView;
 
         /**
          * SIGNALTONS
@@ -36,7 +36,7 @@ package com.pauluz.bbapps.kontomierz.view.mediators
         public var provideAllCategoriesSignal:ProvideAllCategoriesSignal;
 
         [Inject]
-        public var selectedCategorySuccessfulStoreSignal:SelectedCategorySuccessfulStoreSignal;
+        public var transactionSuccessfulySavedSignal:TransactionSuccessfulySavedSignal;
 
         /**
          * SIGNAL -> COMMAND
@@ -45,7 +45,7 @@ package com.pauluz.bbapps.kontomierz.view.mediators
         public var getAllCategoriesSignal:GetAllCategoriesSignal;
 
         [Inject]
-        public var storeSelectedCategorySignal:StoreSelectedCategorySignal;
+        public var addTransactionSignal:AddTransactionSignal;
 
         /** variables **/
         private var logger:ILogger;
@@ -53,7 +53,7 @@ package com.pauluz.bbapps.kontomierz.view.mediators
         /** 
          * CONSTRUCTOR 
          */
-        public function CategoriesViewMediator()
+        public function AddTransactionViewMediator()
         {
             super();
             
@@ -68,12 +68,12 @@ package com.pauluz.bbapps.kontomierz.view.mediators
         override public function onRegister():void
         {
             logger.debug(": onRegister");
-
+            
             addToSignal(view.viewAddedSignal, onViewAdded);
-            addToSignal(view.storeSelectedCategory, onStoreSelectedCategory);
+            addToSignal(view.addTransactionSignal, onAddTransaction);
 
             addOnceToSignal(provideAllCategoriesSignal, onCategoriesData);
-            addToSignal(selectedCategorySuccessfulStoreSignal, onCategorySuccessfulStore);
+            addToSignal(transactionSuccessfulySavedSignal, onSuccessfulSave);
         }
 
         private function onViewAdded():void
@@ -83,11 +83,11 @@ package com.pauluz.bbapps.kontomierz.view.mediators
             getAllCategoriesSignal.dispatch();
         }
 
-        private function onStoreSelectedCategory(category:CategoryVO):void
+        private function onAddTransaction(transaction:TransactionVO):void
         {
-            logger.debug(": onStoreSelectedCategory");
+            logger.debug(":onAddTransactione");
 
-            storeSelectedCategorySignal.dispatch(category);
+            addTransactionSignal.dispatch(transaction);
         }
 
         private function onCategoriesData(data:SectionDataProvider):void
@@ -100,13 +100,13 @@ package com.pauluz.bbapps.kontomierz.view.mediators
             }
         }
 
-        private function onCategorySuccessfulStore(category:CategoryVO):void
+        private function onSuccessfulSave():void
         {
-            logger.debug(": onCategorySuccessfulStore");
+            logger.debug(": onSuccessfulSave");
 
             if (view)
             {
-                view.addCategoryTransactionsView(category.name);
+                view.showAlertAndCleanUp();
             }
         }
     }

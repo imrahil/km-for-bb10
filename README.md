@@ -5,8 +5,11 @@ Copyright (c) 2013 pauluZ
 
 *Ikonka aplikacji* - [http://www.iconfinder.com/icondetails/49718](http://www.iconfinder.com/icondetails/49718/256/money_piggybank_pink_icon)
 
+*klasa DatePicker* - [http://supportforums.blackberry.com/t5/Adobe-AIR-Development/BB10-Date-Picker-class/m-p/1996999#M40295](http://supportforums.blackberry.com/t5/Adobe-AIR-Development/BB10-Date-Picker-class/m-p/1996999#M40295)
+
 Wersje:
 
+* 0.0.5 - dodana mozliwosc wprowadzania nowych wydatkow
 * 0.0.4 - dodane wyswietlanie listy kategorii
 * 0.0.3 - dodane wczytywanie transakcji dla portfela
 * 0.0.2 - logowanie, zapamietywanie sesji, wczytywanie listy kont, wczytywanie transakcji dla wybranego konta

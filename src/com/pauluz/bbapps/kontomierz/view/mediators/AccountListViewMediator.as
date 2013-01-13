@@ -95,9 +95,9 @@ package com.pauluz.bbapps.kontomierz.view.mediators
         {
             logger.debug(": onAccountsData");
 
-            if (view && view.accountList)
+            if (view)
             {
-                view.accountList.dataProvider = data;
+                view.addData(data);
             }
         }
 

@@ -8,6 +8,7 @@
 package com.pauluz.bbapps.kontomierz.view
 {
     import com.pauluz.bbapps.kontomierz.model.vo.CategoryVO;
+    import com.pauluz.bbapps.kontomierz.utils.ContainerHelper;
     import com.pauluz.bbapps.kontomierz.utils.LogUtil;
     import com.pauluz.bbapps.kontomierz.view.components.CustomSectionHeaderRenderer;
 
@@ -15,18 +16,22 @@ package com.pauluz.bbapps.kontomierz.view
 
     import org.osflash.signals.Signal;
 
+    import qnx.fuse.ui.core.Container;
+
     import qnx.fuse.ui.core.SizeOptions;
     import qnx.fuse.ui.events.ListEvent;
     import qnx.fuse.ui.layouts.Align;
     import qnx.fuse.ui.layouts.gridLayout.GridData;
     import qnx.fuse.ui.listClasses.SectionList;
     import qnx.fuse.ui.navigation.TitlePage;
+    import qnx.ui.data.SectionDataProvider;
 
     public class CategoriesView extends TitlePage
     {
         private var logger:ILogger;
 
-        public var categoriesList:SectionList;
+        private var container:Container;
+        private var categoriesList:SectionList;
 
         public var viewAddedSignal:Signal = new Signal();
         public var storeSelectedCategory:Signal = new Signal(CategoryVO);
@@ -47,6 +52,8 @@ package com.pauluz.bbapps.kontomierz.view
 
             logger.debug(": onAdded");
 
+            container = ContainerHelper.createEmptyContainer(0xFFFFFF);
+
             categoriesList = new SectionList();
             categoriesList.headerHeight = 80;
             categoriesList.headerSkin = CustomSectionHeaderRenderer;
@@ -55,10 +62,11 @@ package com.pauluz.bbapps.kontomierz.view
             var listData:GridData = new GridData();
             listData.hAlign = Align.FILL;
             listData.setOptions(SizeOptions.RESIZE_BOTH);
-
             categoriesList.layoutData = listData;
 
-            content.addChild(categoriesList);
+            container.addChild(categoriesList);
+
+            content = ContainerHelper.createSpinner();
 
             viewAddedSignal.dispatch();
         }
@@ -74,6 +82,12 @@ package com.pauluz.bbapps.kontomierz.view
             categoryTransactionsView.title = title;
 
             pushPage(categoryTransactionsView);
+        }
+
+        public function addData(data:SectionDataProvider):void
+        {
+            content = container;
+            categoriesList.dataProvider = data;
         }
     }
 }

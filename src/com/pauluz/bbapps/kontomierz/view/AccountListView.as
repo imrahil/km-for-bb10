@@ -8,6 +8,7 @@
 package com.pauluz.bbapps.kontomierz.view
 {
     import com.pauluz.bbapps.kontomierz.model.vo.AccountVO;
+    import com.pauluz.bbapps.kontomierz.utils.ContainerHelper;
     import com.pauluz.bbapps.kontomierz.utils.LogUtil;
     import com.pauluz.bbapps.kontomierz.view.components.AccountListCellRenderer;
 
@@ -15,17 +16,22 @@ package com.pauluz.bbapps.kontomierz.view
 
     import org.osflash.signals.Signal;
 
+    import qnx.fuse.ui.core.Container;
+
     import qnx.fuse.ui.core.SizeOptions;
     import qnx.fuse.ui.events.ListEvent;
     import qnx.fuse.ui.layouts.Align;
     import qnx.fuse.ui.layouts.gridLayout.GridData;
     import qnx.fuse.ui.listClasses.List;
     import qnx.fuse.ui.navigation.TitlePage;
+    import qnx.ui.data.DataProvider;
 
     public class AccountListView extends TitlePage
     {
         private var logger:ILogger;
-        public var accountList:List;
+
+        private var container:Container;
+        private var accountList:List;
 
         public var viewAddedSignal:Signal = new Signal();
         public var storeSelectedAccount:Signal = new Signal(AccountVO);
@@ -46,6 +52,8 @@ package com.pauluz.bbapps.kontomierz.view
 
             logger.debug(": onAdded");
 
+            container = ContainerHelper.createEmptyContainer(0xFFFFFF);
+
             accountList = new List();
             accountList.cellRenderer = AccountListCellRenderer;
             accountList.addEventListener(ListEvent.ITEM_CLICKED, listClicked);
@@ -53,10 +61,11 @@ package com.pauluz.bbapps.kontomierz.view
             var listData:GridData = new GridData();
             listData.hAlign = Align.FILL;
             listData.setOptions(SizeOptions.RESIZE_BOTH);
-
             accountList.layoutData = listData;
 
-            content.addChild(accountList);
+            container.addChild(accountList);
+
+            content = ContainerHelper.createSpinner();
 
             viewAddedSignal.dispatch();
         }
@@ -72,6 +81,12 @@ package com.pauluz.bbapps.kontomierz.view
             transactionView.title = title;
 
             pushPage(transactionView);
+        }
+
+        public function addData(data:DataProvider):void
+        {
+            content = container;
+            accountList.dataProvider = data;
         }
     }
 }

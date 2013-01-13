@@ -8,13 +8,17 @@
 package com.pauluz.bbapps.kontomierz.controller 
 {
     import com.pauluz.bbapps.kontomierz.model.IKontomierzModel;
+    import com.pauluz.bbapps.kontomierz.model.vo.TransactionVO;
     import com.pauluz.bbapps.kontomierz.services.IKontomierzService;
-    import com.pauluz.bbapps.kontomierz.signals.signaltons.ProvideAllCategoriesSignal;
 
     import org.robotlegs.mvcs.SignalCommand;
 
-    public final class GetAllCategoriesCommand extends SignalCommand
+    public final class AddTransactionCommand extends SignalCommand
     {
+        /** PARAMETERS **/
+        [Inject]
+        public var transaction:TransactionVO;
+
         /** INJECTIONS **/
         [Inject]
         public var model:IKontomierzModel;
@@ -22,22 +26,12 @@ package com.pauluz.bbapps.kontomierz.controller
         [Inject]
         public var kontomierzService:IKontomierzService;
 
-        [Inject]
-        public var provideAllCategoriesSignal:ProvideAllCategoriesSignal;
-
         /**
-         * Method handle the logic for <code>GetAllCategoriesCommand</code>
+         * Method handle the logic for <code>AddTransactionCommand</code>
          */        
         override public function execute():void    
         {
-            if (model.categoriesList && model.categoriesList.length > 0)
-            {
-                provideAllCategoriesSignal.dispatch(model.categoriesList);
-            }
-            else
-            {
-                kontomierzService.getAllCategories(model.apiKey);
-            }
+            kontomierzService.createTransaction(transaction, model.apiKey);
         }
     }
 }

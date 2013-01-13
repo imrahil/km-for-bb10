@@ -10,6 +10,7 @@ package com.pauluz.bbapps.kontomierz.services
     import com.pauluz.bbapps.kontomierz.constants.ApplicationConstants;
     import com.pauluz.bbapps.kontomierz.model.IKontomierzModel;
     import com.pauluz.bbapps.kontomierz.model.vo.ErrorVO;
+    import com.pauluz.bbapps.kontomierz.model.vo.TransactionVO;
     import com.pauluz.bbapps.kontomierz.model.vo.UserVO;
     import com.pauluz.bbapps.kontomierz.services.helpers.IResultParser;
     import com.pauluz.bbapps.kontomierz.signals.StoreDefaultWalletIdSignal;
@@ -18,6 +19,7 @@ package com.pauluz.bbapps.kontomierz.services
     import com.pauluz.bbapps.kontomierz.signals.signaltons.ProvideAllAccountsDataSignal;
     import com.pauluz.bbapps.kontomierz.signals.signaltons.ProvideAllCategoriesSignal;
     import com.pauluz.bbapps.kontomierz.signals.signaltons.ProvideAllTransactionsSignal;
+    import com.pauluz.bbapps.kontomierz.signals.signaltons.TransactionSuccessfulySavedSignal;
     import com.pauluz.bbapps.kontomierz.utils.LogUtil;
 
     import flash.events.ErrorEvent;
@@ -65,6 +67,9 @@ package com.pauluz.bbapps.kontomierz.services
 
         [Inject]
         public var provideAllTransactionsSignal:ProvideAllTransactionsSignal;
+
+        [Inject]
+        public var transactionSuccessfulySavedSignal:TransactionSuccessfulySavedSignal;
 
         [Inject]
         public var provideAllCategoriesSignal:ProvideAllCategoriesSignal;
@@ -123,6 +128,11 @@ package com.pauluz.bbapps.kontomierz.services
         }
 
         public function getAllTransactionsForCategory(categoryId:int, apiKey:String):void
+        {
+            throw new Error("Override this method!");
+        }
+
+        public function createTransaction(transaction:TransactionVO, apiKey:String):void
         {
             throw new Error("Override this method!");
         }
@@ -208,6 +218,28 @@ package com.pauluz.bbapps.kontomierz.services
             provideAllTransactionsSignal.dispatch(transactionsData);
         }
 
+        protected function addTransactionCompleteHandler(event:Event):void
+        {
+            logger.debug(": addTransactionCompleteHandler");
+
+            var loader:URLLoader = event.currentTarget as URLLoader;
+
+            loader.removeEventListener(Event.COMPLETE, addTransactionCompleteHandler);
+            removeLoaderListeners(loader);
+
+            if (responseStatus == 201)
+            {
+                transactionSuccessfulySavedSignal.dispatch();
+            }
+            else
+            {
+                logger.debug(": addTransactionCompleteHandler - status: " + responseStatus);
+
+                var error:ErrorVO = new ErrorVO("Wystąpił błąd: " + responseStatus);
+                errorSignal.dispatch(error);
+            }
+        }
+
         protected function getAllCategoriesCompleteHandler(event:Event):void
         {
             logger.debug(": getAllCategoriesCompleteHandler");
@@ -217,9 +249,10 @@ package com.pauluz.bbapps.kontomierz.services
             loader.removeEventListener(Event.COMPLETE, getAllCategoriesCompleteHandler);
             removeLoaderListeners(loader);
 
-            var categoriesData:SectionDataProvider = _parser.parseAllCategoriesResponse(loader.data as String);
+            var categoriesList:SectionDataProvider = _parser.parseAllCategoriesResponse(loader.data as String);
 
-            provideAllCategoriesSignal.dispatch(categoriesData);
+            model.categoriesList = categoriesList;
+            provideAllCategoriesSignal.dispatch(categoriesList);
         }
 
         protected function addLoaderListeners(loader:URLLoader):void

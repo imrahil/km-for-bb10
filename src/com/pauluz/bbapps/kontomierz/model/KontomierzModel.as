@@ -13,12 +13,15 @@ package com.pauluz.bbapps.kontomierz.model
 
     import org.robotlegs.mvcs.*;
 
+    import qnx.ui.data.SectionDataProvider;
+
     public class KontomierzModel extends Actor implements IKontomierzModel
     {
         private var _apiKey:String = "";
         private var _selectedAccount:AccountVO;
         private var _selectedTransaction:TransactionVO;
         private var _defaultWalletId:int;
+        private var _categoriesList:SectionDataProvider;
         private var _selectedCategory:CategoryVO;
 
         public function get apiKey():String
@@ -62,6 +65,16 @@ package com.pauluz.bbapps.kontomierz.model
         public function set defaultWalletId(value:int):void
         {
             _defaultWalletId = value;
+        }
+
+        public function get categoriesList():SectionDataProvider
+        {
+            return _categoriesList;
+        }
+
+        public function set categoriesList(value:SectionDataProvider):void
+        {
+            _categoriesList = value;
         }
 
         public function get selectedCategory():CategoryVO

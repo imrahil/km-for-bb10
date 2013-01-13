@@ -17,10 +17,10 @@ package com.pauluz.bbapps.kontomierz.utils
             super();
         }
 
-        public static function setFormat(format:TextFormat, fontSize:int = 54):TextFormat
+        public static function setFormat(format:TextFormat, fontSize:int = 54, color:uint = 0xFAFAFA):TextFormat
         {
             format.size = fontSize;
-            format.color = 0xFAFAFA;
+            format.color = color;
             format.italic = true;
             format.font = "Slate Pro Light";
 

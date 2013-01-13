@@ -8,6 +8,7 @@
 package com.pauluz.bbapps.kontomierz.view
 {
     import com.pauluz.bbapps.kontomierz.model.vo.TransactionVO;
+    import com.pauluz.bbapps.kontomierz.utils.ContainerHelper;
     import com.pauluz.bbapps.kontomierz.utils.LogUtil;
     import com.pauluz.bbapps.kontomierz.view.components.TransactionListCellRenderer;
 
@@ -23,6 +24,7 @@ package com.pauluz.bbapps.kontomierz.view
     import qnx.fuse.ui.listClasses.List;
     import qnx.fuse.ui.navigation.NavigationPaneProperties;
     import qnx.fuse.ui.navigation.TitlePage;
+    import qnx.ui.data.DataProvider;
 
     public class AllTransactionsView extends TitlePage
     {
@@ -65,7 +67,7 @@ package com.pauluz.bbapps.kontomierz.view
 
             transactionsList.layoutData = listData;
 
-            content.addChild(transactionsList);
+            content = ContainerHelper.createSpinner();
 
             viewAddedSignal.dispatch();
         }
@@ -79,6 +81,12 @@ package com.pauluz.bbapps.kontomierz.view
         {
             var detailView:SingleTransactionView = new SingleTransactionView();
             pushPage(detailView);
+        }
+
+        public function addData(data:DataProvider):void
+        {
+            content = transactionsList;
+            transactionsList.dataProvider = data;
         }
     }
 }
