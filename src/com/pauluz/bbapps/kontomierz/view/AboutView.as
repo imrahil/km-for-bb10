@@ -40,7 +40,7 @@ package com.pauluz.bbapps.kontomierz.view
             var app_xml:XML = NativeApplication.nativeApplication.applicationDescriptor;
             var ns:Namespace = app_xml.namespace();
 
-            title = "Kontomierz dla BB10 - v." + app_xml.ns::versionNumber;
+            title = "Wydatki - v." + app_xml.ns::versionNumber;
 
             logger = LogUtil.getLogger(this);
             logger.debug(": constructor");
@@ -62,13 +62,14 @@ package com.pauluz.bbapps.kontomierz.view
             logger.debug(": onAdded");
 
             var container:Container = ContainerHelper.createContainer();
+            container.scrollDirection = ScrollDirection.VERTICAL;
 
             var gridData:GridData = new GridData();
             gridData.setOptions(SizeOptions.RESIZE_BOTH);
             container.layoutData = gridData;
 
             var infoLabel:Label = new Label();
-            infoLabel.maxLines = 0;
+            infoLabel.maxLines = 8;
             infoLabel.text = "Author:\nPaweł Szczepanek\n\n" +
                     "Email:\npawel.szczepanek@gmail.com\n\n" +
                     "Website:\nhttp://www.pauluz.pl/";
@@ -76,26 +77,27 @@ package com.pauluz.bbapps.kontomierz.view
             infoLabel.format = TextFormatUtil.setFormat(infoLabel.format, 45);
             container.addChild(infoLabel);
 
+            var visitBtn:LabelButton = new LabelButton();
+            visitBtn.label = "Odwiedź stronę domową";
+            visitBtn.addEventListener(MouseEvent.CLICK, onVisitBtnClick);
+
+            var visitBtnGrid:GridData = new GridData();
+            visitBtnGrid.setOptions(SizeOptions.RESIZE_HORIZONTAL);
+            visitBtnGrid.hAlign = Align.CENTER;
+            visitBtnGrid.vAlign = Align.END;
+            visitBtnGrid.marginTop = 30;
+            visitBtnGrid.marginBottom = 30;
+            visitBtn.layoutData = visitBtnGrid;
+
+            container.addChild(visitBtn);
+
             var descLabel:Label = new Label();
-            descLabel.maxLines = 0;
+            descLabel.maxLines = 5;
             descLabel.text = "Wydatki to nieoficjalna aplikacja serwisu Kontomierz.pl\n\n" +
                     "Żadne Twoje dane nie są przechwytywane i wysyłane bez Twojej wiedzy.";
 
             descLabel.format = TextFormatUtil.setFormat(descLabel.format, 35);
             container.addChild(descLabel);
-
-            var visitBtn:LabelButton = new LabelButton();
-            visitBtn.label = "Visit website";
-            visitBtn.addEventListener(MouseEvent.CLICK, onVisitBtnClick);
-
-            var visitBtnGrid:GridData = new GridData();
-            visitBtnGrid.setOptions(SizeOptions.RESIZE_BOTH);
-            visitBtnGrid.hAlign = Align.CENTER;
-            visitBtnGrid.vAlign = Align.END;
-            visitBtnGrid.marginTop = 100;
-            visitBtn.layoutData = visitBtnGrid;
-
-            container.addChild(visitBtn);
 
             content = container;
         }
