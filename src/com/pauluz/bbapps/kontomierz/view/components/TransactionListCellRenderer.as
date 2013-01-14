@@ -60,7 +60,7 @@ package com.pauluz.bbapps.kontomierz.view.components
         {
             super.drawLabel(arg1, arg2);
 
-            this.label.width -= 280;
+            this.label.width -= 260;
 
             this.balance.x = this.label.x + this.label.width;
             this.balance.y = this.label.y;

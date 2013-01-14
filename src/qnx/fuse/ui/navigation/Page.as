@@ -125,6 +125,16 @@ package qnx.fuse.ui.navigation
                         actionBar.addEventListener(DragEvent.DRAG_BEGIN, onBackDragBegin);
                         actionBar.addEventListener(DragEvent.DRAG_MOVE, onBackDragMove);
                         actionBar.addEventListener(DragEvent.DRAG_END, onBackDragEnd);
+
+                        __actions = getActionsToDisplayOnBar();
+
+                        if (__actions && actionBar)
+                        {
+                            for (var i:int = 0; i < __actions.length; i++)
+                            {
+                                actionBar.addAction(__actions[i]);
+                            }
+                        }
                     }
                 }
                 else
@@ -209,7 +219,7 @@ package qnx.fuse.ui.navigation
         {
             if (actions)
             {
-                return(actions);
+                return actions;
             }
 
             return super.getActionsToDisplayOnBar();

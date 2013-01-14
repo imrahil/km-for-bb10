@@ -114,7 +114,7 @@ package com.pauluz.bbapps.kontomierz.services
 
         }
 
-        override public function getAllTransactions(accountId:int, apiKey:String):void
+        override public function getAllTransactions(accountId:int, wallet:Boolean, apiKey:String):void
         {
             logger.debug(": getAllTransactions service call");
 
@@ -127,7 +127,14 @@ package com.pauluz.bbapps.kontomierz.services
             url += "&api_key=" + apiKey;
             urlRequest.url = url;
 
-            loader.addEventListener(Event.COMPLETE, getAllTransactionsCompleteHandler);
+            if (wallet)
+            {
+                loader.addEventListener(Event.COMPLETE, getAllTransactionsForWalletCompleteHandler);
+            }
+            else
+            {
+                loader.addEventListener(Event.COMPLETE, getAllTransactionsCompleteHandler);
+            }
             addLoaderListeners(loader);
 
             loader.load(urlRequest);

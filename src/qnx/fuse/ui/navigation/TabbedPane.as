@@ -157,7 +157,7 @@ package qnx.fuse.ui.navigation
 
                     for (var i:int = 0; i < __tabs.length; i++)
                     {
-                        var tab:Tab = __tabs[ i ];
+                        var tab:Tab = __tabs[i];
                         //TODO currently the Tab is the data object.
                         //We probably want to make TabAction the Tab class in the future.
                         //But TabAction is final.
@@ -238,7 +238,7 @@ package qnx.fuse.ui.navigation
             {
                 for (i = 0; i < __actions.length; i++)
                 {
-                    actionBar.removeAction(__actions[ i ]);
+                    actionBar.removeAction(__actions[i]);
                 }
 
                 __actions = null;
@@ -250,7 +250,7 @@ package qnx.fuse.ui.navigation
             {
                 for (i = 0; i < __actions.length; i++)
                 {
-                    actionBar.addAction(__actions[ i ]);
+                    actionBar.addAction(__actions[i]);
                 }
             }
         }

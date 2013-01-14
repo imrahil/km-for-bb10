@@ -9,6 +9,7 @@ package com.pauluz.bbapps.kontomierz.controller
 {
     import com.pauluz.bbapps.kontomierz.model.IKontomierzModel;
     import com.pauluz.bbapps.kontomierz.services.IKontomierzService;
+    import com.pauluz.bbapps.kontomierz.signals.signaltons.ProvideAllAccountsDataSignal;
 
     import org.robotlegs.mvcs.SignalCommand;
 
@@ -21,12 +22,22 @@ package com.pauluz.bbapps.kontomierz.controller
         [Inject]
         public var kontomierzService:IKontomierzService;
 
+        [Inject]
+        public var provideAllAccountsDataSignal:ProvideAllAccountsDataSignal;
+
         /**
          * Method handle the logic for <code>GetAllAccountsCommand</code>
          */        
         override public function execute():void    
         {
-            kontomierzService.getAllAccounts(model.apiKey);
+            if (model.accountsList && model.accountsList.length > 0)
+            {
+                provideAllAccountsDataSignal.dispatch(model.accountsList);
+            }
+            else
+            {
+                kontomierzService.getAllAccounts(model.apiKey);
+            }
         }
     }
 }

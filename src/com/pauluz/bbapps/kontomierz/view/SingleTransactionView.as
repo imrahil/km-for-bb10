@@ -7,6 +7,7 @@
  */
 package com.pauluz.bbapps.kontomierz.view
 {
+    import com.pauluz.bbapps.kontomierz.constants.Resources;
     import com.pauluz.bbapps.kontomierz.model.vo.TransactionVO;
     import com.pauluz.bbapps.kontomierz.utils.ContainerHelper;
     import com.pauluz.bbapps.kontomierz.utils.LogUtil;
@@ -15,6 +16,8 @@ package com.pauluz.bbapps.kontomierz.view
     import mx.logging.ILogger;
 
     import org.osflash.signals.Signal;
+
+    import qnx.fuse.ui.actionbar.ActionPlacement;
 
     import qnx.fuse.ui.core.Action;
     import qnx.fuse.ui.core.Container;
@@ -30,12 +33,16 @@ package com.pauluz.bbapps.kontomierz.view
     {
         private var logger:ILogger;
 
+        private var editAction:Action;
+        private var deleteAction:Action;
+
         public var viewAddedSignal:Signal = new Signal();
 
         private var amountLbl:Label;
         private var dateLbl:Label;
         private var descriptionLbl:Label;
         private var categoryLbl:Label;
+
 
         public function SingleTransactionView()
         {
@@ -53,6 +60,15 @@ package com.pauluz.bbapps.kontomierz.view
 
             var prop:NavigationPaneProperties = new NavigationPaneProperties();
             prop.backButton = new Action("Transakcje");
+
+            actions = new Vector.<Action>();
+
+            editAction = new Action("Edytuj", new Resources.ICON_EDIT());
+            actions.push(editAction);
+
+            deleteAction = new Action("Usuń", new Resources.ICON_DELETE());
+            actions.push(deleteAction);
+
             paneProperties = prop;
         }
 

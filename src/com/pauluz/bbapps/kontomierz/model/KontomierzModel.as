@@ -13,14 +13,21 @@ package com.pauluz.bbapps.kontomierz.model
 
     import org.robotlegs.mvcs.*;
 
+    import qnx.ui.data.DataProvider;
+
     import qnx.ui.data.SectionDataProvider;
 
     public class KontomierzModel extends Actor implements IKontomierzModel
     {
         private var _apiKey:String = "";
         private var _selectedAccount:AccountVO;
+        private var _accountsList:DataProvider;
+
         private var _selectedTransaction:TransactionVO;
+
         private var _defaultWalletId:int;
+        private var _walletTransactionsList:DataProvider;
+
         private var _categoriesList:SectionDataProvider;
         private var _selectedCategory:CategoryVO;
 
@@ -47,6 +54,16 @@ package com.pauluz.bbapps.kontomierz.model
             _selectedAccount = value;
         }
 
+        public function get accountsList():DataProvider
+        {
+            return _accountsList;
+        }
+
+        public function set accountsList(value:DataProvider):void
+        {
+            _accountsList = value;
+        }
+
         public function get selectedTransaction():TransactionVO
         {
             return _selectedTransaction;
@@ -65,6 +82,16 @@ package com.pauluz.bbapps.kontomierz.model
         public function set defaultWalletId(value:int):void
         {
             _defaultWalletId = value;
+        }
+
+        public function get walletTransactionsList():DataProvider
+        {
+            return _walletTransactionsList;
+        }
+
+        public function set walletTransactionsList(value:DataProvider):void
+        {
+            _walletTransactionsList = value;
         }
 
         public function get categoriesList():SectionDataProvider

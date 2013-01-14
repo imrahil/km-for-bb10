@@ -22,7 +22,6 @@ package qnx.fuse.ui.navigation
      */
     public class NavigationPaneProperties extends PaneProperties
     {
-
         public var backButton:Action;
     }
 }

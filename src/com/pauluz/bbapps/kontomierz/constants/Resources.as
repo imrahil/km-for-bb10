@@ -45,5 +45,11 @@ package com.pauluz.bbapps.kontomierz.constants
         [Embed(source="/assets/images/menuicons/icon_share.png")]
         public static const ICON_SHARE:Class;
 
+        [Embed(source="/assets/images/menuicons/icon_edit.png")]
+        public static const ICON_EDIT:Class;
+
+        [Embed(source="/assets/images/menuicons/icon_delete.png")]
+        public static const ICON_DELETE:Class;
+
     }
 }

@@ -117,7 +117,7 @@ package com.pauluz.bbapps.kontomierz.services
             throw new Error("Override this method!");
         }
 
-        public function getAllTransactions(accountId:int, apiKey:String):void
+        public function getAllTransactions(accountId:int, wallet:Boolean, apiKey:String):void
         {
             throw new Error("Override this method!");
         }
@@ -190,6 +190,8 @@ package com.pauluz.bbapps.kontomierz.services
             if (responseStatus == 200)
             {
                 var accountsData:DataProvider = _parser.parseAllAccountsResponse(loader.data as String);
+
+                model.accountsList = accountsData;
                 provideAllAccountsDataSignal.dispatch(accountsData);
 
                 var defaultWalletId:int = _parser.parseAllAccountsResponseAndFindDefaultWalletId(loader.data as String);
@@ -215,6 +217,21 @@ package com.pauluz.bbapps.kontomierz.services
 
             var transactionsData:DataProvider = _parser.parseAllTransactionsResponse(loader.data as String);
 
+            provideAllTransactionsSignal.dispatch(transactionsData);
+        }
+
+        protected function getAllTransactionsForWalletCompleteHandler(event:Event):void
+        {
+            logger.debug(": getAllTransactionsForWalletCompleteHandler");
+
+            var loader:URLLoader = event.currentTarget as URLLoader;
+
+            loader.removeEventListener(Event.COMPLETE, getAllTransactionsForWalletCompleteHandler);
+            removeLoaderListeners(loader);
+
+            var transactionsData:DataProvider = _parser.parseAllTransactionsResponse(loader.data as String);
+
+            model.walletTransactionsList = transactionsData;
             provideAllTransactionsSignal.dispatch(transactionsData);
         }
 
