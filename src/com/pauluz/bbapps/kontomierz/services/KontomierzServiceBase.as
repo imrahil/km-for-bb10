@@ -232,6 +232,7 @@ package com.pauluz.bbapps.kontomierz.services
             var transactionsData:DataProvider = _parser.parseAllTransactionsResponse(loader.data as String);
 
             model.walletTransactionsList = transactionsData;
+            model.isWalletListExpired = false;
             provideAllTransactionsSignal.dispatch(transactionsData);
         }
 
@@ -246,6 +247,7 @@ package com.pauluz.bbapps.kontomierz.services
 
             if (responseStatus == 201)
             {
+                model.isWalletListExpired = true;
                 transactionSuccessfulySavedSignal.dispatch();
             }
             else

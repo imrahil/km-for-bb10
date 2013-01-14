@@ -30,7 +30,7 @@ package com.pauluz.bbapps.kontomierz.controller
          */
         override public function execute():void
         {
-            if (model.walletTransactionsList && model.walletTransactionsList.length > 0)
+            if (!model.isWalletListExpired && model.walletTransactionsList && model.walletTransactionsList.length > 0)
             {
                 provideAllTransactionsSignal.dispatch(model.walletTransactionsList);
             }

@@ -27,6 +27,7 @@ package com.pauluz.bbapps.kontomierz.model
 
         private var _defaultWalletId:int;
         private var _walletTransactionsList:DataProvider;
+        private var _isWalletListExpired:Boolean;
 
         private var _categoriesList:SectionDataProvider;
         private var _selectedCategory:CategoryVO;
@@ -92,6 +93,16 @@ package com.pauluz.bbapps.kontomierz.model
         public function set walletTransactionsList(value:DataProvider):void
         {
             _walletTransactionsList = value;
+        }
+
+        public function get isWalletListExpired():Boolean
+        {
+            return _isWalletListExpired;
+        }
+
+        public function set isWalletListExpired(value:Boolean):void
+        {
+            _isWalletListExpired = value;
         }
 
         public function get categoriesList():SectionDataProvider

@@ -25,6 +25,8 @@ package com.pauluz.bbapps.kontomierz.model
 
         function get walletTransactionsList():DataProvider;
         function set walletTransactionsList(value:DataProvider):void;
+        function get isWalletListExpired():Boolean;
+        function set isWalletListExpired(value:Boolean):void;
 
         function get categoriesList():SectionDataProvider;
         function set categoriesList(value:SectionDataProvider):void;
