@@ -135,6 +135,7 @@ package com.pauluz.bbapps.kontomierz.services
             {
                 loader.addEventListener(Event.COMPLETE, getAllTransactionsCompleteHandler);
             }
+
             addLoaderListeners(loader);
 
             loader.load(urlRequest);
@@ -181,6 +182,31 @@ package com.pauluz.bbapps.kontomierz.services
             urlRequest.data = variables;
 
             loader.addEventListener(Event.COMPLETE, addTransactionCompleteHandler);
+            addLoaderListeners(loader);
+
+            loader.load(urlRequest);
+        }
+
+
+        override public function deleteTransaction(id:int, wallet:Boolean):void
+        {
+            logger.debug(": deleteTransaction service call");
+
+            var loader:URLLoader = new URLLoader();
+            var urlRequest:URLRequest = new URLRequest();
+
+            urlRequest.url = ApplicationConstants.KONTOMIERZ_API_ENDPOINT + "money_transactions/" + id + ApplicationConstants.KONTOMIERZ_API_FORMAT_JSON + "?api_key=" + model.apiKey;
+            urlRequest.method = URLRequestMethod.DELETE;
+
+            if (wallet)
+            {
+                loader.addEventListener(Event.COMPLETE, deleteWalletTransactionCompleteHandler);
+            }
+            else
+            {
+                loader.addEventListener(Event.COMPLETE, deleteTransactionCompleteHandler);
+            }
+
             addLoaderListeners(loader);
 
             loader.load(urlRequest);

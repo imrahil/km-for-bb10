@@ -13,6 +13,8 @@ package com.pauluz.bbapps.kontomierz.services
     import com.pauluz.bbapps.kontomierz.model.vo.TransactionVO;
     import com.pauluz.bbapps.kontomierz.model.vo.UserVO;
     import com.pauluz.bbapps.kontomierz.services.helpers.IResultParser;
+    import com.pauluz.bbapps.kontomierz.signals.GetAllTransactionsSignal;
+    import com.pauluz.bbapps.kontomierz.signals.GetAllWalletTransactionsSignal;
     import com.pauluz.bbapps.kontomierz.signals.StoreDefaultWalletIdSignal;
     import com.pauluz.bbapps.kontomierz.signals.signaltons.ErrorSignal;
     import com.pauluz.bbapps.kontomierz.signals.signaltons.LoginSuccessfulSignal;
@@ -78,6 +80,13 @@ package com.pauluz.bbapps.kontomierz.services
         [Inject]
         public var errorSignal:ErrorSignal;
 
+        [Inject]
+        public var getAllTransactionsSignal:GetAllTransactionsSignal;
+
+        [Inject]
+        public var getAllWalletTransactionsSignal:GetAllWalletTransactionsSignal;
+
+
         /** Constructor */
         public function KontomierzServiceBase()
         {
@@ -135,7 +144,7 @@ package com.pauluz.bbapps.kontomierz.services
             throw new Error("Override this method!");
         }
 
-        public function deleteTransaction(id:int):void
+        public function deleteTransaction(id:int, wallet:Boolean):void
         {
             throw new Error("Override this method!");
         }
@@ -256,6 +265,51 @@ package com.pauluz.bbapps.kontomierz.services
             else
             {
                 logger.debug(": addTransactionCompleteHandler - status: " + responseStatus);
+
+                var error:ErrorVO = new ErrorVO("Wystąpił błąd: " + responseStatus);
+                errorSignal.dispatch(error);
+            }
+        }
+
+        protected function deleteTransactionCompleteHandler(event:Event):void
+        {
+            logger.debug(": deleteTransactionCompleteHandler");
+
+            var loader:URLLoader = event.currentTarget as URLLoader;
+
+            loader.removeEventListener(Event.COMPLETE, deleteTransactionCompleteHandler);
+            removeLoaderListeners(loader);
+
+            if (responseStatus == 200)
+            {
+                getAllTransactionsSignal.dispatch();
+            }
+            else
+            {
+                logger.debug(": deleteTransactionCompleteHandler - status: " + responseStatus);
+
+                var error:ErrorVO = new ErrorVO("Wystąpił błąd: " + responseStatus);
+                errorSignal.dispatch(error);
+            }
+        }
+
+        protected function deleteWalletTransactionCompleteHandler(event:Event):void
+        {
+            logger.debug(": deleteWalletTransactionCompleteHandler");
+
+            var loader:URLLoader = event.currentTarget as URLLoader;
+
+            loader.removeEventListener(Event.COMPLETE, deleteWalletTransactionCompleteHandler);
+            removeLoaderListeners(loader);
+
+            if (responseStatus == 200)
+            {
+                model.isWalletListExpired = true;
+                getAllWalletTransactionsSignal.dispatch();
+            }
+            else
+            {
+                logger.debug(": deleteWalletTransactionCompleteHandler - status: " + responseStatus);
 
                 var error:ErrorVO = new ErrorVO("Wystąpił błąd: " + responseStatus);
                 errorSignal.dispatch(error);

@@ -13,6 +13,8 @@ package com.pauluz.bbapps.kontomierz.view
     import com.pauluz.bbapps.kontomierz.utils.LogUtil;
     import com.pauluz.bbapps.kontomierz.view.components.TransactionListCellRenderer;
 
+    import flash.events.Event;
+
 
     import mx.logging.ILogger;
 
@@ -25,6 +27,7 @@ package com.pauluz.bbapps.kontomierz.view
     import qnx.fuse.ui.core.Container;
 
     import qnx.fuse.ui.core.SizeOptions;
+    import qnx.fuse.ui.dialog.AlertDialog;
     import qnx.fuse.ui.events.ActionEvent;
     import qnx.fuse.ui.events.ContextMenuEvent;
 
@@ -52,6 +55,9 @@ package com.pauluz.bbapps.kontomierz.view
         public var viewAddedSignal:Signal = new Signal();
         public var storeSelectedTransaction:Signal = new Signal(TransactionVO);
 
+        public var editTransaction:Signal = new Signal(TransactionVO);
+        public var deleteTransaction:Signal = new Signal(TransactionVO);
+
         public function WalletView()
         {
             super();
@@ -68,6 +74,13 @@ package com.pauluz.bbapps.kontomierz.view
 
             logger.debug(": onAdded");
 
+            content = ContainerHelper.createSpinner();
+
+            viewAddedSignal.dispatch();
+        }
+
+        private function createUI():void
+        {
             container = ContainerHelper.createEmptyContainer(0xFFFFFF);
 
             transactionsList = new List();
@@ -102,10 +115,6 @@ package com.pauluz.bbapps.kontomierz.view
             contextActions.push(actionSet);
 
             transactionsList.contextActions = contextActions;
-
-            content = ContainerHelper.createSpinner();
-
-            viewAddedSignal.dispatch();
         }
 
         private function transactionListClicked(event:ListEvent):void
@@ -132,11 +141,27 @@ package com.pauluz.bbapps.kontomierz.view
         {
             if (event.action == editAction)
             {
-                // TODO
+                editTransaction.dispatch(transactionsList.selectedItem as TransactionVO);
             }
             else if (event.action == deleteAction)
             {
-                // TODO
+                var confirmDialog:AlertDialog = new AlertDialog();
+                confirmDialog.title = "Potwierdzenie";
+                confirmDialog.message = "Czy napewno usunąć wybraną transakcję?";
+                confirmDialog.addButton("TAK");
+                confirmDialog.addButton("NIE");
+                confirmDialog.addEventListener(Event.SELECT, onDeleteConfirmation);
+                confirmDialog.show();
+            }
+        }
+
+        private function onDeleteConfirmation(event:Event):void
+        {
+            if (event.target.selectedIndex == 0)
+            {
+                deleteTransaction.dispatch(transactionsList.selectedItem as TransactionVO);
+
+                content = ContainerHelper.createSpinner();
             }
         }
 
@@ -148,6 +173,8 @@ package com.pauluz.bbapps.kontomierz.view
 
         public function addData(data:DataProvider):void
         {
+            createUI();
+
             content = container;
             transactionsList.dataProvider = data;
         }

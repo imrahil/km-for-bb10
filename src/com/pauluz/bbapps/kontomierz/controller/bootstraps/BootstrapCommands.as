@@ -32,10 +32,13 @@ package com.pauluz.bbapps.kontomierz.controller.bootstraps
             commandMap.mapSignalClass(RequestSelectedTransactionSignal, ProvideSelectedTransactionCommand);
 
             commandMap.mapSignalClass(AddTransactionSignal, AddTransactionCommand);
+            commandMap.mapSignalClass(DeleteTransactionSignal, DeleteTransactionCommand);
 
             // wallet
             commandMap.mapSignalClass(GetAllWalletTransactionsSignal, GetAllWalletTransactionsCommand);
             commandMap.mapSignalClass(StoreDefaultWalletIdSignal, StoreDefaultWalletIdCommand);
+
+            commandMap.mapSignalClass(DeleteWalletTransactionSignal, DeleteWalletTransactionCommand);
 
             // categories
             commandMap.mapSignalClass(GetAllCategoriesSignal, GetAllCategoriesCommand);

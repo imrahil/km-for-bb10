@@ -13,6 +13,8 @@ package com.pauluz.bbapps.kontomierz.view
     import com.pauluz.bbapps.kontomierz.utils.LogUtil;
     import com.pauluz.bbapps.kontomierz.view.components.TransactionListCellRenderer;
 
+    import flash.events.Event;
+
     import mx.logging.ILogger;
 
     import org.osflash.signals.Signal;
@@ -20,7 +22,9 @@ package com.pauluz.bbapps.kontomierz.view
     import qnx.fuse.ui.core.Action;
     import qnx.fuse.ui.core.ActionBase;
     import qnx.fuse.ui.core.ActionSet;
+    import qnx.fuse.ui.core.Container;
     import qnx.fuse.ui.core.SizeOptions;
+    import qnx.fuse.ui.dialog.AlertDialog;
     import qnx.fuse.ui.events.ActionEvent;
     import qnx.fuse.ui.events.ContextMenuEvent;
     import qnx.fuse.ui.events.ListEvent;
@@ -35,6 +39,7 @@ package com.pauluz.bbapps.kontomierz.view
     public class AllTransactionsView extends TitlePage
     {
         private var logger:ILogger;
+        private var container:Container;
         public var transactionsList:List;
         private var _contextMenuOpen:Boolean;
 
@@ -43,6 +48,9 @@ package com.pauluz.bbapps.kontomierz.view
 
         public var viewAddedSignal:Signal = new Signal();
         public var storeSelectedTransaction:Signal = new Signal(TransactionVO);
+
+        public var editTransaction:Signal = new Signal(TransactionVO);
+        public var deleteTransaction:Signal = new Signal(TransactionVO);
 
         public function AllTransactionsView()
         {
@@ -66,6 +74,15 @@ package com.pauluz.bbapps.kontomierz.view
             super.onAdded();
 
             logger.debug(": onAdded");
+
+            content = ContainerHelper.createSpinner();
+
+            viewAddedSignal.dispatch();
+        }
+
+        private function createUI():void
+        {
+            container = ContainerHelper.createEmptyContainer(0xFFFFFF);
 
             transactionsList = new List();
             transactionsList.selectionMode = ListSelectionMode.SINGLE;
@@ -98,9 +115,7 @@ package com.pauluz.bbapps.kontomierz.view
 
             transactionsList.contextActions = contextActions;
 
-            content = ContainerHelper.createSpinner();
-
-            viewAddedSignal.dispatch();
+            container.addChild(transactionsList);
         }
 
         private function transactionListClicked(event:ListEvent):void
@@ -127,11 +142,27 @@ package com.pauluz.bbapps.kontomierz.view
         {
             if (event.action == editAction)
             {
-                // TODO
+                editTransaction.dispatch(transactionsList.selectedItem as TransactionVO);
             }
             else if (event.action == deleteAction)
             {
-                // TODO
+                var confirmDialog:AlertDialog = new AlertDialog();
+                confirmDialog.title = "Potwierdzenie";
+                confirmDialog.message = "Czy napewno usunąć wybraną transakcję?";
+                confirmDialog.addButton("TAK");
+                confirmDialog.addButton("NIE");
+                confirmDialog.addEventListener(Event.SELECT, onDeleteConfirmation);
+                confirmDialog.show();
+            }
+        }
+
+        private function onDeleteConfirmation(event:Event):void
+        {
+            if (event.target.selectedIndex == 0)
+            {
+                deleteTransaction.dispatch(transactionsList.selectedItem as TransactionVO);
+
+                content = ContainerHelper.createSpinner();
             }
         }
 
@@ -143,7 +174,9 @@ package com.pauluz.bbapps.kontomierz.view
 
         public function addData(data:DataProvider):void
         {
-            content = transactionsList;
+            createUI();
+
+            content = container;
             transactionsList.dataProvider = data;
         }
     }

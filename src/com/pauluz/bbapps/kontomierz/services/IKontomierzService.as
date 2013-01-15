@@ -26,7 +26,7 @@ package com.pauluz.bbapps.kontomierz.services
 
         function createTransaction(transaction:TransactionVO):void;
 //        function updateTransaction(id:int, ...):void;
-        function deleteTransaction(id:int):void;
+        function deleteTransaction(id:int, wallet:Boolean):void;
 
         function getAllCategories():void;
 //        function getAllTags():void;
