@@ -30,8 +30,6 @@ package com.pauluz.bbapps.kontomierz.services
     import flash.net.SharedObject;
     import flash.net.URLLoader;
 
-    import mx.collections.ArrayCollection;
-
     import mx.logging.ILogger;
 
     import org.robotlegs.mvcs.Actor;
@@ -97,42 +95,47 @@ package com.pauluz.bbapps.kontomierz.services
             throw new Error("Override this method!");
         }
 
-        public function getAllAccounts(apiKey:String):void
+        public function getAllAccounts():void
         {
             throw new Error("Override this method!");
         }
 
-        public function createWallet(name:String, balance:Number, currency:String, liquid:Boolean, apiKey:String):void
+        public function createWallet(name:String, balance:Number, currency:String, liquid:Boolean):void
         {
             throw new Error("Override this method!");
         }
 
-        public function updateWallet(id:int, name:String, balance:Number, currency:String, liquid:Boolean, apiKey:String):void
+        public function updateWallet(id:int, name:String, balance:Number, currency:String, liquid:Boolean):void
         {
             throw new Error("Override this method!");
         }
 
-        public function deleteWallet(id:int, apiKey:String):void
+        public function deleteWallet(id:int):void
         {
             throw new Error("Override this method!");
         }
 
-        public function getAllTransactions(accountId:int, wallet:Boolean, apiKey:String):void
+        public function getAllTransactions(accountId:int, wallet:Boolean):void
         {
             throw new Error("Override this method!");
         }
 
-        public function getAllCategories(apiKey:String):void
+        public function getAllCategories():void
         {
             throw new Error("Override this method!");
         }
 
-        public function getAllTransactionsForCategory(categoryId:int, apiKey:String):void
+        public function getAllTransactionsForCategory(categoryId:int):void
         {
             throw new Error("Override this method!");
         }
 
-        public function createTransaction(transaction:TransactionVO, apiKey:String):void
+        public function createTransaction(transaction:TransactionVO):void
+        {
+            throw new Error("Override this method!");
+        }
+
+        public function deleteTransaction(id:int):void
         {
             throw new Error("Override this method!");
         }

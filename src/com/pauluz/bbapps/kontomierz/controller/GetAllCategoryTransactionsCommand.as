@@ -12,7 +12,7 @@ package com.pauluz.bbapps.kontomierz.controller
 
     import org.robotlegs.mvcs.SignalCommand;
 
-    public final class GetAllCategoryTransactionsCommand extends SignalCommand 
+    public final class GetAllCategoryTransactionsCommand extends SignalCommand
     {
         [Inject]
         public var model:IKontomierzModel;
@@ -25,7 +25,7 @@ package com.pauluz.bbapps.kontomierz.controller
          */        
         override public function execute():void    
         {
-            kontomierzService.getAllTransactionsForCategory(model.selectedCategory.id, model.apiKey);
+            kontomierzService.getAllTransactionsForCategory(model.selectedCategory.id);
         }
     }
 }

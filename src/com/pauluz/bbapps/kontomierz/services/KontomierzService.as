@@ -81,14 +81,14 @@ package com.pauluz.bbapps.kontomierz.services
         }
 
 
-        override public function getAllAccounts(apiKey:String):void
+        override public function getAllAccounts():void
         {
             logger.debug(": getAllAccounts service call");
 
             var loader:URLLoader = new URLLoader();
             var urlRequest:URLRequest = new URLRequest();
 
-            urlRequest.url = ApplicationConstants.KONTOMIERZ_API_ENDPOINT + "user_accounts" + ApplicationConstants.KONTOMIERZ_API_FORMAT_JSON + "?api_key=" + apiKey;
+            urlRequest.url = ApplicationConstants.KONTOMIERZ_API_ENDPOINT + "user_accounts" + ApplicationConstants.KONTOMIERZ_API_FORMAT_JSON + "?api_key=" + model.apiKey;
 
             loader.addEventListener(Event.COMPLETE, getAllAccountsCompleteHandler);
             addLoaderListeners(loader);
@@ -96,25 +96,25 @@ package com.pauluz.bbapps.kontomierz.services
             loader.load(urlRequest);
         }
 
-        override public function createWallet(name:String, balance:Number, currency:String, liquid:Boolean, apiKey:String):void
+        override public function createWallet(name:String, balance:Number, currency:String, liquid:Boolean):void
         {
             logger.debug(": createWallet service call");
 
         }
 
-        override public function updateWallet(id:int, name:String, balance:Number, currency:String, liquid:Boolean, apiKey:String):void
+        override public function updateWallet(id:int, name:String, balance:Number, currency:String, liquid:Boolean):void
         {
             logger.debug(": updateWallet service call");
 
         }
 
-        override public function deleteWallet(id:int, apiKey:String):void
+        override public function deleteWallet(id:int):void
         {
             logger.debug(": deleteWallet service call");
 
         }
 
-        override public function getAllTransactions(accountId:int, wallet:Boolean, apiKey:String):void
+        override public function getAllTransactions(accountId:int, wallet:Boolean):void
         {
             logger.debug(": getAllTransactions service call");
 
@@ -124,7 +124,7 @@ package com.pauluz.bbapps.kontomierz.services
             var url:String = ApplicationConstants.KONTOMIERZ_API_ENDPOINT + "money_transactions" + ApplicationConstants.KONTOMIERZ_API_FORMAT_JSON;
             url += "?user_account_id=" + accountId;
             url += "&start_on=01-01-2011";
-            url += "&api_key=" + apiKey;
+            url += "&api_key=" + model.apiKey;
             urlRequest.url = url;
 
             if (wallet)
@@ -140,7 +140,7 @@ package com.pauluz.bbapps.kontomierz.services
             loader.load(urlRequest);
         }
 
-        override public function getAllTransactionsForCategory(categoryId:int, apiKey:String):void
+        override public function getAllTransactionsForCategory(categoryId:int):void
         {
             logger.debug(": getAllTransactionsForCategory service call");
 
@@ -150,7 +150,7 @@ package com.pauluz.bbapps.kontomierz.services
             var url:String = ApplicationConstants.KONTOMIERZ_API_ENDPOINT + "money_transactions" + ApplicationConstants.KONTOMIERZ_API_FORMAT_JSON;
             url += "?category_id=" + categoryId;
             url += "&start_on=01-01-2011";
-            url += "&api_key=" + apiKey;
+            url += "&api_key=" + model.apiKey;
             urlRequest.url = url;
 
             loader.addEventListener(Event.COMPLETE, getAllTransactionsCompleteHandler);
@@ -160,7 +160,7 @@ package com.pauluz.bbapps.kontomierz.services
         }
 
 
-        override public function createTransaction(transaction:TransactionVO, apiKey:String):void
+        override public function createTransaction(transaction:TransactionVO):void
         {
             logger.debug(": createTransaction service call");
 
@@ -177,7 +177,7 @@ package com.pauluz.bbapps.kontomierz.services
             var apiDate:String = transaction.transactionOn.substr(8, 2) + "-" + transaction.transactionOn.substr(5, 2) + "-" + transaction.transactionOn.substr(0, 4);
             variables["money_transaction[transaction_on]"] = apiDate;
             variables["money_transaction[client_assigned_id]"] = new Date().getMilliseconds();
-            variables["api_key"] = apiKey;
+            variables["api_key"] = model.apiKey;
             urlRequest.data = variables;
 
             loader.addEventListener(Event.COMPLETE, addTransactionCompleteHandler);
@@ -186,7 +186,7 @@ package com.pauluz.bbapps.kontomierz.services
             loader.load(urlRequest);
         }
 
-        override public function getAllCategories(apiKey:String):void
+        override public function getAllCategories():void
         {
             logger.debug(": getAllTransactions service call");
 
@@ -195,7 +195,7 @@ package com.pauluz.bbapps.kontomierz.services
 
             var url:String = ApplicationConstants.KONTOMIERZ_API_ENDPOINT + "categories" + ApplicationConstants.KONTOMIERZ_API_FORMAT_JSON;
             url += "?direction=withdrawal&in_wallet=true";
-            url += "&api_key=" + apiKey;
+            url += "&api_key=" + model.apiKey;
             urlRequest.url = url;
 
             loader.addEventListener(Event.COMPLETE, getAllCategoriesCompleteHandler);

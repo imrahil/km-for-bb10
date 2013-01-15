@@ -36,7 +36,7 @@ package com.pauluz.bbapps.kontomierz.controller
             }
             else
             {
-                kontomierzService.getAllTransactions(model.defaultWalletId, true, model.apiKey);
+                kontomierzService.getAllTransactions(model.defaultWalletId, true);
             }
         }
     }

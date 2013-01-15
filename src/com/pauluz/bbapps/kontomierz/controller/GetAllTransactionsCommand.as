@@ -26,7 +26,7 @@ package com.pauluz.bbapps.kontomierz.controller
          */        
         override public function execute():void    
         {
-            kontomierzService.getAllTransactions(model.selectedAccount.id, false, model.apiKey);
+            kontomierzService.getAllTransactions(model.selectedAccount.id, false);
         }
     }
 }

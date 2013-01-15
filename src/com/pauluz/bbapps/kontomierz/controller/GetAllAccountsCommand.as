@@ -36,7 +36,7 @@ package com.pauluz.bbapps.kontomierz.controller
             }
             else
             {
-                kontomierzService.getAllAccounts(model.apiKey);
+                kontomierzService.getAllAccounts();
             }
         }
     }

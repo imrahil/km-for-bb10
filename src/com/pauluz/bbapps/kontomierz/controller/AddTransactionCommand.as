@@ -21,9 +21,6 @@ package com.pauluz.bbapps.kontomierz.controller
 
         /** INJECTIONS **/
         [Inject]
-        public var model:IKontomierzModel;
-
-        [Inject]
         public var kontomierzService:IKontomierzService;
 
         /**
@@ -31,7 +28,7 @@ package com.pauluz.bbapps.kontomierz.controller
          */        
         override public function execute():void    
         {
-            kontomierzService.createTransaction(transaction, model.apiKey);
+            kontomierzService.createTransaction(transaction);
         }
     }
 }
