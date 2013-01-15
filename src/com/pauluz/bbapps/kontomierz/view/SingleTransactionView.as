@@ -17,9 +17,8 @@ package com.pauluz.bbapps.kontomierz.view
 
     import org.osflash.signals.Signal;
 
-    import qnx.fuse.ui.actionbar.ActionPlacement;
-
     import qnx.fuse.ui.core.Action;
+    import qnx.fuse.ui.core.ActionBase;
     import qnx.fuse.ui.core.Container;
     import qnx.fuse.ui.core.SizeOptions;
     import qnx.fuse.ui.layouts.gridLayout.GridData;
@@ -61,7 +60,7 @@ package com.pauluz.bbapps.kontomierz.view
             var prop:NavigationPaneProperties = new NavigationPaneProperties();
             prop.backButton = new Action("Transakcje");
 
-            actions = new Vector.<Action>();
+            actions = new Vector.<ActionBase>();
 
             editAction = new Action("Edytuj", new Resources.ICON_EDIT());
             actions.push(editAction);

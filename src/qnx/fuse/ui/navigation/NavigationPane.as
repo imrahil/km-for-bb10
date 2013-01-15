@@ -143,7 +143,7 @@ package qnx.fuse.ui.navigation
             }
         }
 
-        override public function getActionsToDisplayOnBar():Vector.<Action>
+        override public function getActionsToDisplayOnBar():Vector.<ActionBase>
         {
             if (top && top.actions)
             {

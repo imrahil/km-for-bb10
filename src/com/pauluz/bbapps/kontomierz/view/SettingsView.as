@@ -50,7 +50,7 @@ package com.pauluz.bbapps.kontomierz.view
             aboutAction = new Action("O programie", new Resources.ICON_ABOUT());
             aboutAction.actionBarPlacement = ActionPlacement.ON_BAR;
 
-            actions = new Vector.<Action>();
+            actions = new Vector.<ActionBase>();
             actions.push(aboutAction);
         }
 
@@ -63,12 +63,6 @@ package com.pauluz.bbapps.kontomierz.view
             var container:Container = ContainerHelper.createContainer();
             var labelButton:LabelButton;
             var gridDataHolder:GridData;
-
-//            var containerData:GridData = new GridData();
-//            containerData.hAlign = Align.BEGIN;
-//            containerData.vAlign = Align.BEGIN;
-//            containerData.setOptions(SizeOptions.RESIZE_BOTH);
-//            container.layoutData = containerData;
 
             labelButton = new LabelButton();
             labelButton.label = "Zmiana e-maila";
