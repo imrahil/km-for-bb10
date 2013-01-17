@@ -7,12 +7,14 @@
  */
 package com.pauluz.bbapps.kontomierz.view
 {
+    import com.pauluz.bbapps.kontomierz.constants.ApplicationConstants;
     import com.pauluz.bbapps.kontomierz.model.vo.TransactionVO;
     import com.pauluz.bbapps.kontomierz.utils.ContainerHelper;
     import com.pauluz.bbapps.kontomierz.utils.LogUtil;
     import com.pauluz.bbapps.kontomierz.utils.TextFormatUtil;
     import com.pauluz.bbapps.kontomierz.view.components.DatePicker;
 
+    import flash.events.Event;
     import flash.events.MouseEvent;
 
     import mx.logging.ILogger;
@@ -20,6 +22,8 @@ package com.pauluz.bbapps.kontomierz.view
     import org.osflash.signals.Signal;
 
     import qnx.fuse.ui.buttons.LabelButton;
+    import qnx.fuse.ui.buttons.RadioButton;
+    import qnx.fuse.ui.buttons.RadioButtonGroup;
     import qnx.fuse.ui.core.Action;
     import qnx.fuse.ui.core.Container;
     import qnx.fuse.ui.core.SizeOptions;
@@ -27,8 +31,10 @@ package com.pauluz.bbapps.kontomierz.view
     import qnx.fuse.ui.dialog.ListDialog;
     import qnx.fuse.ui.events.ActionEvent;
     import qnx.fuse.ui.layouts.gridLayout.GridData;
+    import qnx.fuse.ui.layouts.gridLayout.GridLayout;
     import qnx.fuse.ui.listClasses.ScrollDirection;
     import qnx.fuse.ui.navigation.TitlePage;
+    import qnx.fuse.ui.skins.SkinStates;
     import qnx.fuse.ui.text.KeyboardType;
     import qnx.fuse.ui.text.Label;
     import qnx.fuse.ui.text.TextInput;
@@ -38,6 +44,9 @@ package com.pauluz.bbapps.kontomierz.view
     {
         private var logger:ILogger;
 
+        private var directionRadioGroup:RadioButtonGroup;
+        private var withdrawalRadio:RadioButton;
+        private var depositRadio:RadioButton;
         private var amountTextInput:TextInput;
         private var expenseErrorLabel:Label;
         private var datePicker:DatePicker;
@@ -79,6 +88,43 @@ package com.pauluz.bbapps.kontomierz.view
             gridData.setOptions(SizeOptions.RESIZE_BOTH);
             container.layoutData = gridData;
 
+            // TRANSACTION DIRECTION
+            textLabel = new Label();
+            textLabel.text = "Kierunek:";
+            textLabel.format = TextFormatUtil.setFormat(textLabel.format, 45);
+            container.addChild(textLabel);
+
+            var directionsGrid:GridLayout = new GridLayout();
+            directionsGrid.numColumns = 2;
+            directionsGrid.hSpacing = 40;
+            var directionsContainer:Container = new Container();
+            directionsContainer.layout = directionsGrid;
+
+            withdrawalRadio = new RadioButton();
+            withdrawalRadio.label = "Wydatek";
+            withdrawalRadio.selected = true;
+            withdrawalRadio.groupname = "direction";
+            withdrawalRadio.paddingLeft = 10;
+            withdrawalRadio.setTextFormatForState(TextFormatUtil.setFormat(withdrawalRadio.getTextFormatForState(SkinStates.UP), 45), SkinStates.UP);
+            withdrawalRadio.setTextFormatForState(TextFormatUtil.setFormat(withdrawalRadio.getTextFormatForState(SkinStates.DOWN), 45), SkinStates.DOWN);
+            withdrawalRadio.setTextFormatForState(TextFormatUtil.setFormat(withdrawalRadio.getTextFormatForState(SkinStates.SELECTED), 45), SkinStates.SELECTED);
+
+            depositRadio = new RadioButton();
+            depositRadio.label = "Przychód";
+            depositRadio.groupname = "direction";
+            depositRadio.paddingLeft = 10;
+            depositRadio.setTextFormatForState(TextFormatUtil.setFormat(depositRadio.getTextFormatForState(SkinStates.UP), 45), SkinStates.UP);
+            depositRadio.setTextFormatForState(TextFormatUtil.setFormat(depositRadio.getTextFormatForState(SkinStates.DOWN), 45), SkinStates.DOWN);
+            depositRadio.setTextFormatForState(TextFormatUtil.setFormat(depositRadio.getTextFormatForState(SkinStates.SELECTED), 45), SkinStates.SELECTED);
+
+            directionsContainer.addChild(withdrawalRadio);
+            directionsContainer.addChild(depositRadio);
+
+            container.addChild(directionsContainer);
+
+            directionRadioGroup = RadioButtonGroup.getGroup("direction");
+            directionRadioGroup.addEventListener(Event.CHANGE, onDirectionChange);
+
             // AMOUNT LABEL
             labelContainer = new Container();
             labelContainer.layout = ContainerHelper.createTwoColumnGridData();
@@ -112,8 +158,7 @@ package com.pauluz.bbapps.kontomierz.view
             datePicker.setDate(new Date());
             container.addChild(datePicker);
 
-
-            // DESCRIPTIONLABEL
+            // DESCRIPTION LABEL
             labelContainer = new Container();
             labelContainer.layout = ContainerHelper.createTwoColumnGridData();
 
@@ -151,6 +196,20 @@ package com.pauluz.bbapps.kontomierz.view
             viewAddedSignal.dispatch();
         }
 
+        private function onDirectionChange(event:Event):void
+        {
+            if (directionRadioGroup.selection == withdrawalRadio)
+            {
+                amountTextInput.prompt = "Wysokość wydatku";
+                descriptionTextInput.prompt = "Opis wydatku";
+            }
+            else
+            {
+                amountTextInput.prompt = "Wysokość przychodu";
+                descriptionTextInput.prompt = "Opis przychodu";
+            }
+        }
+
         private function onCategoryBtnClick(event:MouseEvent):void
         {
             var myList:ListDialog = new ListDialog();
@@ -164,7 +223,7 @@ package com.pauluz.bbapps.kontomierz.view
         public function addData(data:SectionDataProvider):void
         {
 //            categoryBtn.enabled = true;
-            categoryDP = data;
+//            categoryDP = data;
         }
 
         private function onAddExpenseAction(event:ActionEvent):void
@@ -187,12 +246,15 @@ package com.pauluz.bbapps.kontomierz.view
                 newTransaction.transactionOn = datePicker.value;
                 newTransaction.description = descriptionTextInput.text;
 
+                newTransaction.direction = (directionRadioGroup.selection == withdrawalRadio) ? ApplicationConstants.TRANSACTION_DIRECTION_WITHDRAWAL : ApplicationConstants.TRANSACTION_DIRECTION_DEPOSIT;
+
                 addTransactionSignal.dispatch(newTransaction);
             }
         }
 
         public function showAlertAndCleanUp():void
         {
+            directionRadioGroup.setSelectedRadioButton(withdrawalRadio);
             amountTextInput.text = "";
             datePicker.setDate(new Date());
             descriptionTextInput.text = "";

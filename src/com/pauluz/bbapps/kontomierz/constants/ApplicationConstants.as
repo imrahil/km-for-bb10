@@ -23,5 +23,8 @@ package com.pauluz.bbapps.kontomierz.constants
 
         public static const WALLET_ACCOUNT_NAME:String  = "Wallets";
 
+        public static const TRANSACTION_DIRECTION_WITHDRAWAL:String  = "withdrawal";
+        public static const TRANSACTION_DIRECTION_DEPOSIT:String  = "deposit";
+
     }
 }

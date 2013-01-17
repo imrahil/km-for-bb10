@@ -32,6 +32,8 @@ package com.pauluz.bbapps.kontomierz.model
         private var _categoriesList:SectionDataProvider;
         private var _selectedCategory:CategoryVO;
 
+        private var _currenciesList:DataProvider;
+
         public function get apiKey():String
         {
             return _apiKey;
@@ -123,6 +125,16 @@ package com.pauluz.bbapps.kontomierz.model
         public function set selectedCategory(value:CategoryVO):void
         {
             _selectedCategory = value;
+        }
+
+        public function get currenciesList():DataProvider
+        {
+            return _currenciesList;
+        }
+
+        public function set currenciesList(value:DataProvider):void
+        {
+            _currenciesList = value;
         }
     }
 }

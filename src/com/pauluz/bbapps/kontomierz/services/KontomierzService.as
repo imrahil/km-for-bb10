@@ -172,11 +172,21 @@ package com.pauluz.bbapps.kontomierz.services
             urlRequest.method = URLRequestMethod.POST;
 
             var variables:URLVariables = new URLVariables();
-            variables["money_transaction[category_id]"] = 101;
             variables["money_transaction[currency_amount]"] = transaction.amount;
             variables["money_transaction[name]"] = transaction.description;
             var apiDate:String = transaction.transactionOn.substr(8, 2) + "-" + transaction.transactionOn.substr(5, 2) + "-" + transaction.transactionOn.substr(0, 4);
             variables["money_transaction[transaction_on]"] = apiDate;
+            variables["money_transaction[direction]"] = transaction.direction;
+
+            if (transaction.direction == ApplicationConstants.TRANSACTION_DIRECTION_WITHDRAWAL)
+            {
+                variables["money_transaction[category_id]"] = 101;
+            }
+            else
+            {
+                variables["money_transaction[category_id]"] = 103;
+            }
+
             variables["money_transaction[client_assigned_id]"] = new Date().getMilliseconds();
             variables["api_key"] = model.apiKey;
             urlRequest.data = variables;
@@ -187,6 +197,32 @@ package com.pauluz.bbapps.kontomierz.services
             loader.load(urlRequest);
         }
 
+
+        override public function updateTransaction(transaction:TransactionVO):void
+        {
+            logger.debug(": updateTransaction service call");
+
+            var loader:URLLoader = new URLLoader();
+            var urlRequest:URLRequest = new URLRequest();
+
+            urlRequest.url = ApplicationConstants.KONTOMIERZ_API_ENDPOINT + "money_transactions/" + transaction.id + ApplicationConstants.KONTOMIERZ_API_FORMAT_JSON;
+            urlRequest.method = URLRequestMethod.PUT;
+
+            var variables:URLVariables = new URLVariables();
+            variables["money_transaction[category_id]"] = transaction.categoryId;
+            variables["money_transaction[currency_amount]"] = transaction.amount;
+            variables["money_transaction[name]"] = transaction.description;
+            var apiDate:String = transaction.transactionOn.substr(8, 2) + "-" + transaction.transactionOn.substr(5, 2) + "-" + transaction.transactionOn.substr(0, 4);
+            variables["money_transaction[transaction_on]"] = apiDate;
+            variables["money_transaction[direction]"] = transaction.direction;
+            variables["api_key"] = model.apiKey;
+            urlRequest.data = variables;
+
+            loader.addEventListener(Event.COMPLETE, updateTransactionCompleteHandler);
+            addLoaderListeners(loader);
+
+            loader.load(urlRequest);
+        }
 
         override public function deleteTransaction(id:int, wallet:Boolean):void
         {
@@ -225,6 +261,23 @@ package com.pauluz.bbapps.kontomierz.services
             urlRequest.url = url;
 
             loader.addEventListener(Event.COMPLETE, getAllCategoriesCompleteHandler);
+            addLoaderListeners(loader);
+
+            loader.load(urlRequest);
+        }
+
+        override public function getAllCurrencies():void
+        {
+            logger.debug(": getAllCurrencies service call");
+
+            var loader:URLLoader = new URLLoader();
+            var urlRequest:URLRequest = new URLRequest();
+
+            var url:String = ApplicationConstants.KONTOMIERZ_API_ENDPOINT + "currencies" + ApplicationConstants.KONTOMIERZ_API_FORMAT_JSON;
+            url += "?api_key=" + model.apiKey;
+            urlRequest.url = url;
+
+            loader.addEventListener(Event.COMPLETE, getAllCurrenciesCompleteHandler);
             addLoaderListeners(loader);
 
             loader.load(urlRequest);

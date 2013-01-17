@@ -7,6 +7,8 @@
  */
 package com.pauluz.bbapps.kontomierz.view.mediators
 {
+    import com.pauluz.bbapps.kontomierz.signals.GetAllCategoriesSignal;
+    import com.pauluz.bbapps.kontomierz.signals.GetAllCurrenciesSignal;
     import com.pauluz.bbapps.kontomierz.utils.LogUtil;
     import com.pauluz.bbapps.kontomierz.view.MainView;
 
@@ -29,7 +31,11 @@ package com.pauluz.bbapps.kontomierz.view.mediators
         /**
          * SIGNAL -> COMMAND
          */
+        [Inject]
+        public var getAllCategoriesSignal:GetAllCategoriesSignal;
 
+        [Inject]
+        public var getAllCurrenciesSignal:GetAllCurrenciesSignal;
 
         /** variables **/
         private var logger:ILogger;
@@ -53,9 +59,8 @@ package com.pauluz.bbapps.kontomierz.view.mediators
         {
             logger.debug(": onRegister");
 
+            getAllCategoriesSignal.dispatch();
+            getAllCurrenciesSignal.dispatch();
         }
-
-        /** methods **/
-
     }
 }

@@ -25,11 +25,12 @@ package com.pauluz.bbapps.kontomierz.services
         function getAllTransactionsForCategory(categoryId:int):void;
 
         function createTransaction(transaction:TransactionVO):void;
-//        function updateTransaction(id:int, ...):void;
+        function updateTransaction(transaction:TransactionVO):void;
         function deleteTransaction(id:int, wallet:Boolean):void;
 
         function getAllCategories():void;
 //        function getAllTags():void;
+        function getAllCurrencies():void;
 
     }
 }

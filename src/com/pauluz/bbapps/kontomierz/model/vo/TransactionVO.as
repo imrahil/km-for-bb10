@@ -26,5 +26,7 @@ package com.pauluz.bbapps.kontomierz.model.vo
         public var categoryName:String = "";
         public var categoryId:int;
         public var tagString:String = "";
+
+        public var direction:String = "";
     }
 }

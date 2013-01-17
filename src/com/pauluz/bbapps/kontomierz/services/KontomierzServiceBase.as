@@ -20,6 +20,7 @@ package com.pauluz.bbapps.kontomierz.services
     import com.pauluz.bbapps.kontomierz.signals.signaltons.LoginSuccessfulSignal;
     import com.pauluz.bbapps.kontomierz.signals.signaltons.ProvideAllAccountsDataSignal;
     import com.pauluz.bbapps.kontomierz.signals.signaltons.ProvideAllCategoriesSignal;
+    import com.pauluz.bbapps.kontomierz.signals.signaltons.ProvideAllCurrenciesSignal;
     import com.pauluz.bbapps.kontomierz.signals.signaltons.ProvideAllTransactionsSignal;
     import com.pauluz.bbapps.kontomierz.signals.signaltons.TransactionSuccessfulySavedSignal;
     import com.pauluz.bbapps.kontomierz.utils.LogUtil;
@@ -73,6 +74,9 @@ package com.pauluz.bbapps.kontomierz.services
 
         [Inject]
         public var provideAllCategoriesSignal:ProvideAllCategoriesSignal;
+
+        [Inject]
+        public var provideAllCurrenciesSignal:ProvideAllCurrenciesSignal;
 
         [Inject]
         public var storeDefaultWalletIdSignal:StoreDefaultWalletIdSignal;
@@ -129,11 +133,6 @@ package com.pauluz.bbapps.kontomierz.services
             throw new Error("Override this method!");
         }
 
-        public function getAllCategories():void
-        {
-            throw new Error("Override this method!");
-        }
-
         public function getAllTransactionsForCategory(categoryId:int):void
         {
             throw new Error("Override this method!");
@@ -144,7 +143,22 @@ package com.pauluz.bbapps.kontomierz.services
             throw new Error("Override this method!");
         }
 
+        public function updateTransaction(transaction:TransactionVO):void
+        {
+            throw new Error("Override this method!");
+        }
+
         public function deleteTransaction(id:int, wallet:Boolean):void
+        {
+            throw new Error("Override this method!");
+        }
+
+        public function getAllCategories():void
+        {
+            throw new Error("Override this method!");
+        }
+
+        public function getAllCurrencies():void
         {
             throw new Error("Override this method!");
         }
@@ -271,6 +285,29 @@ package com.pauluz.bbapps.kontomierz.services
             }
         }
 
+        protected function updateTransactionCompleteHandler(event:Event):void
+        {
+            logger.debug(": updateTransactionCompleteHandler");
+
+            var loader:URLLoader = event.currentTarget as URLLoader;
+
+            loader.removeEventListener(Event.COMPLETE, updateTransactionCompleteHandler);
+            removeLoaderListeners(loader);
+
+            if (responseStatus == 201)
+            {
+                model.isWalletListExpired = true;
+//                transactionSuccessfulySavedSignal.dispatch();
+            }
+            else
+            {
+                logger.debug(": updateTransactionCompleteHandler - status: " + responseStatus);
+
+                var error:ErrorVO = new ErrorVO("Wystąpił błąd: " + responseStatus);
+                errorSignal.dispatch(error);
+            }
+        }
+
         protected function deleteTransactionCompleteHandler(event:Event):void
         {
             logger.debug(": deleteTransactionCompleteHandler");
@@ -329,6 +366,21 @@ package com.pauluz.bbapps.kontomierz.services
 
             model.categoriesList = categoriesList;
             provideAllCategoriesSignal.dispatch(categoriesList);
+        }
+
+        protected function getAllCurrenciesCompleteHandler(event:Event):void
+        {
+            logger.debug(": getAllCurrenciesCompleteHandler");
+
+            var loader:URLLoader = event.currentTarget as URLLoader;
+
+            loader.removeEventListener(Event.COMPLETE, getAllCurrenciesCompleteHandler);
+            removeLoaderListeners(loader);
+
+            var currenciesList:DataProvider = _parser.parseAllCurrenciesResponse(loader.data as String);
+
+            model.currenciesList = currenciesList;
+            provideAllCurrenciesSignal.dispatch(currenciesList);
         }
 
         protected function addLoaderListeners(loader:URLLoader):void

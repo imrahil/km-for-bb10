@@ -10,6 +10,7 @@ package com.pauluz.bbapps.kontomierz.services.helpers
     import com.pauluz.bbapps.kontomierz.constants.ApplicationConstants;
     import com.pauluz.bbapps.kontomierz.model.vo.AccountVO;
     import com.pauluz.bbapps.kontomierz.model.vo.CategoryVO;
+    import com.pauluz.bbapps.kontomierz.model.vo.CurrencyVO;
     import com.pauluz.bbapps.kontomierz.model.vo.TransactionVO;
     import com.pauluz.bbapps.kontomierz.utils.LogUtil;
 
@@ -175,6 +176,29 @@ package com.pauluz.bbapps.kontomierz.services.helpers
                             output.addChildToItem(subCategory, category);
                         }
                     }
+                }
+            }
+
+            return output;
+        }
+
+        public function parseAllCurrenciesResponse(result:String):DataProvider
+        {
+            logger.debug(": parseAllCurrenciesResponse");
+
+            var output:DataProvider = new DataProvider();
+            var resultObject:Object = JSON.parse(result);
+
+            if (resultObject && resultObject.currencies && resultObject.currencies is Array && resultObject.currencies.length > 0)
+            {
+                for each (var item:Object in resultObject.currencies)
+                {
+                    var currency:CurrencyVO = new CurrencyVO();
+                    currency.id = item.id;
+                    currency.name = item.name;
+                    currency.fullName = item.full_name;
+
+                    output.addItem(currency);
                 }
             }
 

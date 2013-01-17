@@ -33,5 +33,9 @@ package com.pauluz.bbapps.kontomierz.model
 
         function get selectedCategory():CategoryVO;
         function set selectedCategory(value:CategoryVO):void;
+
+        function get currenciesList():DataProvider;
+        function set currenciesList(value:DataProvider):void;
+
     }
 }

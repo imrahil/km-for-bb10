@@ -44,6 +44,9 @@ package com.pauluz.bbapps.kontomierz.controller.bootstraps
             commandMap.mapSignalClass(GetAllCategoriesSignal, GetAllCategoriesCommand);
             commandMap.mapSignalClass(StoreSelectedCategorySignal, StoreSelectedCategoryCommand);
             commandMap.mapSignalClass(GetAllCategoryTransactionsSignal, GetAllCategoryTransactionsCommand);
+
+            // currencies
+            commandMap.mapSignalClass(GetAllCurrenciesSignal, GetAllCurrenciesCommand);
         }
     }
 }

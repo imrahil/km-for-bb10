@@ -30,6 +30,8 @@ package com.pauluz.bbapps.kontomierz.controller.bootstraps
 
             injector.mapSingleton(ProvideAllCategoriesSignal);
             injector.mapSingleton(SelectedCategorySuccessfulStoreSignal);
+
+            injector.mapSingleton(ProvideAllCurrenciesSignal);
         }
     }
 }

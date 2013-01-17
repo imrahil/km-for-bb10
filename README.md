@@ -9,7 +9,8 @@ Copyright (c) 2013 pauluZ
 
 Wersje:
 
-* 0.0.5 - dodana mozliwosc wprowadzania nowych wydatkow
+* 0.1.1 - dodana mozliwosc usuwania transakcji
+* 0.1.0 - dodana mozliwosc wprowadzania nowych wydatkow
 * 0.0.4 - dodane wyswietlanie listy kategorii
 * 0.0.3 - dodane wczytywanie transakcji dla portfela
 * 0.0.2 - logowanie, zapamietywanie sesji, wczytywanie listy kont, wczytywanie transakcji dla wybranego konta
@@ -17,8 +18,13 @@ Wersje:
 
 >TODO:
 >
+* edycja transakcji
+* wybor kategorii przy dodawaniu i edycji transakcji
+* obsluga przychodow (sa juz wydatki)
+* waluty ?
 * dodac zapis danych lokalnie - tak zeby nie wymagane bylo polaczenie z internetem (przy braku synchronizacji -> zablokowac edycje i dodawanie)
 * przy pierwszym starcie odczyt z sieci lub przy jej braku z danych lokalnych (sqlite?)
 * przy kolejnych odczytach brac dane z sqlite, a z sieci dopiero na akcje "Odswiez" wywolana przez uzytkownika
 * wykresy!
 * wyszukiwanie po kategorii i dacie prosto ze szczegolow wybranej transakcji
+* rozszerzyc TransactionListCellRenderer tak aby wyswietlal kwote i date
