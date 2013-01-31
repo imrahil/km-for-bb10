@@ -9,6 +9,7 @@ package com.pauluz.bbapps.kontomierz.view.mediators
 {
     import com.pauluz.bbapps.kontomierz.utils.LogUtil;
     import com.pauluz.bbapps.kontomierz.view.ChartsView;
+    import com.useitbetter.uDash;
 
     import mx.logging.ILogger;
 
@@ -43,6 +44,8 @@ package com.pauluz.bbapps.kontomierz.view.mediators
             
             logger = LogUtil.getLogger(this);
             logger.debug(": constructor");
+
+            uDash.recorder.saveMeta(uDash.metaevents.SECTION, "ChartsView")
         }
         
         /** 

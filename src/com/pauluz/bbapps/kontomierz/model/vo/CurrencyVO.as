@@ -13,10 +13,15 @@ package com.pauluz.bbapps.kontomierz.model.vo
      *
      */
     [Bindable]
-    public class CurrencyVO
+    public class CurrencyVO extends ListDialogBaseVO
     {
         public var id:int;
         public var name:String;
         public var fullName:String;
+
+        public function get label():String
+        {
+            return this.name + " - " + this.fullName;
+        }
     }
 }

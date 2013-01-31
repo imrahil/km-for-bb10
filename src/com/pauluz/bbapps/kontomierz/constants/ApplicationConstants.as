@@ -26,5 +26,8 @@ package com.pauluz.bbapps.kontomierz.constants
         public static const TRANSACTION_DIRECTION_WITHDRAWAL:String  = "withdrawal";
         public static const TRANSACTION_DIRECTION_DEPOSIT:String  = "deposit";
 
+        public static const DEFAULT_CURRENCY_NAME:String  = "PLN";
+        public static const DEFAULT_CURRENCY_FULL_NAME:String  = "złoty polski";
+
     }
 }

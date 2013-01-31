@@ -173,18 +173,19 @@ package com.pauluz.bbapps.kontomierz.services
 
             var variables:URLVariables = new URLVariables();
             variables["money_transaction[currency_amount]"] = transaction.amount;
+            variables["money_transaction[currency_name]"] = transaction.currencyName;
             variables["money_transaction[name]"] = transaction.description;
             var apiDate:String = transaction.transactionOn.substr(8, 2) + "-" + transaction.transactionOn.substr(5, 2) + "-" + transaction.transactionOn.substr(0, 4);
             variables["money_transaction[transaction_on]"] = apiDate;
             variables["money_transaction[direction]"] = transaction.direction;
 
-            if (transaction.direction == ApplicationConstants.TRANSACTION_DIRECTION_WITHDRAWAL)
+//            if (transaction.direction == ApplicationConstants.TRANSACTION_DIRECTION_WITHDRAWAL)
+//            {
+//                variables["money_transaction[category_id]"] = transaction.categoryId;
+//            }
+//            else
             {
-                variables["money_transaction[category_id]"] = 101;
-            }
-            else
-            {
-                variables["money_transaction[category_id]"] = 103;
+                variables["money_transaction[category_id]"] = transaction.categoryId;
             }
 
             variables["money_transaction[client_assigned_id]"] = new Date().getMilliseconds();

@@ -17,7 +17,6 @@ package com.pauluz.bbapps.kontomierz.view
     import org.osflash.signals.Signal;
 
     import qnx.fuse.ui.core.Container;
-
     import qnx.fuse.ui.core.SizeOptions;
     import qnx.fuse.ui.events.ListEvent;
     import qnx.fuse.ui.layouts.Align;

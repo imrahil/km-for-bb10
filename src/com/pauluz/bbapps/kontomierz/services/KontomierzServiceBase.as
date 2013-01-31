@@ -362,7 +362,7 @@ package com.pauluz.bbapps.kontomierz.services
             loader.removeEventListener(Event.COMPLETE, getAllCategoriesCompleteHandler);
             removeLoaderListeners(loader);
 
-            var categoriesList:SectionDataProvider = _parser.parseAllCategoriesResponse(loader.data as String);
+            var categoriesList:Array = _parser.parseAllCategoriesResponse(loader.data as String);
 
             model.categoriesList = categoriesList;
             provideAllCategoriesSignal.dispatch(categoriesList);

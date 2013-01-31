@@ -8,10 +8,13 @@
 package com.pauluz.bbapps.kontomierz.view
 {
     import com.pauluz.bbapps.kontomierz.constants.ApplicationConstants;
+    import com.pauluz.bbapps.kontomierz.model.vo.CategoryVO;
+    import com.pauluz.bbapps.kontomierz.model.vo.CurrencyVO;
     import com.pauluz.bbapps.kontomierz.model.vo.TransactionVO;
     import com.pauluz.bbapps.kontomierz.utils.ContainerHelper;
     import com.pauluz.bbapps.kontomierz.utils.LogUtil;
     import com.pauluz.bbapps.kontomierz.utils.TextFormatUtil;
+    import com.pauluz.bbapps.kontomierz.view.components.CustomListDialog;
     import com.pauluz.bbapps.kontomierz.view.components.DatePicker;
 
     import flash.events.Event;
@@ -38,7 +41,7 @@ package com.pauluz.bbapps.kontomierz.view
     import qnx.fuse.ui.text.KeyboardType;
     import qnx.fuse.ui.text.Label;
     import qnx.fuse.ui.text.TextInput;
-    import qnx.ui.data.SectionDataProvider;
+    import qnx.ui.data.DataProvider;
 
     public class AddTransactionView extends TitlePage
     {
@@ -53,8 +56,14 @@ package com.pauluz.bbapps.kontomierz.view
         private var descriptionTextInput:TextInput;
         private var descriptionErrorLabel:Label;
         private var categoryBtn:LabelButton;
+        private var categoryErrorLabel:Label;
+        private var currencyBtn:LabelButton;
 
-        private var categoryDP:SectionDataProvider;
+        private var categoriesDP:Array;
+        private var currenciesDP:DataProvider;
+
+        private var selectedCategory:CategoryVO;
+        private var selectedCurrency:CurrencyVO;
 
         public var viewAddedSignal:Signal = new Signal();
         public var addTransactionSignal:Signal = new Signal(TransactionVO);
@@ -158,6 +167,7 @@ package com.pauluz.bbapps.kontomierz.view
             datePicker.setDate(new Date());
             container.addChild(datePicker);
 
+
             // DESCRIPTION LABEL
             labelContainer = new Container();
             labelContainer.layout = ContainerHelper.createTwoColumnGridData();
@@ -179,17 +189,37 @@ package com.pauluz.bbapps.kontomierz.view
 
 
             // CATEGORY LABEL
+            labelContainer = new Container();
+            labelContainer.layout = ContainerHelper.createTwoColumnGridData();
+
             textLabel = new Label();
             textLabel.text = "Kategoria:";
             textLabel.format = TextFormatUtil.setFormat(textLabel.format, 45);
-            container.addChild(textLabel);
+            labelContainer.addChild(textLabel);
+
+            categoryErrorLabel = new Label();
+            categoryErrorLabel.format = TextFormatUtil.setFormat(textLabel.format, 45, 0xFF0000);
+            labelContainer.addChild(categoryErrorLabel);
+            container.addChild(labelContainer)
 
             // CATEGORY BTN
             categoryBtn = new LabelButton();
             categoryBtn.label = "-- brak kategorii --";
-            categoryBtn.enabled = false;
             categoryBtn.addEventListener(MouseEvent.CLICK, onCategoryBtnClick);
             container.addChild(categoryBtn);
+
+
+            // CURRENCY LABEL
+            textLabel = new Label();
+            textLabel.text = "Waluta:";
+            textLabel.format = TextFormatUtil.setFormat(textLabel.format, 45);
+            container.addChild(textLabel);
+
+            // CATEGORY BTN
+            currencyBtn = new LabelButton();
+            currencyBtn.label = ApplicationConstants.DEFAULT_CURRENCY_NAME + " (" + ApplicationConstants.DEFAULT_CURRENCY_FULL_NAME + ")";
+            currencyBtn.addEventListener(MouseEvent.CLICK, onCurrencyBtnClick);
+            container.addChild(currencyBtn);
 
             content = container;
 
@@ -212,18 +242,58 @@ package com.pauluz.bbapps.kontomierz.view
 
         private function onCategoryBtnClick(event:MouseEvent):void
         {
-            var myList:ListDialog = new ListDialog();
-            myList.title = "Kategorie";
+            var myList:CustomListDialog = new CustomListDialog();
+            myList.title = "Kategoria";
             myList.addButton("OK");
             myList.addButton("Anuluj");
-//            myList.items = categoryDP.
+            myList.list = categoriesDP;
+            myList.addEventListener(Event.SELECT, onCategorySelect);
             myList.show();
         }
 
-        public function addData(data:SectionDataProvider):void
+        private function onCategorySelect(event:Event):void
+        {
+            var listDialog:ListDialog = event.currentTarget as ListDialog;
+
+            if (listDialog.selectedIndex == 0)
+            {
+                categoryErrorLabel.text = "";
+
+                selectedCategory = categoriesDP[listDialog.listSelectedIndex] as CategoryVO;
+
+                categoryBtn.label = selectedCategory.name;
+            }
+        }
+
+        private function onCurrencyBtnClick(event:MouseEvent):void
+        {
+            var myList:CustomListDialog = new CustomListDialog();
+            myList.title = "Waluta";
+            myList.addButton("OK");
+            myList.addButton("Anuluj");
+            myList.list = currenciesDP.data;
+            myList.allowDeselect = false;
+            myList.addEventListener(Event.SELECT, onCurrencySelect);
+            myList.show();
+        }
+
+        private function onCurrencySelect(event:Event):void
+        {
+            var listDialog:ListDialog = event.currentTarget as ListDialog;
+
+            if (listDialog.selectedIndex == 0)
+            {
+                selectedCurrency = currenciesDP.getItemAt(listDialog.listSelectedIndex) as CurrencyVO;
+
+                currencyBtn.label = selectedCurrency.label;
+            }
+        }
+
+        public function addData(_categoriesData:Array, _currenciesData:DataProvider):void
         {
 //            categoryBtn.enabled = true;
-//            categoryDP = data;
+            categoriesDP = _categoriesData;
+            currenciesDP = _currenciesData;
         }
 
         private function onAddExpenseAction(event:ActionEvent):void
@@ -231,25 +301,35 @@ package com.pauluz.bbapps.kontomierz.view
             if (amountTextInput.text == "")
             {
                 expenseErrorLabel.text = "Proszę podać kwotę!";
+                return;
             }
-            else if (descriptionTextInput.text == "")
+
+            if (descriptionTextInput.text == "")
             {
                 descriptionErrorLabel.text = "Proszę podać opis!";
+                return;
             }
-            else
+
+            if (categoryBtn.label == "-- brak kategorii --")
             {
-                expenseErrorLabel.text = "";
-                descriptionErrorLabel.text = "";
-
-                var newTransaction:TransactionVO = new TransactionVO();
-                newTransaction.amount = parseFloat(amountTextInput.text);
-                newTransaction.transactionOn = datePicker.value;
-                newTransaction.description = descriptionTextInput.text;
-
-                newTransaction.direction = (directionRadioGroup.selection == withdrawalRadio) ? ApplicationConstants.TRANSACTION_DIRECTION_WITHDRAWAL : ApplicationConstants.TRANSACTION_DIRECTION_DEPOSIT;
-
-                addTransactionSignal.dispatch(newTransaction);
+                categoryErrorLabel.text = "Proszę wybrać kategorię!";
+                return;
             }
+
+            expenseErrorLabel.text = "";
+            descriptionErrorLabel.text = "";
+
+            var newTransaction:TransactionVO = new TransactionVO();
+            newTransaction.amount = parseFloat(amountTextInput.text);
+            newTransaction.transactionOn = datePicker.value;
+            newTransaction.description = descriptionTextInput.text;
+
+            newTransaction.direction = (directionRadioGroup.selection == withdrawalRadio) ? ApplicationConstants.TRANSACTION_DIRECTION_WITHDRAWAL : ApplicationConstants.TRANSACTION_DIRECTION_DEPOSIT;
+
+            newTransaction.currencyName = (selectedCurrency) ? selectedCurrency.name : ApplicationConstants.DEFAULT_CURRENCY_NAME;
+            newTransaction.categoryId = selectedCategory.id;
+
+            addTransactionSignal.dispatch(newTransaction);
         }
 
         public function showAlertAndCleanUp():void

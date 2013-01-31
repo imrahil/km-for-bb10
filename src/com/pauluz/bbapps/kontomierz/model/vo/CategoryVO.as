@@ -13,7 +13,7 @@ package com.pauluz.bbapps.kontomierz.model.vo
      *
      */
     [Bindable]
-    public class CategoryVO
+    public class CategoryVO extends ListDialogBaseVO
     {
         public var id:int;
         public var name:String;
@@ -22,7 +22,7 @@ package com.pauluz.bbapps.kontomierz.model.vo
 
         public function get label():String
         {
-            return name;
+            return this.name;
         }
     }
 }

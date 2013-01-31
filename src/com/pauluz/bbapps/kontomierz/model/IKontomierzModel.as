@@ -28,8 +28,8 @@ package com.pauluz.bbapps.kontomierz.model
         function get isWalletListExpired():Boolean;
         function set isWalletListExpired(value:Boolean):void;
 
-        function get categoriesList():SectionDataProvider;
-        function set categoriesList(value:SectionDataProvider):void;
+        function get categoriesList():Array;
+        function set categoriesList(value:Array):void;
 
         function get selectedCategory():CategoryVO;
         function set selectedCategory(value:CategoryVO):void;

@@ -29,7 +29,7 @@ package com.pauluz.bbapps.kontomierz.model
         private var _walletTransactionsList:DataProvider;
         private var _isWalletListExpired:Boolean;
 
-        private var _categoriesList:SectionDataProvider;
+        private var _categoriesList:Array;
         private var _selectedCategory:CategoryVO;
 
         private var _currenciesList:DataProvider;
@@ -107,12 +107,12 @@ package com.pauluz.bbapps.kontomierz.model
             _isWalletListExpired = value;
         }
 
-        public function get categoriesList():SectionDataProvider
+        public function get categoriesList():Array
         {
             return _categoriesList;
         }
 
-        public function set categoriesList(value:SectionDataProvider):void
+        public function set categoriesList(value:Array):void
         {
             _categoriesList = value;
         }

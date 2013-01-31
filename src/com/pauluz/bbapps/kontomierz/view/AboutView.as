@@ -10,6 +10,7 @@ package com.pauluz.bbapps.kontomierz.view
     import com.pauluz.bbapps.kontomierz.utils.ContainerHelper;
     import com.pauluz.bbapps.kontomierz.utils.LogUtil;
     import com.pauluz.bbapps.kontomierz.utils.TextFormatUtil;
+    import com.useitbetter.uDash;
 
     import flash.desktop.NativeApplication;
     import flash.events.MouseEvent;
@@ -100,6 +101,8 @@ package com.pauluz.bbapps.kontomierz.view
             container.addChild(descLabel);
 
             content = container;
+
+            uDash.recorder.saveMeta(uDash.metaevents.SECTION, "AboutView")
         }
 
         private static function onVisitBtnClick(event:MouseEvent):void

@@ -15,7 +15,6 @@ package com.pauluz.bbapps.kontomierz.view
 
     import flash.events.Event;
 
-
     import mx.logging.ILogger;
 
     import org.osflash.signals.Signal;
@@ -23,21 +22,16 @@ package com.pauluz.bbapps.kontomierz.view
     import qnx.fuse.ui.core.Action;
     import qnx.fuse.ui.core.ActionBase;
     import qnx.fuse.ui.core.ActionSet;
-
     import qnx.fuse.ui.core.Container;
-
     import qnx.fuse.ui.core.SizeOptions;
     import qnx.fuse.ui.dialog.AlertDialog;
     import qnx.fuse.ui.events.ActionEvent;
     import qnx.fuse.ui.events.ContextMenuEvent;
-
     import qnx.fuse.ui.events.ListEvent;
     import qnx.fuse.ui.layouts.Align;
     import qnx.fuse.ui.layouts.gridLayout.GridData;
-
     import qnx.fuse.ui.listClasses.List;
     import qnx.fuse.ui.listClasses.ListSelectionMode;
-
     import qnx.fuse.ui.navigation.TitlePage;
     import qnx.ui.data.DataProvider;
 

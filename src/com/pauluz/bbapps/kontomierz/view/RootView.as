@@ -49,22 +49,25 @@ package com.pauluz.bbapps.kontomierz.view
 
         private function stageResize(event:Event):void
         {
-            logger.debug(": rootView resize");
+//            logger.debug(": rootView resize");
 
-            if (mainView)
+            if (stage)
             {
-                mainView.width = stage.stageWidth;
-                mainView.height = stage.stageHeight;
-            }
-            else if (navigationPane)
-            {
-                navigationPane.width = stage.stageWidth;
-                navigationPane.height = stage.stageHeight;
-
-                for (var i:int = 0; i < navigationPane.stack.length; i++)
+                if (mainView)
                 {
-                    navigationPane.stack[i].width = navigationPane.width;
-                    navigationPane.stack[i].height = navigationPane.height;
+                    mainView.width = stage.stageWidth;
+                    mainView.height = stage.stageHeight;
+                }
+                else if (navigationPane)
+                {
+                    navigationPane.width = stage.stageWidth;
+                    navigationPane.height = stage.stageHeight;
+
+                    for (var i:int = 0; i < navigationPane.stack.length; i++)
+                    {
+                        navigationPane.stack[i].width = navigationPane.width;
+                        navigationPane.stack[i].height = navigationPane.height;
+                    }
                 }
             }
         }

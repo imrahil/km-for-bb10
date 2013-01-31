@@ -10,14 +10,19 @@ package com.pauluz.bbapps.kontomierz.view.mediators
     import com.pauluz.bbapps.kontomierz.model.vo.TransactionVO;
     import com.pauluz.bbapps.kontomierz.signals.AddTransactionSignal;
     import com.pauluz.bbapps.kontomierz.signals.GetAllCategoriesSignal;
+    import com.pauluz.bbapps.kontomierz.signals.GetAllCurrenciesSignal;
     import com.pauluz.bbapps.kontomierz.signals.signaltons.ProvideAllCategoriesSignal;
+    import com.pauluz.bbapps.kontomierz.signals.signaltons.ProvideAllCurrenciesSignal;
     import com.pauluz.bbapps.kontomierz.signals.signaltons.TransactionSuccessfulySavedSignal;
     import com.pauluz.bbapps.kontomierz.utils.LogUtil;
+    import com.useitbetter.uDash;
 
     import mx.logging.ILogger;
     
     import com.pauluz.bbapps.kontomierz.view.AddTransactionView;
     import org.robotlegs.mvcs.SignalMediator;
+
+    import qnx.ui.data.DataProvider;
 
     import qnx.ui.data.SectionDataProvider;
 
@@ -36,6 +41,9 @@ package com.pauluz.bbapps.kontomierz.view.mediators
         public var provideAllCategoriesSignal:ProvideAllCategoriesSignal;
 
         [Inject]
+        public var provideAllCurrenciesSignal:ProvideAllCurrenciesSignal;
+
+        [Inject]
         public var transactionSuccessfulySavedSignal:TransactionSuccessfulySavedSignal;
 
         /**
@@ -45,12 +53,20 @@ package com.pauluz.bbapps.kontomierz.view.mediators
         public var getAllCategoriesSignal:GetAllCategoriesSignal;
 
         [Inject]
+        public var getAllCurrenciesSignal:GetAllCurrenciesSignal;
+
+        [Inject]
         public var addTransactionSignal:AddTransactionSignal;
 
         /** variables **/
         private var logger:ILogger;
 
-        /** 
+        private var dataFlag:Boolean = false;
+
+        private var categoriesDP:Array;
+        private var currenciesDP:DataProvider;
+
+        /**
          * CONSTRUCTOR 
          */
         public function AddTransactionViewMediator()
@@ -59,6 +75,8 @@ package com.pauluz.bbapps.kontomierz.view.mediators
             
             logger = LogUtil.getLogger(this);
             logger.debug(": constructor");
+
+            uDash.recorder.saveMeta(uDash.metaevents.SECTION, "AddTransactionView")
         }
         
         /** 
@@ -73,6 +91,7 @@ package com.pauluz.bbapps.kontomierz.view.mediators
             addToSignal(view.addTransactionSignal, onAddTransaction);
 
             addOnceToSignal(provideAllCategoriesSignal, onCategoriesData);
+            addOnceToSignal(provideAllCurrenciesSignal, onCurrenciesData);
             addToSignal(transactionSuccessfulySavedSignal, onSuccessfulSave);
         }
 
@@ -80,7 +99,11 @@ package com.pauluz.bbapps.kontomierz.view.mediators
         {
             logger.debug(": onViewAdded");
 
+            dataFlag = false;
+
+            // TODO - wysylac sygnaly tylko jak brak danych?
             getAllCategoriesSignal.dispatch();
+            getAllCurrenciesSignal.dispatch();
         }
 
         private function onAddTransaction(transaction:TransactionVO):void
@@ -90,13 +113,33 @@ package com.pauluz.bbapps.kontomierz.view.mediators
             addTransactionSignal.dispatch(transaction);
         }
 
-        private function onCategoriesData(data:SectionDataProvider):void
+        private function onCategoriesData(data:Array):void
         {
             logger.debug(": onCategoriesData");
 
-            if (view)
+            if (dataFlag)
             {
-                view.addData(data);
+                view.addData(data, currenciesDP);
+            }
+            else
+            {
+                categoriesDP = data;
+                dataFlag = true;
+            }
+        }
+
+        private function onCurrenciesData(data:DataProvider):void
+        {
+            logger.debug(": onCurrenciesData");
+
+            if (dataFlag)
+            {
+                view.addData(categoriesDP, data);
+            }
+            else
+            {
+                currenciesDP = data;
+                dataFlag = true;
             }
         }
 

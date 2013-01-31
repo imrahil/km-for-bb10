@@ -14,7 +14,6 @@ package com.pauluz.bbapps.kontomierz.view
     import mx.logging.ILogger;
 
     import qnx.fuse.ui.core.Container;
-
     import qnx.fuse.ui.navigation.TitlePage;
     import qnx.fuse.ui.text.Label;
 

@@ -8,8 +8,12 @@
 package
 {
     import com.pauluz.bbapps.kontomierz.KontomierzContext;
+    import com.useitbetter.modules.minipanel.uMiniPanel;
+    import com.useitbetter.uDash;
+    import com.useitbetter.uSettings;
 
     import flash.display.Sprite;
+    import flash.events.Event;
 
     import mx.logging.Log;
     import mx.logging.LogEventLevel;
@@ -24,7 +28,26 @@ package
 
         public function Kontomierz()
         {
-            ThemeGlobals.injectCSS( "CellRenderer{ mouseChildren:false; opaqueBackground:#FAFAFA;}" );
+            if (stage)
+            {
+                init()
+            }
+            else
+            {
+                this.addEventListener(Event.ADDED_TO_STAGE, init)
+            }
+        }
+
+        private function init(e:Event = null):void
+        {
+//            uSettings.uProjectName = "Kontomierz";
+//            uSettings.uProjectApiPass = "b0bced19bf2f61b0484b5399c75405bb";
+//            uSettings.uPort = 57932;
+//
+//            stage.addChild(uDash.init());
+//            stage.addChild(new uMiniPanel());
+
+            ThemeGlobals.injectCSS("CellRenderer{ mouseChildren:false; opaqueBackground:#FAFAFA;}");
 
             CONFIG::debugMode
             {

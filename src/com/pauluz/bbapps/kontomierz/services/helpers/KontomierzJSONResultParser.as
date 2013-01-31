@@ -142,11 +142,11 @@ package com.pauluz.bbapps.kontomierz.services.helpers
             return output;
         }
 
-        public function parseAllCategoriesResponse(result:String):SectionDataProvider
+        public function parseAllCategoriesResponse(result:String):Array
         {
             logger.debug(": parseAllCategoriesResponse");
 
-            var output:SectionDataProvider = new SectionDataProvider();
+            var output:Array = [];
             var resultObject:Object = JSON.parse(result);
 
             if (resultObject && resultObject.category_groups && resultObject.category_groups is Array && resultObject.category_groups.length > 0)
@@ -159,8 +159,9 @@ package com.pauluz.bbapps.kontomierz.services.helpers
                     category.name = item.name;
                     category.position = item.position;
                     category.color = item.color;
+                    category.header = true;
 
-                    output.addItem(category);
+                    output.push(category);
 
                     if (item.categories && item.categories is Array && item.categories.length > 0)
                     {
@@ -173,7 +174,7 @@ package com.pauluz.bbapps.kontomierz.services.helpers
                             subCategory.position = subItem.position;
                             subCategory.color = subItem.color;
 
-                            output.addChildToItem(subCategory, category);
+                            output.push(subCategory);
                         }
                     }
                 }
@@ -197,6 +198,11 @@ package com.pauluz.bbapps.kontomierz.services.helpers
                     currency.id = item.id;
                     currency.name = item.name;
                     currency.fullName = item.full_name;
+
+                    if (item.name == ApplicationConstants.DEFAULT_CURRENCY_NAME)
+                    {
+                        currency.selected = true;
+                    }
 
                     output.addItem(currency);
                 }
