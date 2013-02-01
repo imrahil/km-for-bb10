@@ -10,7 +10,7 @@ package com.pauluz.bbapps.kontomierz.view.mediators
     import com.pauluz.bbapps.kontomierz.model.vo.CategoryVO;
     import com.pauluz.bbapps.kontomierz.signals.GetAllCategoriesSignal;
     import com.pauluz.bbapps.kontomierz.signals.StoreSelectedCategorySignal;
-    import com.pauluz.bbapps.kontomierz.signals.signaltons.ProvideAllCategoriesSignal;
+    import com.pauluz.bbapps.kontomierz.signals.signaltons.ProvideAllWithdrawalCategoriesSignal;
     import com.pauluz.bbapps.kontomierz.signals.signaltons.SelectedCategorySuccessfulStoreSignal;
     import com.pauluz.bbapps.kontomierz.utils.LogUtil;
     import com.useitbetter.uDash;
@@ -34,7 +34,7 @@ package com.pauluz.bbapps.kontomierz.view.mediators
          * SIGNALTONS
          */
         [Inject]
-        public var provideAllCategoriesSignal:ProvideAllCategoriesSignal;
+        public var provideAllWithdrawalCategoriesSignal:ProvideAllWithdrawalCategoriesSignal;
 
         [Inject]
         public var selectedCategorySuccessfulStoreSignal:SelectedCategorySuccessfulStoreSignal;
@@ -75,7 +75,7 @@ package com.pauluz.bbapps.kontomierz.view.mediators
             addToSignal(view.viewAddedSignal, onViewAdded);
             addToSignal(view.storeSelectedCategory, onStoreSelectedCategory);
 
-            addOnceToSignal(provideAllCategoriesSignal, onCategoriesData);
+            addOnceToSignal(provideAllWithdrawalCategoriesSignal, onCategoriesData);
             addToSignal(selectedCategorySuccessfulStoreSignal, onCategorySuccessfulStore);
         }
 

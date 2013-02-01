@@ -9,9 +9,11 @@ package com.pauluz.bbapps.kontomierz.signals.signaltons
 {
     import org.osflash.signals.Signal;
 
-    public class ProvideAllCurrenciesSignal extends Signal
+    import qnx.ui.data.SectionDataProvider;
+
+    public class ProvideAllWithdrawalCategoriesSignal extends Signal
     {
-        public function ProvideAllCurrenciesSignal()
+        public function ProvideAllWithdrawalCategoriesSignal()
         {
             super(Array);
         }

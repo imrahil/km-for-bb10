@@ -175,19 +175,9 @@ package com.pauluz.bbapps.kontomierz.services
             variables["money_transaction[currency_amount]"] = transaction.amount;
             variables["money_transaction[currency_name]"] = transaction.currencyName;
             variables["money_transaction[name]"] = transaction.description;
-            var apiDate:String = transaction.transactionOn.substr(8, 2) + "-" + transaction.transactionOn.substr(5, 2) + "-" + transaction.transactionOn.substr(0, 4);
-            variables["money_transaction[transaction_on]"] = apiDate;
+            variables["money_transaction[transaction_on]"] = transaction.transactionOn.substr(8, 2) + "-" + transaction.transactionOn.substr(5, 2) + "-" + transaction.transactionOn.substr(0, 4);
             variables["money_transaction[direction]"] = transaction.direction;
-
-//            if (transaction.direction == ApplicationConstants.TRANSACTION_DIRECTION_WITHDRAWAL)
-//            {
-//                variables["money_transaction[category_id]"] = transaction.categoryId;
-//            }
-//            else
-            {
-                variables["money_transaction[category_id]"] = transaction.categoryId;
-            }
-
+            variables["money_transaction[category_id]"] = transaction.categoryId;
             variables["money_transaction[client_assigned_id]"] = new Date().getMilliseconds();
             variables["api_key"] = model.apiKey;
             urlRequest.data = variables;
@@ -249,9 +239,9 @@ package com.pauluz.bbapps.kontomierz.services
             loader.load(urlRequest);
         }
 
-        override public function getAllCategories():void
+        override public function getAllWithdrawalCategories():void
         {
-            logger.debug(": getAllTransactions service call");
+            logger.debug(": getAllCategoriesWithdrawal service call");
 
             var loader:URLLoader = new URLLoader();
             var urlRequest:URLRequest = new URLRequest();
@@ -261,7 +251,25 @@ package com.pauluz.bbapps.kontomierz.services
             url += "&api_key=" + model.apiKey;
             urlRequest.url = url;
 
-            loader.addEventListener(Event.COMPLETE, getAllCategoriesCompleteHandler);
+            loader.addEventListener(Event.COMPLETE, getAllCategoriesWithdrawalCompleteHandler);
+            addLoaderListeners(loader);
+
+            loader.load(urlRequest);
+        }
+
+        override public function getAllDepositCategories():void
+        {
+            logger.debug(": getAllCategoriesDeposit service call");
+
+            var loader:URLLoader = new URLLoader();
+            var urlRequest:URLRequest = new URLRequest();
+
+            var url:String = ApplicationConstants.KONTOMIERZ_API_ENDPOINT + "categories" + ApplicationConstants.KONTOMIERZ_API_FORMAT_JSON;
+            url += "?direction=deposit&in_wallet=true";
+            url += "&api_key=" + model.apiKey;
+            urlRequest.url = url;
+
+            loader.addEventListener(Event.COMPLETE, getAllCategoriesDepositCompleteHandler);
             addLoaderListeners(loader);
 
             loader.load(urlRequest);

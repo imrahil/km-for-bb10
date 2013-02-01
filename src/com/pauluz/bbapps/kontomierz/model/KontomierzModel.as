@@ -29,10 +29,11 @@ package com.pauluz.bbapps.kontomierz.model
         private var _walletTransactionsList:DataProvider;
         private var _isWalletListExpired:Boolean;
 
-        private var _categoriesList:Array;
+        private var _withdrawalCategoriesList:Array;
+        private var _depositCategoriesList:Array;
         private var _selectedCategory:CategoryVO;
 
-        private var _currenciesList:DataProvider;
+        private var _currenciesList:Array;
 
         public function get apiKey():String
         {
@@ -107,14 +108,24 @@ package com.pauluz.bbapps.kontomierz.model
             _isWalletListExpired = value;
         }
 
-        public function get categoriesList():Array
+        public function get withdrawalCategoriesList():Array
         {
-            return _categoriesList;
+            return _withdrawalCategoriesList;
         }
 
-        public function set categoriesList(value:Array):void
+        public function set withdrawalCategoriesList(value:Array):void
         {
-            _categoriesList = value;
+            _withdrawalCategoriesList = value;
+        }
+
+        public function get depositCategoriesList():Array
+        {
+            return _depositCategoriesList;
+        }
+
+        public function set depositCategoriesList(value:Array):void
+        {
+            _depositCategoriesList = value;
         }
 
         public function get selectedCategory():CategoryVO
@@ -127,12 +138,12 @@ package com.pauluz.bbapps.kontomierz.model
             _selectedCategory = value;
         }
 
-        public function get currenciesList():DataProvider
+        public function get currenciesList():Array
         {
             return _currenciesList;
         }
 
-        public function set currenciesList(value:DataProvider):void
+        public function set currenciesList(value:Array):void
         {
             _currenciesList = value;
         }

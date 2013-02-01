@@ -28,7 +28,8 @@ package com.pauluz.bbapps.kontomierz.services
         function updateTransaction(transaction:TransactionVO):void;
         function deleteTransaction(id:int, wallet:Boolean):void;
 
-        function getAllCategories():void;
+        function getAllWithdrawalCategories():void;
+        function getAllDepositCategories():void;
 //        function getAllTags():void;
         function getAllCurrencies():void;
 

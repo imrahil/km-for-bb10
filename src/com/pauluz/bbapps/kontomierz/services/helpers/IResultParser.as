@@ -18,6 +18,6 @@ package com.pauluz.bbapps.kontomierz.services.helpers
         function parseAllAccountsResponseAndFindDefaultWalletId(result:String):int;
         function parseAllTransactionsResponse(result:String):DataProvider;
         function parseAllCategoriesResponse(result:String):Array;
-        function parseAllCurrenciesResponse(result:String):DataProvider;
+        function parseAllCurrenciesResponse(result:String):Array;
     }
 }

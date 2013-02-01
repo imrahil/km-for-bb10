@@ -183,11 +183,11 @@ package com.pauluz.bbapps.kontomierz.services.helpers
             return output;
         }
 
-        public function parseAllCurrenciesResponse(result:String):DataProvider
+        public function parseAllCurrenciesResponse(result:String):Array
         {
             logger.debug(": parseAllCurrenciesResponse");
 
-            var output:DataProvider = new DataProvider();
+            var output:Array = [];
             var resultObject:Object = JSON.parse(result);
 
             if (resultObject && resultObject.currencies && resultObject.currencies is Array && resultObject.currencies.length > 0)
@@ -204,7 +204,7 @@ package com.pauluz.bbapps.kontomierz.services.helpers
                         currency.selected = true;
                     }
 
-                    output.addItem(currency);
+                    output.push(currency);
                 }
             }
 

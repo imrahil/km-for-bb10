@@ -19,7 +19,8 @@ package com.pauluz.bbapps.kontomierz.services
     import com.pauluz.bbapps.kontomierz.signals.signaltons.ErrorSignal;
     import com.pauluz.bbapps.kontomierz.signals.signaltons.LoginSuccessfulSignal;
     import com.pauluz.bbapps.kontomierz.signals.signaltons.ProvideAllAccountsDataSignal;
-    import com.pauluz.bbapps.kontomierz.signals.signaltons.ProvideAllCategoriesSignal;
+    import com.pauluz.bbapps.kontomierz.signals.signaltons.ProvideAllDepositCategoriesSignal;
+    import com.pauluz.bbapps.kontomierz.signals.signaltons.ProvideAllWithdrawalCategoriesSignal;
     import com.pauluz.bbapps.kontomierz.signals.signaltons.ProvideAllCurrenciesSignal;
     import com.pauluz.bbapps.kontomierz.signals.signaltons.ProvideAllTransactionsSignal;
     import com.pauluz.bbapps.kontomierz.signals.signaltons.TransactionSuccessfulySavedSignal;
@@ -73,7 +74,10 @@ package com.pauluz.bbapps.kontomierz.services
         public var transactionSuccessfulySavedSignal:TransactionSuccessfulySavedSignal;
 
         [Inject]
-        public var provideAllCategoriesSignal:ProvideAllCategoriesSignal;
+        public var provideAllCategoriesSignal:ProvideAllWithdrawalCategoriesSignal;
+
+        [Inject]
+        public var provideAllDepositCategoriesSignal:ProvideAllDepositCategoriesSignal;
 
         [Inject]
         public var provideAllCurrenciesSignal:ProvideAllCurrenciesSignal;
@@ -153,7 +157,12 @@ package com.pauluz.bbapps.kontomierz.services
             throw new Error("Override this method!");
         }
 
-        public function getAllCategories():void
+        public function getAllWithdrawalCategories():void
+        {
+            throw new Error("Override this method!");
+        }
+
+        public function getAllDepositCategories():void
         {
             throw new Error("Override this method!");
         }
@@ -353,19 +362,34 @@ package com.pauluz.bbapps.kontomierz.services
             }
         }
 
-        protected function getAllCategoriesCompleteHandler(event:Event):void
+        protected function getAllCategoriesWithdrawalCompleteHandler(event:Event):void
         {
-            logger.debug(": getAllCategoriesCompleteHandler");
+            logger.debug(": getAllCategoriesWithdrawalCompleteHandler");
 
             var loader:URLLoader = event.currentTarget as URLLoader;
 
-            loader.removeEventListener(Event.COMPLETE, getAllCategoriesCompleteHandler);
+            loader.removeEventListener(Event.COMPLETE, getAllCategoriesWithdrawalCompleteHandler);
             removeLoaderListeners(loader);
 
             var categoriesList:Array = _parser.parseAllCategoriesResponse(loader.data as String);
 
-            model.categoriesList = categoriesList;
+            model.withdrawalCategoriesList = categoriesList;
             provideAllCategoriesSignal.dispatch(categoriesList);
+        }
+
+        protected function getAllCategoriesDepositCompleteHandler(event:Event):void
+        {
+            logger.debug(": getAllCategoriesDepositCompleteHandler");
+
+            var loader:URLLoader = event.currentTarget as URLLoader;
+
+            loader.removeEventListener(Event.COMPLETE, getAllCategoriesDepositCompleteHandler);
+            removeLoaderListeners(loader);
+
+            var categoriesList:Array = _parser.parseAllCategoriesResponse(loader.data as String);
+
+            model.depositCategoriesList = categoriesList;
+            provideAllDepositCategoriesSignal.dispatch(categoriesList);
         }
 
         protected function getAllCurrenciesCompleteHandler(event:Event):void
@@ -377,7 +401,7 @@ package com.pauluz.bbapps.kontomierz.services
             loader.removeEventListener(Event.COMPLETE, getAllCurrenciesCompleteHandler);
             removeLoaderListeners(loader);
 
-            var currenciesList:DataProvider = _parser.parseAllCurrenciesResponse(loader.data as String);
+            var currenciesList:Array = _parser.parseAllCurrenciesResponse(loader.data as String);
 
             model.currenciesList = currenciesList;
             provideAllCurrenciesSignal.dispatch(currenciesList);

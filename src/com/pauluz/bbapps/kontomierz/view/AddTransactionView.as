@@ -59,8 +59,9 @@ package com.pauluz.bbapps.kontomierz.view
         private var categoryErrorLabel:Label;
         private var currencyBtn:LabelButton;
 
-        private var categoriesDP:Array;
-        private var currenciesDP:DataProvider;
+        private var withdrawalCategoriesDP:Array = [];
+        private var depositCategoriesDP:Array = [];
+        private var currenciesDP:Array = [];
 
         private var selectedCategory:CategoryVO;
         private var selectedCurrency:CurrencyVO;
@@ -204,7 +205,8 @@ package com.pauluz.bbapps.kontomierz.view
 
             // CATEGORY BTN
             categoryBtn = new LabelButton();
-            categoryBtn.label = "-- brak kategorii --";
+            categoryBtn.label = ApplicationConstants.NO_CATEGORY_LABEL;
+            categoryBtn.enabled = false;
             categoryBtn.addEventListener(MouseEvent.CLICK, onCategoryBtnClick);
             container.addChild(categoryBtn);
 
@@ -232,11 +234,15 @@ package com.pauluz.bbapps.kontomierz.view
             {
                 amountTextInput.prompt = "Wysokość wydatku";
                 descriptionTextInput.prompt = "Opis wydatku";
+
+                categoryBtn.label = ApplicationConstants.NO_CATEGORY_LABEL;
             }
             else
             {
                 amountTextInput.prompt = "Wysokość przychodu";
                 descriptionTextInput.prompt = "Opis przychodu";
+
+                categoryBtn.label = ApplicationConstants.NO_CATEGORY_LABEL;
             }
         }
 
@@ -246,7 +252,16 @@ package com.pauluz.bbapps.kontomierz.view
             myList.title = "Kategoria";
             myList.addButton("OK");
             myList.addButton("Anuluj");
-            myList.list = categoriesDP;
+
+            if (directionRadioGroup.selection == withdrawalRadio)
+            {
+                myList.list = withdrawalCategoriesDP;
+            }
+            else
+            {
+                myList.list = depositCategoriesDP;
+            }
+
             myList.addEventListener(Event.SELECT, onCategorySelect);
             myList.show();
         }
@@ -259,10 +274,30 @@ package com.pauluz.bbapps.kontomierz.view
             {
                 categoryErrorLabel.text = "";
 
-                selectedCategory = categoriesDP[listDialog.listSelectedIndex] as CategoryVO;
+                if (directionRadioGroup.selection == withdrawalRadio)
+                {
+                    selectedCategory = withdrawalCategoriesDP[listDialog.listSelectedIndex] as CategoryVO;
+                }
+                else
+                {
+                    selectedCategory = depositCategoriesDP[listDialog.listSelectedIndex] as CategoryVO;
+                }
 
                 categoryBtn.label = selectedCategory.name;
             }
+//            else
+//            {
+//                var category:CategoryVO;
+//                for each (category in withdrawalCategoriesDP)
+//                {
+//                    category.selected = (category.id == selectedCategory.id);
+//                }
+//
+//                for each (category in depositCategoriesDP)
+//                {
+//                    category.selected = (category.id == selectedCategory.id);
+//                }
+//            }
         }
 
         private function onCurrencyBtnClick(event:MouseEvent):void
@@ -271,7 +306,7 @@ package com.pauluz.bbapps.kontomierz.view
             myList.title = "Waluta";
             myList.addButton("OK");
             myList.addButton("Anuluj");
-            myList.list = currenciesDP.data;
+            myList.list = currenciesDP;
             myList.allowDeselect = false;
             myList.addEventListener(Event.SELECT, onCurrencySelect);
             myList.show();
@@ -283,16 +318,32 @@ package com.pauluz.bbapps.kontomierz.view
 
             if (listDialog.selectedIndex == 0)
             {
-                selectedCurrency = currenciesDP.getItemAt(listDialog.listSelectedIndex) as CurrencyVO;
+                selectedCurrency = currenciesDP[listDialog.listSelectedIndex] as CurrencyVO;
 
                 currencyBtn.label = selectedCurrency.label;
             }
+//            else
+//            {
+//                for each (var currency:CurrencyVO in currenciesDP)
+//                {
+//                    if (selectedCurrency)
+//                    {
+//                        currency.selected = (currency.id == selectedCurrency.id);
+//                    }
+//                    else
+//                    {
+//                        currency.selected = (currency.name == ApplicationConstants.DEFAULT_CURRENCY_NAME);
+//                    }
+//                }
+//            }
         }
 
-        public function addData(_categoriesData:Array, _currenciesData:DataProvider):void
+        public function addData(_withdrawalCategoriesData:Array, _depositCategoriesData:Array, _currenciesData:Array):void
         {
-//            categoryBtn.enabled = true;
-            categoriesDP = _categoriesData;
+            categoryBtn.enabled = true;
+
+            withdrawalCategoriesDP = _withdrawalCategoriesData;
+            depositCategoriesDP = _depositCategoriesData;
             currenciesDP = _currenciesData;
         }
 
@@ -310,7 +361,7 @@ package com.pauluz.bbapps.kontomierz.view
                 return;
             }
 
-            if (categoryBtn.label == "-- brak kategorii --")
+            if (categoryBtn.label == ApplicationConstants.NO_CATEGORY_LABEL)
             {
                 categoryErrorLabel.text = "Proszę wybrać kategorię!";
                 return;
@@ -338,6 +389,27 @@ package com.pauluz.bbapps.kontomierz.view
             amountTextInput.text = "";
             datePicker.setDate(new Date());
             descriptionTextInput.text = "";
+
+            selectedCategory = null;
+            selectedCurrency = null;
+
+            var category:CategoryVO;
+            for each (category in withdrawalCategoriesDP)
+            {
+                category.selected = false;
+            }
+
+            for each (category in depositCategoriesDP)
+            {
+                category.selected = false;
+            }
+
+            currencyBtn.label = ApplicationConstants.DEFAULT_CURRENCY_NAME + " (" + ApplicationConstants.DEFAULT_CURRENCY_FULL_NAME + ")";
+
+            for each (var currency:CurrencyVO in currenciesDP)
+            {
+                currency.selected = (currency.name == ApplicationConstants.DEFAULT_CURRENCY_NAME);
+            }
 
             var successDialog:AlertDialog = new AlertDialog();
             successDialog.title = "Sukces";

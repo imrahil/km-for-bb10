@@ -11,7 +11,8 @@ package com.pauluz.bbapps.kontomierz.view.mediators
     import com.pauluz.bbapps.kontomierz.signals.AddTransactionSignal;
     import com.pauluz.bbapps.kontomierz.signals.GetAllCategoriesSignal;
     import com.pauluz.bbapps.kontomierz.signals.GetAllCurrenciesSignal;
-    import com.pauluz.bbapps.kontomierz.signals.signaltons.ProvideAllCategoriesSignal;
+    import com.pauluz.bbapps.kontomierz.signals.signaltons.ProvideAllDepositCategoriesSignal;
+    import com.pauluz.bbapps.kontomierz.signals.signaltons.ProvideAllWithdrawalCategoriesSignal;
     import com.pauluz.bbapps.kontomierz.signals.signaltons.ProvideAllCurrenciesSignal;
     import com.pauluz.bbapps.kontomierz.signals.signaltons.TransactionSuccessfulySavedSignal;
     import com.pauluz.bbapps.kontomierz.utils.LogUtil;
@@ -38,7 +39,10 @@ package com.pauluz.bbapps.kontomierz.view.mediators
          * SIGNALTONS
          */
         [Inject]
-        public var provideAllCategoriesSignal:ProvideAllCategoriesSignal;
+        public var provideAllWithdrawalCategoriesSignal:ProvideAllWithdrawalCategoriesSignal;
+
+        [Inject]
+        public var provideAllDepositCategoriesSignal:ProvideAllDepositCategoriesSignal;
 
         [Inject]
         public var provideAllCurrenciesSignal:ProvideAllCurrenciesSignal;
@@ -61,10 +65,11 @@ package com.pauluz.bbapps.kontomierz.view.mediators
         /** variables **/
         private var logger:ILogger;
 
-        private var dataFlag:Boolean = false;
+        private var dataFlag:int = 0;
 
-        private var categoriesDP:Array;
-        private var currenciesDP:DataProvider;
+        private var withdrawalCategoriesDP:Array = [];
+        private var depositCategoriesDP:Array = [];
+        private var currenciesDP:Array = [];
 
         /**
          * CONSTRUCTOR 
@@ -90,7 +95,9 @@ package com.pauluz.bbapps.kontomierz.view.mediators
             addToSignal(view.viewAddedSignal, onViewAdded);
             addToSignal(view.addTransactionSignal, onAddTransaction);
 
-            addOnceToSignal(provideAllCategoriesSignal, onCategoriesData);
+            addOnceToSignal(provideAllWithdrawalCategoriesSignal, onWithdrawalCategoriesData);
+            addOnceToSignal(provideAllDepositCategoriesSignal, onDepositCategoriesData);
+
             addOnceToSignal(provideAllCurrenciesSignal, onCurrenciesData);
             addToSignal(transactionSuccessfulySavedSignal, onSuccessfulSave);
         }
@@ -99,7 +106,7 @@ package com.pauluz.bbapps.kontomierz.view.mediators
         {
             logger.debug(": onViewAdded");
 
-            dataFlag = false;
+            dataFlag = 0;
 
             // TODO - wysylac sygnaly tylko jak brak danych?
             getAllCategoriesSignal.dispatch();
@@ -113,33 +120,48 @@ package com.pauluz.bbapps.kontomierz.view.mediators
             addTransactionSignal.dispatch(transaction);
         }
 
-        private function onCategoriesData(data:Array):void
+        private function onWithdrawalCategoriesData(data:Array):void
         {
-            logger.debug(": onCategoriesData");
+            logger.debug(": onWithdrawalCategoriesData");
 
-            if (dataFlag)
+            if (dataFlag == 2)
             {
-                view.addData(data, currenciesDP);
+                view.addData(data, depositCategoriesDP, currenciesDP);
             }
             else
             {
-                categoriesDP = data;
-                dataFlag = true;
+                withdrawalCategoriesDP = data;
+                dataFlag++;
             }
         }
 
-        private function onCurrenciesData(data:DataProvider):void
+        private function onDepositCategoriesData(data:Array):void
+        {
+            logger.debug(": onDepositCategoriesData");
+
+            if (dataFlag == 2)
+            {
+                view.addData(withdrawalCategoriesDP, data, currenciesDP);
+            }
+            else
+            {
+                depositCategoriesDP = data;
+                dataFlag++;
+            }
+        }
+
+        private function onCurrenciesData(data:Array):void
         {
             logger.debug(": onCurrenciesData");
 
-            if (dataFlag)
+            if (dataFlag == 2)
             {
-                view.addData(categoriesDP, data);
+                view.addData(withdrawalCategoriesDP, depositCategoriesDP, data);
             }
             else
             {
                 currenciesDP = data;
-                dataFlag = true;
+                dataFlag++;
             }
         }
 
