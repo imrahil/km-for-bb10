@@ -13,6 +13,9 @@ package com.pauluz.bbapps.kontomierz.constants
         public static const KONTOMIERZ_API_FORMAT_JSON:String = ".json";
         public static const KONTOMIERZ_API_FORMAT_XML:String = ".xml";
 
+        public static const KONTOMIERZ_DEMO_EMAIL:String = "demo@kontomierz.pl";
+        public static const KONTOMIERZ_DEMO_API_KEY:String = "e7cOI9zZTbprBddSHHnlniLsAvzBpfhqTIjeUid2be0fjb2REaWnudZqGSgxz1Lz";
+
         public static const KONTOMIERZ_SO_NAME:String = "kontomierzApiKeySharedObject";
 
         public static const LOGIN_STATUS_NEW:String         = "userLoggedOut";

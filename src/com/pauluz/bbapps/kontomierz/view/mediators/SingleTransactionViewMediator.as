@@ -8,6 +8,8 @@
 package com.pauluz.bbapps.kontomierz.view.mediators
 {
     import com.pauluz.bbapps.kontomierz.model.vo.TransactionVO;
+    import com.pauluz.bbapps.kontomierz.signals.DeleteTransactionSignal;
+    import com.pauluz.bbapps.kontomierz.signals.DeleteWalletTransactionSignal;
     import com.pauluz.bbapps.kontomierz.signals.RequestSelectedTransactionSignal;
     import com.pauluz.bbapps.kontomierz.signals.signaltons.ProvideSelectedTransactionSignal;
     import com.pauluz.bbapps.kontomierz.utils.LogUtil;
@@ -37,8 +39,15 @@ package com.pauluz.bbapps.kontomierz.view.mediators
         [Inject]
         public var requestSelectedTransactionSignal:RequestSelectedTransactionSignal;
 
+        [Inject]
+        public var deleteTransactionSignal:DeleteTransactionSignal;
+
+        [Inject]
+        public var deleteWalletTransactionSignal:DeleteWalletTransactionSignal;
+
         /** variables **/
         private var logger:ILogger;
+        private var selectedTransaction:TransactionVO;
 
         /** 
          * CONSTRUCTOR 
@@ -61,6 +70,9 @@ package com.pauluz.bbapps.kontomierz.view.mediators
             
             addToSignal(view.viewAddedSignal, onViewAdded);
 
+            addToSignal(view.editTransaction, onEditTransaction);
+            addToSignal(view.deleteTransaction, onDeleteTransaction);
+
             addOnceToSignal(provideSelectedTransactionSignal, onDetailsData);
         }
 
@@ -71,9 +83,30 @@ package com.pauluz.bbapps.kontomierz.view.mediators
             requestSelectedTransactionSignal.dispatch();
         }
 
+        private function onEditTransaction():void
+        {
+            logger.debug(": onEditTransaction");
+        }
+
+        private function onDeleteTransaction(isWallet:Boolean):void
+        {
+            logger.debug(": onDeleteTransaction");
+
+            if (isWallet)
+            {
+                deleteWalletTransactionSignal.dispatch(selectedTransaction);
+            }
+            else
+            {
+                deleteTransactionSignal.dispatch(selectedTransaction);
+            }
+        }
+
         private function onDetailsData(transaction:TransactionVO):void
         {
             logger.debug(": onDetailsData");
+
+            selectedTransaction = transaction;
 
             if (view)
             {

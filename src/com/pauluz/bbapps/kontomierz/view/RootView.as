@@ -27,6 +27,8 @@ package com.pauluz.bbapps.kontomierz.view
         private var navigationPane:NavigationPane;
         private var mainView:MainView;
 
+        private var errorDialog:AlertDialog;
+
         public function RootView()
         {
             this.addEventListener(Event.ADDED_TO_STAGE, create)
@@ -226,11 +228,20 @@ package com.pauluz.bbapps.kontomierz.view
                 navigationPane.popAndDelete();
             }
 
-            var errorDialog:AlertDialog = new AlertDialog();
-            errorDialog.title = "Błąd";
-            errorDialog.message = message;
-            errorDialog.addButton("OK");
-            errorDialog.show();
+            if (!errorDialog)
+            {
+                errorDialog = new AlertDialog();
+                errorDialog.title = "Błąd";
+                errorDialog.message = message;
+                errorDialog.addButton("OK");
+                errorDialog.addEventListener(Event.SELECT, onErrorDialogClicked);
+                errorDialog.show();
+            }
+        }
+
+        private function onErrorDialogClicked(event:Event):void
+        {
+            errorDialog = null;
         }
     }
 }

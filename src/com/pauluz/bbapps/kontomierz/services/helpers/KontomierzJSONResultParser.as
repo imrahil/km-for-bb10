@@ -34,7 +34,13 @@ package com.pauluz.bbapps.kontomierz.services.helpers
         {
             logger.debug(": parseLoginRegisterResponse");
 
-            var resultObject:Object = JSON.parse(result);
+            try {
+                var resultObject:Object = JSON.parse(result);
+            }
+            catch (e:Error)
+            {
+                logger.error("JSON Parse Error - parseLoginRegisterResponse");
+            }
 
             if (resultObject && resultObject.user && resultObject.user.api_key != "")
             {
@@ -51,7 +57,14 @@ package com.pauluz.bbapps.kontomierz.services.helpers
             logger.debug(": parseAllAccountsResponse");
 
             var output:DataProvider = new DataProvider();
-            var resultObject:Object = JSON.parse(result);
+
+            try {
+                var resultObject:Object = JSON.parse(result);
+            }
+            catch (e:Error)
+            {
+                logger.error("JSON Parse Error - parseAllAccountsResponse");
+            }
 
             if (resultObject && resultObject is Array && resultObject.length > 0)
             {
@@ -85,7 +98,13 @@ package com.pauluz.bbapps.kontomierz.services.helpers
         {
             logger.debug(": parseAllAccountsResponseAndFindDefaultWalletId");
 
-            var resultObject:Object = JSON.parse(result);
+            try {
+                var resultObject:Object = JSON.parse(result);
+            }
+            catch (e:Error)
+            {
+                logger.error("JSON Parse Error - parseAllAccountsResponseAndFindDefaultWalletId");
+            }
 
             if (resultObject && resultObject is Array && resultObject.length > 0)
             {
@@ -111,7 +130,14 @@ package com.pauluz.bbapps.kontomierz.services.helpers
             logger.debug(": parseAllTransactionsResponse");
 
             var output:DataProvider = new DataProvider();
-            var resultObject:Object = JSON.parse(result);
+
+            try {
+                var resultObject:Object = JSON.parse(result);
+            }
+            catch (e:Error)
+            {
+                logger.error("JSON Parse Error - parseAllTransactionsResponse");
+            }
 
             if (resultObject && resultObject is Array && resultObject.length > 0)
             {
@@ -147,7 +173,14 @@ package com.pauluz.bbapps.kontomierz.services.helpers
             logger.debug(": parseAllCategoriesResponse");
 
             var output:Array = [];
-            var resultObject:Object = JSON.parse(result);
+
+            try {
+                var resultObject:Object = JSON.parse(result);
+            }
+            catch (e:Error)
+            {
+                logger.error("JSON Parse Error - parseAllCategoriesResponse");
+            }
 
             if (resultObject && resultObject.category_groups && resultObject.category_groups is Array && resultObject.category_groups.length > 0)
             {
@@ -188,7 +221,14 @@ package com.pauluz.bbapps.kontomierz.services.helpers
             logger.debug(": parseAllCurrenciesResponse");
 
             var output:Array = [];
-            var resultObject:Object = JSON.parse(result);
+
+            try {
+                var resultObject:Object = JSON.parse(result);
+            }
+            catch (e:Error)
+            {
+                logger.error("JSON Parse Error - parseAllCurrenciesResponse");
+            }
 
             if (resultObject && resultObject.currencies && resultObject.currencies is Array && resultObject.currencies.length > 0)
             {

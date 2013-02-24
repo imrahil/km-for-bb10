@@ -7,6 +7,7 @@
  */
 package com.pauluz.bbapps.kontomierz.view
 {
+    import com.pauluz.bbapps.kontomierz.constants.ApplicationConstants;
     import com.pauluz.bbapps.kontomierz.model.vo.UserVO;
     import com.pauluz.bbapps.kontomierz.utils.ContainerHelper;
     import com.pauluz.bbapps.kontomierz.utils.LogUtil;
@@ -126,7 +127,7 @@ package com.pauluz.bbapps.kontomierz.view
 
             // LAYOUT DLA PRZYCISKOW
             var buttonsGrid:GridLayout = new GridLayout();
-            buttonsGrid.numColumns = 2;
+            buttonsGrid.numColumns = 3;
             buttonsGrid.paddingTop = 10;
             buttonsGrid.hSpacing = 20;
             var buttonsContainer:Container = new Container();
@@ -147,6 +148,14 @@ package com.pauluz.bbapps.kontomierz.view
             labelButton.enabled = false;
             gridDataHolder = new GridData();
             labelButton.layoutData = gridDataHolder;
+            buttonsContainer.addChild(labelButton);
+
+            // button DEMO
+            labelButton = new LabelButton();
+            labelButton.label = "Demo";
+            gridDataHolder = new GridData();
+            labelButton.layoutData = gridDataHolder;
+            labelButton.addEventListener(MouseEvent.CLICK, onDemoClick);
             buttonsContainer.addChild(labelButton);
 
             container.addChild(buttonsContainer);
@@ -175,6 +184,14 @@ package com.pauluz.bbapps.kontomierz.view
         private function onZalogujClick(event:MouseEvent):void
         {
             zaloguj();
+        }
+
+        private function onDemoClick(event:MouseEvent):void
+        {
+            var user:UserVO = new UserVO();
+            user.email = ApplicationConstants.KONTOMIERZ_DEMO_EMAIL;
+
+            loginSignal.dispatch(user);
         }
 
         private function zaloguj():void

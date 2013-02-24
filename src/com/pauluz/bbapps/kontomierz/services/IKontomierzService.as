@@ -14,6 +14,7 @@ package com.pauluz.bbapps.kontomierz.services
     {
         function login(user:UserVO):void;
         function register(user:UserVO):void;
+        function demo():void;
 
         function getAllAccounts():void
 

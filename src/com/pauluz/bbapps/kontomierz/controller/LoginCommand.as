@@ -7,6 +7,7 @@
  */
 package com.pauluz.bbapps.kontomierz.controller 
 {
+    import com.pauluz.bbapps.kontomierz.constants.ApplicationConstants;
     import com.pauluz.bbapps.kontomierz.model.vo.UserVO;
     import com.pauluz.bbapps.kontomierz.services.IKontomierzService;
 
@@ -27,7 +28,14 @@ package com.pauluz.bbapps.kontomierz.controller
          */        
         override public function execute():void    
         {
-            kontomierzService.login(user);
+            if (user.email == ApplicationConstants.KONTOMIERZ_DEMO_EMAIL)
+            {
+                kontomierzService.demo();
+            }
+            else
+            {
+                kontomierzService.login(user);
+            }
         }
     }
 }

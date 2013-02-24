@@ -50,7 +50,7 @@ package com.pauluz.bbapps.kontomierz.view.components
 
                 if (balance)
                 {
-                    var balanceLabel:String = transaction.currencyAmount.toString().replace(".", ",");
+                    var balanceLabel:String = transaction.currencyAmountString;
                     balance.text = balanceLabel + " " + transaction.currencyName;
                 }
             }

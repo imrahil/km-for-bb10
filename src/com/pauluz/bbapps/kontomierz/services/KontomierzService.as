@@ -80,6 +80,17 @@ package com.pauluz.bbapps.kontomierz.services
             loader.load(urlRequest);
         }
 
+        /**
+         * DEMO
+         */
+        override public function demo():void
+        {
+            logger.debug(": demo service call");
+
+            model.apiKey = ApplicationConstants.KONTOMIERZ_DEMO_API_KEY;
+
+            loginSuccessfulSignal.dispatch();
+        }
 
         override public function getAllAccounts():void
         {

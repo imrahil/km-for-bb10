@@ -41,7 +41,6 @@ package com.pauluz.bbapps.kontomierz.view
     import qnx.fuse.ui.text.KeyboardType;
     import qnx.fuse.ui.text.Label;
     import qnx.fuse.ui.text.TextInput;
-    import qnx.ui.data.DataProvider;
 
     public class AddTransactionView extends TitlePage
     {
@@ -86,6 +85,7 @@ package com.pauluz.bbapps.kontomierz.view
             logger.debug(": onAdded");
 
             titleBar.acceptAction = new Action("Dodaj");
+            titleBar.acceptAction.enabled = false;
             titleBar.addEventListener(ActionEvent.ACTION_SELECTED, onAddExpenseAction);
 
             var textLabel:Label;
@@ -220,6 +220,7 @@ package com.pauluz.bbapps.kontomierz.view
             // CATEGORY BTN
             currencyBtn = new LabelButton();
             currencyBtn.label = ApplicationConstants.DEFAULT_CURRENCY_NAME + " (" + ApplicationConstants.DEFAULT_CURRENCY_FULL_NAME + ")";
+            currencyBtn.enabled = false;
             currencyBtn.addEventListener(MouseEvent.CLICK, onCurrencyBtnClick);
             container.addChild(currencyBtn);
 
@@ -340,7 +341,10 @@ package com.pauluz.bbapps.kontomierz.view
 
         public function addData(_withdrawalCategoriesData:Array, _depositCategoriesData:Array, _currenciesData:Array):void
         {
+            titleBar.acceptAction.enabled = true;
+
             categoryBtn.enabled = true;
+            currencyBtn.enabled = true;
 
             withdrawalCategoriesDP = _withdrawalCategoriesData;
             depositCategoriesDP = _depositCategoriesData;
@@ -354,17 +358,29 @@ package com.pauluz.bbapps.kontomierz.view
                 expenseErrorLabel.text = "Proszę podać kwotę!";
                 return;
             }
+            else
+            {
+                expenseErrorLabel.text = "";
+            }
 
             if (descriptionTextInput.text == "")
             {
                 descriptionErrorLabel.text = "Proszę podać opis!";
                 return;
             }
+            else
+            {
+                descriptionErrorLabel.text = "";
+            }
 
             if (categoryBtn.label == ApplicationConstants.NO_CATEGORY_LABEL)
             {
                 categoryErrorLabel.text = "Proszę wybrać kategorię!";
                 return;
+            }
+            else
+            {
+                categoryErrorLabel.text = "";
             }
 
             expenseErrorLabel.text = "";

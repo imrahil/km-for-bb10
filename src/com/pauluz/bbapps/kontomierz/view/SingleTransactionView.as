@@ -14,6 +14,8 @@ package com.pauluz.bbapps.kontomierz.view
     import com.pauluz.bbapps.kontomierz.utils.TextFormatUtil;
     import com.useitbetter.uDash;
 
+    import flash.events.Event;
+
     import mx.logging.ILogger;
 
     import org.osflash.signals.Signal;
@@ -22,6 +24,7 @@ package com.pauluz.bbapps.kontomierz.view
     import qnx.fuse.ui.core.ActionBase;
     import qnx.fuse.ui.core.Container;
     import qnx.fuse.ui.core.SizeOptions;
+    import qnx.fuse.ui.dialog.AlertDialog;
     import qnx.fuse.ui.layouts.gridLayout.GridData;
     import qnx.fuse.ui.layouts.gridLayout.GridLayout;
     import qnx.fuse.ui.listClasses.ScrollDirection;
@@ -36,6 +39,8 @@ package com.pauluz.bbapps.kontomierz.view
         private var editAction:Action;
         private var deleteAction:Action;
 
+        public var isWallet:Boolean;
+
         public var viewAddedSignal:Signal = new Signal();
 
         private var amountLbl:Label;
@@ -43,6 +48,8 @@ package com.pauluz.bbapps.kontomierz.view
         private var descriptionLbl:Label;
         private var categoryLbl:Label;
 
+        public var editTransaction:Signal = new Signal(Boolean);
+        public var deleteTransaction:Signal = new Signal(Boolean);
 
         public function SingleTransactionView()
         {
@@ -139,9 +146,41 @@ package com.pauluz.bbapps.kontomierz.view
             viewAddedSignal.dispatch();
         }
 
+        override public function onActionSelected(action:ActionBase):void
+        {
+            if (action == editAction)
+            {
+                editTransaction.dispatch(isWallet);
+            }
+            else if (action == deleteAction)
+            {
+                var confirmDialog:AlertDialog = new AlertDialog();
+                confirmDialog.title = "Potwierdzenie";
+                confirmDialog.message = "Czy napewno usunąć wybraną transakcję?";
+                confirmDialog.addButton("TAK");
+                confirmDialog.addButton("NIE");
+                confirmDialog.addEventListener(Event.SELECT, onDeleteConfirmation);
+                confirmDialog.show();
+            }
+            else
+            {
+                super.onActionSelected(action);
+            }
+        }
+
+        private function onDeleteConfirmation(event:Event):void
+        {
+            if (event.target.selectedIndex == 0)
+            {
+                deleteTransaction.dispatch(isWallet);
+
+                popAndDeletePage();
+            }
+        }
+
         public function showDetails(transaction:TransactionVO):void
         {
-            var amountLabel:String = transaction.currencyAmount.toString().replace(".", ",");
+            var amountLabel:String = transaction.currencyAmountString;
             amountLbl.text = amountLabel + " " + transaction.currencyName;
             dateLbl.text = transaction.bookedOn;
             descriptionLbl.text = transaction.description;

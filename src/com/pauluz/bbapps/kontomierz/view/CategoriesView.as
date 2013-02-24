@@ -83,10 +83,27 @@ package com.pauluz.bbapps.kontomierz.view
             pushPage(categoryTransactionsView);
         }
 
-        public function addData(data:SectionDataProvider):void
+        public function addData(data:Array):void
         {
             content = container;
-            categoriesList.dataProvider = data;
+
+            var provider:SectionDataProvider = new SectionDataProvider();
+            var tempHeader:CategoryVO;
+
+            for each (var category:CategoryVO in data)
+            {
+                if (category.header)
+                {
+                    tempHeader = category;
+                    provider.addItem(category);
+                }
+                else
+                {
+                    provider.addChildToItem(category, tempHeader);
+                }
+            }
+
+            categoriesList.dataProvider = provider;
         }
     }
 }

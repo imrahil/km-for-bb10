@@ -70,11 +70,16 @@ package com.pauluz.bbapps.kontomierz.view
 
             content = ContainerHelper.createSpinner();
 
+            titleBar.acceptAction = new Action("Odśwież");
+            titleBar.addEventListener(ActionEvent.ACTION_SELECTED, onRefreshAction);
+
             viewAddedSignal.dispatch();
         }
 
         private function createUI():void
         {
+            logger.debug(": createUI");
+
             container = ContainerHelper.createEmptyContainer(0xFFFFFF);
 
             transactionsList = new List();
@@ -109,6 +114,14 @@ package com.pauluz.bbapps.kontomierz.view
             contextActions.push(actionSet);
 
             transactionsList.contextActions = contextActions;
+        }
+
+        private function onRefreshAction(event:ActionEvent):void
+        {
+            logger.debug(": onRefreshAction");
+
+            content = ContainerHelper.createSpinner();
+            viewAddedSignal.dispatch();
         }
 
         private function transactionListClicked(event:ListEvent):void
@@ -162,14 +175,15 @@ package com.pauluz.bbapps.kontomierz.view
         public function addDetailView():void
         {
             var detailView:SingleTransactionView = new SingleTransactionView();
+            detailView.isWallet = true;
             pushPage(detailView);
         }
 
         public function addData(data:DataProvider):void
         {
             createUI();
-
             content = container;
+
             transactionsList.dataProvider = data;
         }
     }

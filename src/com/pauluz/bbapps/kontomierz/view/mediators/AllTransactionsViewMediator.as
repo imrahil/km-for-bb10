@@ -78,6 +78,8 @@ package com.pauluz.bbapps.kontomierz.view.mediators
             
             addToSignal(view.viewAddedSignal, onViewAdded);
             addToSignal(view.storeSelectedTransaction, onStoreSelectedTransaction);
+
+            addToSignal(view.editTransaction, onEditTransaction);
             addToSignal(view.deleteTransaction, onDeleteTransaction);
 
             addToSignal(provideAllTransactionsSignal, onTransactionsData);
@@ -96,6 +98,11 @@ package com.pauluz.bbapps.kontomierz.view.mediators
             logger.debug(": onStoreSelectedTransaction");
 
             storeSelectedTransactionSignal.dispatch(transaction);
+        }
+
+        private function onEditTransaction(transaction:TransactionVO):void
+        {
+            logger.debug(": onEditTransaction");
         }
 
         private function onDeleteTransaction(transaction:TransactionVO):void

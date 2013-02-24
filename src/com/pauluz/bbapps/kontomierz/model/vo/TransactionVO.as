@@ -28,5 +28,10 @@ package com.pauluz.bbapps.kontomierz.model.vo
         public var tagString:String = "";
 
         public var direction:String = "";
+
+        public function get currencyAmountString():String
+        {
+            return currencyAmount.toString().replace(".", ",");
+        }
     }
 }
