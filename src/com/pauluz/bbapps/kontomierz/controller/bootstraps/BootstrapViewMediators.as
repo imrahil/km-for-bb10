@@ -28,13 +28,15 @@ package com.pauluz.bbapps.kontomierz.controller.bootstraps
             mediatorMap.mapView(WalletView, WalletViewMediator);
             mediatorMap.mapView(AddTransactionView, AddTransactionViewMediator);
 
+            mediatorMap.mapView(BudgetsView, BudgetsViewMediator);
+            mediatorMap.mapView(ScheduleView, ScheduleViewMediator);
+
             mediatorMap.mapView(CategoriesView, CategoriesViewMediator);
             mediatorMap.mapView(CategoryAllTransactionsView, CategoryAllTransactionsMediator);
 
             mediatorMap.mapView(TagsView, TagsViewMediator);
             mediatorMap.mapView(ChartsView, ChartsViewMediator);
             mediatorMap.mapView(SettingsView, SettingsViewMediator);
-            mediatorMap.mapView(EmptyView, EmptyViewMediator);
         }
     }
 }
