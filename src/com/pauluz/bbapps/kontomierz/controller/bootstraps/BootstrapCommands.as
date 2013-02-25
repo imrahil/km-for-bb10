@@ -39,6 +39,7 @@ package com.pauluz.bbapps.kontomierz.controller.bootstraps
             commandMap.mapSignalClass(StoreDefaultWalletIdSignal, StoreDefaultWalletIdCommand);
 
             commandMap.mapSignalClass(DeleteWalletTransactionSignal, DeleteWalletTransactionCommand);
+            commandMap.mapSignalClass(RefreshWalletSignal, RefreshWalletCommand);
 
             // categories
             commandMap.mapSignalClass(GetAllCategoriesSignal, GetAllCategoriesCommand);

@@ -51,6 +51,7 @@ package com.pauluz.bbapps.kontomierz.view
 
         public var editTransaction:Signal = new Signal(TransactionVO);
         public var deleteTransaction:Signal = new Signal(TransactionVO);
+        public var refreshWallet:Signal = new Signal();
 
         public function WalletView()
         {
@@ -121,7 +122,7 @@ package com.pauluz.bbapps.kontomierz.view
             logger.debug(": onRefreshAction");
 
             content = ContainerHelper.createSpinner();
-            viewAddedSignal.dispatch();
+            refreshWallet.dispatch();
         }
 
         private function transactionListClicked(event:ListEvent):void
