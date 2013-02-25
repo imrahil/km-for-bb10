@@ -8,7 +8,8 @@ Copyright (c) 2013 pauluZ
 *klasa DatePicker* - [http://supportforums.blackberry.com/t5/Adobe-AIR-Development/BB10-Date-Picker-class/m-p/1996999#M40295](http://supportforums.blackberry.com/t5/Adobe-AIR-Development/BB10-Date-Picker-class/m-p/1996999#M40295)
 
 Wersje:
-
+* 0.1.3 - poprawione odswiezanie listy transakcji w portfelu
+* 0.1.2 - mozliwosc uzywania aplikacji w trybie demo. Poprawione wyswietlanie listy kategorii.
 * 0.1.1 - dodana mozliwosc usuwania transakcji
 * 0.1.0 - dodana mozliwosc wprowadzania nowych wydatkow
 * 0.0.4 - dodane wyswietlanie listy kategorii
@@ -20,8 +21,8 @@ Wersje:
 >
 * edycja transakcji
 * wybor kategorii przy dodawaniu i edycji transakcji
-* obsluga przychodow (sa juz wydatki)
-* waluty ?
+* ~~obsluga przychodow (sa juz wydatki)~~
+* ~~waluty ?~~
 * dodac zapis danych lokalnie - tak zeby nie wymagane bylo polaczenie z internetem (przy braku synchronizacji -> zablokowac edycje i dodawanie)
 * przy pierwszym starcie odczyt z sieci lub przy jej braku z danych lokalnych (sqlite?)
 * przy kolejnych odczytach brac dane z sqlite, a z sieci dopiero na akcje "Odswiez" wywolana przez uzytkownika
