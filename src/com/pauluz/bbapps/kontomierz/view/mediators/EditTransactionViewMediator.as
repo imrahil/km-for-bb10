@@ -8,36 +8,35 @@
 package com.pauluz.bbapps.kontomierz.view.mediators
 {
     import com.pauluz.bbapps.kontomierz.model.vo.TransactionVO;
-    import com.pauluz.bbapps.kontomierz.signals.AddTransactionSignal;
     import com.pauluz.bbapps.kontomierz.signals.GetAllCategoriesSignal;
     import com.pauluz.bbapps.kontomierz.signals.GetAllCurrenciesSignal;
+    import com.pauluz.bbapps.kontomierz.signals.RequestSelectedTransactionSignal;
+    import com.pauluz.bbapps.kontomierz.signals.signaltons.ProvideAllCurrenciesSignal;
     import com.pauluz.bbapps.kontomierz.signals.signaltons.ProvideAllDepositCategoriesSignal;
     import com.pauluz.bbapps.kontomierz.signals.signaltons.ProvideAllWithdrawalCategoriesSignal;
-    import com.pauluz.bbapps.kontomierz.signals.signaltons.ProvideAllCurrenciesSignal;
-    import com.pauluz.bbapps.kontomierz.signals.signaltons.TransactionSuccessfulySavedSignal;
+    import com.pauluz.bbapps.kontomierz.signals.signaltons.ProvideSelectedTransactionSignal;
     import com.pauluz.bbapps.kontomierz.utils.LogUtil;
     import com.useitbetter.uDash;
 
     import mx.logging.ILogger;
     
-    import com.pauluz.bbapps.kontomierz.view.AddTransactionView;
+    import com.pauluz.bbapps.kontomierz.view.EditTransactionView;
     import org.robotlegs.mvcs.SignalMediator;
 
-    import qnx.ui.data.DataProvider;
-
-    import qnx.ui.data.SectionDataProvider;
-
-    public class AddTransactionViewMediator extends SignalMediator
+    public class EditTransactionViewMediator extends SignalMediator
     {
         /**
          * VIEW
          */
         [Inject]
-        public var view:AddTransactionView;
+        public var view:EditTransactionView;
 
         /**
          * SIGNALTONS
          */
+        [Inject]
+        public var provideSelectedTransactionSignal:ProvideSelectedTransactionSignal;
+
         [Inject]
         public var provideAllWithdrawalCategoriesSignal:ProvideAllWithdrawalCategoriesSignal;
 
@@ -47,23 +46,23 @@ package com.pauluz.bbapps.kontomierz.view.mediators
         [Inject]
         public var provideAllCurrenciesSignal:ProvideAllCurrenciesSignal;
 
-        [Inject]
-        public var transactionSuccessfulySavedSignal:TransactionSuccessfulySavedSignal;
 
         /**
          * SIGNAL -> COMMAND
          */
+        [Inject]
+        public var requestSelectedTransactionSignal:RequestSelectedTransactionSignal;
+
         [Inject]
         public var getAllCategoriesSignal:GetAllCategoriesSignal;
 
         [Inject]
         public var getAllCurrenciesSignal:GetAllCurrenciesSignal;
 
-        [Inject]
-        public var addTransactionSignal:AddTransactionSignal;
-
         /** variables **/
         private var logger:ILogger;
+
+        private var selectedTransaction:TransactionVO;
 
         private var dataFlag:int = 0;
 
@@ -71,17 +70,18 @@ package com.pauluz.bbapps.kontomierz.view.mediators
         private var depositCategoriesDP:Array = [];
         private var currenciesDP:Array = [];
 
-        /**
+        private static const DATA_FLAG_COUNT:int = 3;
+        /** 
          * CONSTRUCTOR 
          */
-        public function AddTransactionViewMediator()
+        public function EditTransactionViewMediator()
         {
             super();
             
             logger = LogUtil.getLogger(this);
             logger.debug(": constructor");
 
-            uDash.recorder.saveMeta(uDash.metaevents.SECTION, "AddTransactionView")
+            uDash.recorder.saveMeta(uDash.metaevents.SECTION, "EditTransactionView")
         }
         
         /** 
@@ -91,15 +91,15 @@ package com.pauluz.bbapps.kontomierz.view.mediators
         override public function onRegister():void
         {
             logger.debug(": onRegister");
-            
+
             addToSignal(view.viewAddedSignal, onViewAdded);
-            addToSignal(view.addTransactionSignal, onAddTransaction);
+
+            addOnceToSignal(provideSelectedTransactionSignal, onTransactionDetailsData);
 
             addOnceToSignal(provideAllWithdrawalCategoriesSignal, onWithdrawalCategoriesData);
             addOnceToSignal(provideAllDepositCategoriesSignal, onDepositCategoriesData);
 
             addOnceToSignal(provideAllCurrenciesSignal, onCurrenciesData);
-            addToSignal(transactionSuccessfulySavedSignal, onSuccessfulSave);
         }
 
         private function onViewAdded():void
@@ -108,24 +108,34 @@ package com.pauluz.bbapps.kontomierz.view.mediators
 
             dataFlag = 0;
 
+            requestSelectedTransactionSignal.dispatch();
+
             getAllCategoriesSignal.dispatch();
             getAllCurrenciesSignal.dispatch();
         }
 
-        private function onAddTransaction(transaction:TransactionVO):void
+        private function onTransactionDetailsData(transaction:TransactionVO):void
         {
-            logger.debug(":onAddTransactione");
+            logger.debug(": onTransactionDetailsData");
 
-            addTransactionSignal.dispatch(transaction);
+            if (dataFlag == DATA_FLAG_COUNT)
+            {
+                view.addData(transaction, withdrawalCategoriesDP, depositCategoriesDP, currenciesDP);
+            }
+            else
+            {
+                selectedTransaction = transaction;
+                dataFlag++;
+            }
         }
 
         private function onWithdrawalCategoriesData(data:Array):void
         {
             logger.debug(": onWithdrawalCategoriesData");
 
-            if (dataFlag == 2)
+            if (dataFlag == DATA_FLAG_COUNT)
             {
-                view.addData(data, depositCategoriesDP, currenciesDP);
+                view.addData(selectedTransaction, data, depositCategoriesDP, currenciesDP);
             }
             else
             {
@@ -138,9 +148,9 @@ package com.pauluz.bbapps.kontomierz.view.mediators
         {
             logger.debug(": onDepositCategoriesData");
 
-            if (dataFlag == 2)
+            if (dataFlag == DATA_FLAG_COUNT)
             {
-                view.addData(withdrawalCategoriesDP, data, currenciesDP);
+                view.addData(selectedTransaction, withdrawalCategoriesDP, data, currenciesDP);
             }
             else
             {
@@ -153,24 +163,14 @@ package com.pauluz.bbapps.kontomierz.view.mediators
         {
             logger.debug(": onCurrenciesData");
 
-            if (dataFlag == 2)
+            if (dataFlag == DATA_FLAG_COUNT)
             {
-                view.addData(withdrawalCategoriesDP, depositCategoriesDP, data);
+                view.addData(selectedTransaction, withdrawalCategoriesDP, depositCategoriesDP, data);
             }
             else
             {
                 currenciesDP = data;
                 dataFlag++;
-            }
-        }
-
-        private function onSuccessfulSave():void
-        {
-            logger.debug(": onSuccessfulSave");
-
-            if (view)
-            {
-                view.showAlertAndCleanUp();
             }
         }
     }

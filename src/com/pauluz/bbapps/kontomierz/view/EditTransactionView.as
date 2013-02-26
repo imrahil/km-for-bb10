@@ -11,6 +11,7 @@ package com.pauluz.bbapps.kontomierz.view
     import com.pauluz.bbapps.kontomierz.model.vo.CategoryVO;
     import com.pauluz.bbapps.kontomierz.model.vo.CurrencyVO;
     import com.pauluz.bbapps.kontomierz.model.vo.TransactionVO;
+    import com.pauluz.bbapps.kontomierz.model.vo.TransactionVO;
     import com.pauluz.bbapps.kontomierz.utils.LogUtil;
     import com.pauluz.bbapps.kontomierz.view.components.AddEditTransactionForm;
 
@@ -21,22 +22,25 @@ package com.pauluz.bbapps.kontomierz.view
     import qnx.fuse.ui.core.Action;
     import qnx.fuse.ui.dialog.AlertDialog;
     import qnx.fuse.ui.events.ActionEvent;
+    import qnx.fuse.ui.navigation.NavigationPaneProperties;
     import qnx.fuse.ui.navigation.TitlePage;
 
-    public class AddTransactionView extends TitlePage
+    public class EditTransactionView extends TitlePage
     {
         private var logger:ILogger;
 
         public var form:AddEditTransactionForm;
 
-        public var viewAddedSignal:Signal = new Signal();
-        public var addTransactionSignal:Signal = new Signal(TransactionVO);
+        private var saveAction:Action;
 
-        public function AddTransactionView()
+        public var viewAddedSignal:Signal = new Signal();
+        public var editTransactionSignal:Signal = new Signal(TransactionVO);
+
+        public function EditTransactionView()
         {
             super();
 
-            title = "Dodaj wydatek";
+            title = "Edytuj wydatek";
 
             logger = LogUtil.getLogger(this);
             logger.debug(": constructor");
@@ -48,9 +52,11 @@ package com.pauluz.bbapps.kontomierz.view
 
             logger.debug(": onAdded");
 
-            titleBar.acceptAction = new Action("Dodaj");
-            titleBar.acceptAction.enabled = false;
-            titleBar.addEventListener(ActionEvent.ACTION_SELECTED, onAddExpenseAction);
+            saveAction = new Action("Zapisz");
+
+            titleBar.acceptAction = saveAction;
+            titleBar.dismissAction = new Action("Anuluj");
+            titleBar.addEventListener(ActionEvent.ACTION_SELECTED, onSaveAction);
 
             form = new AddEditTransactionForm();
 
@@ -59,56 +65,78 @@ package com.pauluz.bbapps.kontomierz.view
             viewAddedSignal.dispatch();
         }
 
-        public function addData(_withdrawalCategoriesData:Array, _depositCategoriesData:Array, _currenciesData:Array):void
+        public function addData(transaction:TransactionVO, _withdrawalCategoriesData:Array, _depositCategoriesData:Array, _currenciesData:Array):void
         {
             titleBar.acceptAction.enabled = true;
-
             form.categoryBtn.enabled = true;
             form.currencyBtn.enabled = true;
 
             form.withdrawalCategoriesDP = _withdrawalCategoriesData;
             form.depositCategoriesDP = _depositCategoriesData;
             form.currenciesDP = _currenciesData;
+
+            if (transaction.direction == ApplicationConstants.TRANSACTION_DIRECTION_WITHDRAWAL)
+            {
+                form.withdrawalRadio.selected = true;
+            }
+            else
+            {
+                form.depositRadio.selected = true;
+            }
+
+            form.amountTextInput.text = transaction.currencyAmount.toString().replace("-", "");
+            form.datePicker.setDateFromString(transaction.transactionOn);
+            form.descriptionTextInput.text = transaction.description;
+            form.categoryBtn.label = transaction.categoryName;
+            form.currencyBtn.label = transaction.currencyName;
         }
 
-        private function onAddExpenseAction(event:ActionEvent):void
+        private function onSaveAction(event:ActionEvent):void
         {
-            if (form.amountTextInput.text == "")
+            if (event.action == saveAction)
             {
-                form.expenseErrorLabel.text = "Proszę podać kwotę!";
-                return;
-            }
-            else
-            {
+                if (form.amountTextInput.text == "")
+                {
+                    form.expenseErrorLabel.text = "Proszę podać kwotę!";
+                    return;
+                }
+                else
+                {
+                    form.expenseErrorLabel.text = "";
+                }
+
+                if (form.descriptionTextInput.text == "")
+                {
+                    form.descriptionErrorLabel.text = "Proszę podać opis!";
+                    return;
+                }
+                else
+                {
+                    form.descriptionErrorLabel.text = "";
+                }
+
+                if (form.categoryBtn.label == ApplicationConstants.NO_CATEGORY_LABEL)
+                {
+                    form.categoryErrorLabel.text = "Proszę wybrać kategorię!";
+                    return;
+                }
+                else
+                {
+                    form.categoryErrorLabel.text = "";
+                }
+
                 form.expenseErrorLabel.text = "";
-            }
-
-            if (form.descriptionTextInput.text == "")
-            {
-                form.descriptionErrorLabel.text = "Proszę podać opis!";
-                return;
-            }
-            else
-            {
                 form.descriptionErrorLabel.text = "";
-            }
 
-            if (form.categoryBtn.label == ApplicationConstants.NO_CATEGORY_LABEL)
-            {
-                form.categoryErrorLabel.text = "Proszę wybrać kategorię!";
-                return;
+                var newTransaction:TransactionVO = form.provideTransactionData();
+
+                editTransactionSignal.dispatch(newTransaction);
             }
             else
             {
-                form.categoryErrorLabel.text = "";
+                form.removeListeners();
+                popAndDeletePage();
             }
-
-            form.expenseErrorLabel.text = "";
-            form.descriptionErrorLabel.text = "";
-
-            var newTransaction:TransactionVO = form.provideTransactionData();
-
-            addTransactionSignal.dispatch(newTransaction);
         }
 
         public function showAlertAndCleanUp():void

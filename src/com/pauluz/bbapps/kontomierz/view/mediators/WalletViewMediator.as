@@ -11,9 +11,11 @@ package com.pauluz.bbapps.kontomierz.view.mediators
     import com.pauluz.bbapps.kontomierz.signals.DeleteWalletTransactionSignal;
     import com.pauluz.bbapps.kontomierz.signals.GetAllWalletTransactionsSignal;
     import com.pauluz.bbapps.kontomierz.signals.RefreshWalletSignal;
+    import com.pauluz.bbapps.kontomierz.signals.StoreSelectedTransactionForEditSignal;
     import com.pauluz.bbapps.kontomierz.signals.StoreSelectedTransactionSignal;
     import com.pauluz.bbapps.kontomierz.signals.signaltons.ProvideAllTransactionsSignal;
     import com.pauluz.bbapps.kontomierz.signals.signaltons.SelectedTransactionSuccessfulStoreSignal;
+    import com.pauluz.bbapps.kontomierz.signals.signaltons.TransactionForEditSuccessfulStoreSignal;
     import com.pauluz.bbapps.kontomierz.utils.LogUtil;
     import com.pauluz.bbapps.kontomierz.view.WalletView;
     import com.useitbetter.uDash;
@@ -41,6 +43,9 @@ package com.pauluz.bbapps.kontomierz.view.mediators
         [Inject]
         public var selectedTransactionSuccessfulStoreSignal:SelectedTransactionSuccessfulStoreSignal;
 
+        [Inject]
+        public var transactionForEditSuccessfulStoreSignal:TransactionForEditSuccessfulStoreSignal;
+
         /**
          * SIGNAL -> COMMAND
          */
@@ -49,6 +54,9 @@ package com.pauluz.bbapps.kontomierz.view.mediators
 
         [Inject]
         public var storeSelectedTransactionSignal:StoreSelectedTransactionSignal;
+
+        [Inject]
+        public var storeSelectedTransactionForEditSignal:StoreSelectedTransactionForEditSignal;
 
         [Inject]
         public var deleteWalletTransactionSignal:DeleteWalletTransactionSignal;
@@ -82,11 +90,14 @@ package com.pauluz.bbapps.kontomierz.view.mediators
 
             addToSignal(view.viewAddedSignal, onViewAdded);
             addToSignal(view.storeSelectedTransaction, onStoreSelectedTransaction);
+            addToSignal(view.storeSelectedTransactionForEdit, onStoreSelectedTransactionForEdit);
+
             addToSignal(view.deleteTransaction, onDeleteTransaction);
             addToSignal(view.refreshWallet, onRefreshWallet);
 
             addToSignal(provideAllTransactionsSignal, onTransactionsData);
             addToSignal(selectedTransactionSuccessfulStoreSignal, onTransactionSuccessfulStore);
+            addToSignal(transactionForEditSuccessfulStoreSignal, onTransactionForEditSuccessfulStore);
         }
 
         private function onViewAdded():void
@@ -101,6 +112,13 @@ package com.pauluz.bbapps.kontomierz.view.mediators
             logger.debug(": onStoreSelectedTransaction");
 
             storeSelectedTransactionSignal.dispatch(transaction);
+        }
+
+        private function onStoreSelectedTransactionForEdit(transaction:TransactionVO):void
+        {
+            logger.debug(": onStoreSelectedTransactionForEdit");
+
+            storeSelectedTransactionForEditSignal.dispatch(transaction);
         }
 
         private function onDeleteTransaction(transaction:TransactionVO):void
@@ -134,6 +152,16 @@ package com.pauluz.bbapps.kontomierz.view.mediators
             if (view)
             {
                 view.addDetailView();
+            }
+        }
+
+        private function onTransactionForEditSuccessfulStore():void
+        {
+            logger.debug(": onTransactionForEditSuccessfulStore");
+
+            if (view)
+            {
+                view.addEditView();
             }
         }
     }

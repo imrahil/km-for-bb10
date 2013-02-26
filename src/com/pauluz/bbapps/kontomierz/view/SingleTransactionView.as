@@ -12,7 +12,6 @@ package com.pauluz.bbapps.kontomierz.view
     import com.pauluz.bbapps.kontomierz.utils.ContainerHelper;
     import com.pauluz.bbapps.kontomierz.utils.LogUtil;
     import com.pauluz.bbapps.kontomierz.utils.TextFormatUtil;
-    import com.useitbetter.uDash;
 
     import flash.events.Event;
 
@@ -59,8 +58,6 @@ package com.pauluz.bbapps.kontomierz.view
 
             logger = LogUtil.getLogger(this);
             logger.debug(": constructor");
-
-            uDash.recorder.saveMeta(uDash.metaevents.SECTION, "SingleTransactionView")
         }
 
         override protected function init():void

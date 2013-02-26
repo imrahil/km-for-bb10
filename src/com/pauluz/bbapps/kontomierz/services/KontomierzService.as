@@ -183,7 +183,7 @@ package com.pauluz.bbapps.kontomierz.services
             urlRequest.method = URLRequestMethod.POST;
 
             var variables:URLVariables = new URLVariables();
-            variables["money_transaction[currency_amount]"] = transaction.amount;
+            variables["money_transaction[currency_amount]"] = transaction.currencyAmount;
             variables["money_transaction[currency_name]"] = transaction.currencyName;
             variables["money_transaction[name]"] = transaction.description;
             variables["money_transaction[transaction_on]"] = transaction.transactionOn.substr(8, 2) + "-" + transaction.transactionOn.substr(5, 2) + "-" + transaction.transactionOn.substr(0, 4);
@@ -212,7 +212,7 @@ package com.pauluz.bbapps.kontomierz.services
 
             var variables:URLVariables = new URLVariables();
             variables["money_transaction[category_id]"] = transaction.categoryId;
-            variables["money_transaction[currency_amount]"] = transaction.amount;
+            variables["money_transaction[currency_amount]"] = transaction.currencyAmount;
             variables["money_transaction[name]"] = transaction.description;
             var apiDate:String = transaction.transactionOn.substr(8, 2) + "-" + transaction.transactionOn.substr(5, 2) + "-" + transaction.transactionOn.substr(0, 4);
             variables["money_transaction[transaction_on]"] = apiDate;

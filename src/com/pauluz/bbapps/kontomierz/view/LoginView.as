@@ -147,6 +147,7 @@ package com.pauluz.bbapps.kontomierz.view
             labelButton.label = "Załóż konto";
             labelButton.enabled = false;
             gridDataHolder = new GridData();
+            gridDataHolder.setOptions(SizeOptions.RESIZE_HORIZONTAL);
             labelButton.layoutData = gridDataHolder;
             buttonsContainer.addChild(labelButton);
 
@@ -155,6 +156,7 @@ package com.pauluz.bbapps.kontomierz.view
             labelButton.label = "Demo";
             gridDataHolder = new GridData();
             labelButton.layoutData = gridDataHolder;
+            gridDataHolder.setOptions(SizeOptions.RESIZE_HORIZONTAL);
             labelButton.addEventListener(MouseEvent.CLICK, onDemoClick);
             buttonsContainer.addChild(labelButton);
 

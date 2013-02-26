@@ -12,8 +12,8 @@ package com.pauluz.bbapps.kontomierz.view.components
             super();
 
             // year col
-            var yrar:Array = [];
-            var moar:Array = [
+            var yearArr:Array = [];
+            var monthsArr:Array = [
                 { data: 1, label: 'Sty' },
                 { data: 2, label: 'Lut' },
                 { data: 3, label: 'Mar' },
@@ -27,22 +27,22 @@ package com.pauluz.bbapps.kontomierz.view.components
                 { data: 11, label: 'Lis' },
                 { data: 12, label: 'Gru' }
             ];
-            var datear:Array = [];
+            var dateArr:Array = [];
             var today:Date = new Date();
             var yr:int;
 
             for (yr = today.fullYear; yr >= today.fullYear - years_back; yr--)
             {
-                yrar.push({data: yr, label: yr});
+                yearArr.push({data: yr, label: yr});
             }
 
             var day:int;
             for (day = 1; day <= 31; day++)
             {
-                datear.push({ data: day, label: day });
+                dateArr.push({ data: day, label: day });
             }
 
-            this.dataProvider = new DataProvider([new DataProvider(yrar), new DataProvider(moar), new DataProvider(datear)]);
+            this.dataProvider = new DataProvider([new DataProvider(yearArr), new DataProvider(monthsArr), new DataProvider(dateArr)]);
 
             this.valueFunction = dateDisplay;
 
@@ -112,6 +112,14 @@ package com.pauluz.bbapps.kontomierz.view.components
             this.setDateIndex(value.fullYear, value.month + 1, value.date);
         }
 
+        public function setDateFromString(value:String):void
+        {
+            var dateArr:Array = value.split("-");
+            var newDate:Date = new Date(parseInt(dateArr[0]), parseInt(dateArr[1]) - 1, parseInt(dateArr[2]));
+
+            this.setDateIndex(newDate.fullYear, newDate.month, newDate.date);
+        }
+
         public final function get year():int
         {
             var ar:Array = this.selectedItems;
@@ -164,11 +172,6 @@ package com.pauluz.bbapps.kontomierz.view.components
             if (dt > maxd)dt = maxd;
 
             this.setDateIndex(yr, mo, dt);
-        }
-
-        public final function get bottom():int
-        {
-            return this.y + this.height;
         }
     }
 }

@@ -43,8 +43,8 @@ package
             uSettings.uProjectName = "Kontomierz";
             uSettings.uProjectApiPass = "b0bced19bf2f61b0484b5399c75405bb";
             uSettings.uPort = 57932;
-//
-//            stage.addChild(uDash.init());
+
+            stage.addChild(uDash.init());
 //            stage.addChild(new uMiniPanel());
 
             ThemeGlobals.injectCSS("CellRenderer{ mouseChildren:false; opaqueBackground:#FAFAFA;}");

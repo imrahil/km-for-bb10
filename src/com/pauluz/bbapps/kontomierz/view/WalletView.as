@@ -48,8 +48,8 @@ package com.pauluz.bbapps.kontomierz.view
 
         public var viewAddedSignal:Signal = new Signal();
         public var storeSelectedTransaction:Signal = new Signal(TransactionVO);
+        public var storeSelectedTransactionForEdit:Signal = new Signal(TransactionVO);
 
-        public var editTransaction:Signal = new Signal(TransactionVO);
         public var deleteTransaction:Signal = new Signal(TransactionVO);
         public var refreshWallet:Signal = new Signal();
 
@@ -149,7 +149,12 @@ package com.pauluz.bbapps.kontomierz.view
         {
             if (event.action == editAction)
             {
-                editTransaction.dispatch(transactionsList.selectedItem as TransactionVO);
+                var selectedTransaction:TransactionVO = transactionsList.selectedItem as TransactionVO;
+
+                if (selectedTransaction)
+                {
+                    storeSelectedTransactionForEdit.dispatch(selectedTransaction);
+                }
             }
             else if (event.action == deleteAction)
             {
@@ -165,9 +170,11 @@ package com.pauluz.bbapps.kontomierz.view
 
         private function onDeleteConfirmation(event:Event):void
         {
-            if (event.target.selectedIndex == 0)
+            var selectedTransaction:TransactionVO = transactionsList.selectedItem as TransactionVO;
+
+            if (event.target.selectedIndex == 0 && selectedTransaction)
             {
-                deleteTransaction.dispatch(transactionsList.selectedItem as TransactionVO);
+                deleteTransaction.dispatch(selectedTransaction);
 
                 content = ContainerHelper.createSpinner();
             }
@@ -178,6 +185,12 @@ package com.pauluz.bbapps.kontomierz.view
             var detailView:SingleTransactionView = new SingleTransactionView();
             detailView.isWallet = true;
             pushPage(detailView);
+        }
+
+        public function addEditView():void
+        {
+            var editView:EditTransactionView = new EditTransactionView();
+            pushPage(editView);
         }
 
         public function addData(data:DataProvider):void

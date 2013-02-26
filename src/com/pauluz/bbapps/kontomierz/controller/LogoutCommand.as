@@ -29,6 +29,14 @@ package com.pauluz.bbapps.kontomierz.controller
             sessionSO.clear();
 
             model.apiKey = "";
+
+            model.selectedAccount = null;
+            model.accountsList = null;
+            model.selectedTransaction = null;
+            model.defaultWalletId = 0;
+            model.walletTransactionsList = null;
+
+            model.selectedCategory = null;
         }
     }
 }
