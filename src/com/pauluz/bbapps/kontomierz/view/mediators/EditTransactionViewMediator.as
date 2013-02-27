@@ -93,6 +93,7 @@ package com.pauluz.bbapps.kontomierz.view.mediators
             logger.debug(": onRegister");
 
             addToSignal(view.viewAddedSignal, onViewAdded);
+            addToSignal(view.editTransactionSignal, onEditTransaction);
 
             addOnceToSignal(provideSelectedTransactionSignal, onTransactionDetailsData);
 
@@ -112,6 +113,16 @@ package com.pauluz.bbapps.kontomierz.view.mediators
 
             getAllCategoriesSignal.dispatch();
             getAllCurrenciesSignal.dispatch();
+        }
+
+        private function onEditTransaction(transaction:TransactionVO):void
+        {
+            if (transaction.categoryId == -1)
+            {
+                transaction.categoryId = selectedTransaction.categoryId;
+            }
+
+
         }
 
         private function onTransactionDetailsData(transaction:TransactionVO):void

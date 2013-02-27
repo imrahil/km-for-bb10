@@ -75,13 +75,13 @@ package com.pauluz.bbapps.kontomierz.view
             form.depositCategoriesDP = _depositCategoriesData;
             form.currenciesDP = _currenciesData;
 
-            if (transaction.direction == ApplicationConstants.TRANSACTION_DIRECTION_WITHDRAWAL)
+            if (transaction.currencyAmount > 0)
             {
-                form.withdrawalRadio.selected = true;
+                form.depositRadio.selected = true;
             }
             else
             {
-                form.depositRadio.selected = true;
+                form.withdrawalRadio.selected = true;
             }
 
             form.amountTextInput.text = transaction.currencyAmount.toString().replace("-", "");
@@ -89,6 +89,12 @@ package com.pauluz.bbapps.kontomierz.view
             form.descriptionTextInput.text = transaction.description;
             form.categoryBtn.label = transaction.categoryName;
             form.currencyBtn.label = transaction.currencyName;
+
+            form.selectedCategory = new CategoryVO();
+            form.selectedCategory.id = transaction.categoryId;
+
+            form.selectedCurrency = new CurrencyVO();
+            form.selectedCurrency.name = transaction.currencyName;
         }
 
         private function onSaveAction(event:ActionEvent):void

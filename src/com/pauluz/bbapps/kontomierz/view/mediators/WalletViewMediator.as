@@ -97,7 +97,6 @@ package com.pauluz.bbapps.kontomierz.view.mediators
 
             addToSignal(provideAllTransactionsSignal, onTransactionsData);
             addToSignal(selectedTransactionSuccessfulStoreSignal, onTransactionSuccessfulStore);
-            addToSignal(transactionForEditSuccessfulStoreSignal, onTransactionForEditSuccessfulStore);
         }
 
         private function onViewAdded():void
@@ -117,6 +116,8 @@ package com.pauluz.bbapps.kontomierz.view.mediators
         private function onStoreSelectedTransactionForEdit(transaction:TransactionVO):void
         {
             logger.debug(": onStoreSelectedTransactionForEdit");
+
+            addOnceToSignal(transactionForEditSuccessfulStoreSignal, onTransactionForEditSuccessfulStore);
 
             storeSelectedTransactionForEditSignal.dispatch(transaction);
         }

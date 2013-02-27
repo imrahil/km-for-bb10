@@ -47,7 +47,7 @@ package com.pauluz.bbapps.kontomierz.view
         private var descriptionLbl:Label;
         private var categoryLbl:Label;
 
-        public var editTransaction:Signal = new Signal(Boolean);
+        public var editTransaction:Signal = new Signal();
         public var deleteTransaction:Signal = new Signal(Boolean);
 
         public function SingleTransactionView()
@@ -147,7 +147,7 @@ package com.pauluz.bbapps.kontomierz.view
         {
             if (action == editAction)
             {
-                editTransaction.dispatch(isWallet);
+                editTransaction.dispatch();
             }
             else if (action == deleteAction)
             {
@@ -182,6 +182,12 @@ package com.pauluz.bbapps.kontomierz.view
             dateLbl.text = transaction.bookedOn;
             descriptionLbl.text = transaction.description;
             categoryLbl.text = transaction.categoryName;
+        }
+
+        public function addEditView():void
+        {
+            var editView:EditTransactionView = new EditTransactionView();
+            pushPage(editView);
         }
     }
 }

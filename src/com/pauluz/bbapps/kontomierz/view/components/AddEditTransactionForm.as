@@ -138,8 +138,8 @@ package com.pauluz.bbapps.kontomierz.view.components
             // DATE PICKER
             datePicker = new DatePicker();
             datePicker.setDate(new Date());
-            datePicker.addEventListener(ExpandableEvent.OPENING, onOpening);
-            datePicker.addEventListener(ExpandableEvent.CLOSING, onClosing);
+            datePicker.addEventListener(ExpandableEvent.OPENING, onDatePickerOpening);
+            datePicker.addEventListener(ExpandableEvent.CLOSING, onDatePickerClosing);
             container.addChild(datePicker);
 
 
@@ -201,14 +201,14 @@ package com.pauluz.bbapps.kontomierz.view.components
             return container;
         }
 
-        private function onClosing(event:ExpandableEvent):void
-        {
-            datePicker.prompt = "";
-        }
-
-        private function onOpening(event:ExpandableEvent):void
+        private function onDatePickerOpening(event:ExpandableEvent):void
         {
             datePicker.prompt = "Wybierz datę";
+        }
+
+        private function onDatePickerClosing(event:ExpandableEvent):void
+        {
+            datePicker.prompt = "";
         }
 
         private function onDirectionChange(event:Event):void
@@ -236,12 +236,29 @@ package com.pauluz.bbapps.kontomierz.view.components
             listDialog.addButton("OK");
             listDialog.addButton("Anuluj");
 
+            var category:CategoryVO;
             if (directionRadioGroup.selection == withdrawalRadio)
             {
+                if (selectedCategory)
+                {
+                    for each (category in withdrawalCategoriesDP)
+                    {
+                        category.selected = (category.id == selectedCategory.id);
+                    }
+                }
+
                 listDialog.list = withdrawalCategoriesDP;
             }
             else
             {
+                if (selectedCategory)
+                {
+                    for each (category in depositCategoriesDP)
+                    {
+                        category.selected = (category.id == selectedCategory.id);
+                    }
+                }
+
                 listDialog.list = depositCategoriesDP;
             }
 
@@ -256,6 +273,7 @@ package com.pauluz.bbapps.kontomierz.view.components
 
             if (listDialog.selectedIndex == 0)
             {
+                // jesli wybrano OK
                 categoryErrorLabel.text = "";
 
                 if (directionRadioGroup.selection == withdrawalRadio)
@@ -267,12 +285,23 @@ package com.pauluz.bbapps.kontomierz.view.components
                     selectedCategory = depositCategoriesDP[listDialog.listSelectedIndex] as CategoryVO;
                 }
 
-                categoryBtn.label = selectedCategory.name;
+                if (selectedCategory)
+                {
+                    categoryBtn.label = selectedCategory.name;
+                }
             }
         }
 
         private function onCurrencyBtnClick(event:MouseEvent):void
         {
+            if (selectedCurrency)
+            {
+                for each (var currency:CurrencyVO in currenciesDP)
+                {
+                    currency.selected = (currency.name == selectedCurrency.name);
+                }
+            }
+
             var listDialog:CustomListDialog = new CustomListDialog();
             listDialog.title = "Waluta";
             listDialog.addButton("OK");
@@ -292,7 +321,10 @@ package com.pauluz.bbapps.kontomierz.view.components
             {
                 selectedCurrency = currenciesDP[listDialog.listSelectedIndex] as CurrencyVO;
 
-                currencyBtn.label = selectedCurrency.label;
+                if (selectedCurrency)
+                {
+                    currencyBtn.label = selectedCurrency.label;
+                }
             }
         }
 
@@ -306,7 +338,7 @@ package com.pauluz.bbapps.kontomierz.view.components
             newTransaction.direction = (directionRadioGroup.selection == withdrawalRadio) ? ApplicationConstants.TRANSACTION_DIRECTION_WITHDRAWAL : ApplicationConstants.TRANSACTION_DIRECTION_DEPOSIT;
 
             newTransaction.currencyName = (selectedCurrency) ? selectedCurrency.name : ApplicationConstants.DEFAULT_CURRENCY_NAME;
-            newTransaction.categoryId = selectedCategory.id;
+            newTransaction.categoryId = (selectedCategory) ? selectedCategory.id : -1;
 
             return newTransaction;
         }

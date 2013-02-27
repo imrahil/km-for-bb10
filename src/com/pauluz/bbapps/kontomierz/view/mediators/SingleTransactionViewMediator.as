@@ -11,7 +11,9 @@ package com.pauluz.bbapps.kontomierz.view.mediators
     import com.pauluz.bbapps.kontomierz.signals.DeleteTransactionSignal;
     import com.pauluz.bbapps.kontomierz.signals.DeleteWalletTransactionSignal;
     import com.pauluz.bbapps.kontomierz.signals.RequestSelectedTransactionSignal;
+    import com.pauluz.bbapps.kontomierz.signals.StoreSelectedTransactionForEditSignal;
     import com.pauluz.bbapps.kontomierz.signals.signaltons.ProvideSelectedTransactionSignal;
+    import com.pauluz.bbapps.kontomierz.signals.signaltons.TransactionForEditSuccessfulStoreSignal;
     import com.pauluz.bbapps.kontomierz.utils.LogUtil;
     import com.pauluz.bbapps.kontomierz.view.SingleTransactionView;
     import com.useitbetter.uDash;
@@ -34,11 +36,17 @@ package com.pauluz.bbapps.kontomierz.view.mediators
         [Inject]
         public var provideSelectedTransactionSignal:ProvideSelectedTransactionSignal;
 
+        [Inject]
+        public var transactionForEditSuccessfulStoreSignal:TransactionForEditSuccessfulStoreSignal;
+
         /**
          * SIGNAL -> COMMAND
          */
         [Inject]
         public var requestSelectedTransactionSignal:RequestSelectedTransactionSignal;
+
+        [Inject]
+        public var storeSelectedTransactionForEditSignal:StoreSelectedTransactionForEditSignal;
 
         [Inject]
         public var deleteTransactionSignal:DeleteTransactionSignal;
@@ -89,6 +97,10 @@ package com.pauluz.bbapps.kontomierz.view.mediators
         private function onEditTransaction():void
         {
             logger.debug(": onEditTransaction");
+
+            addOnceToSignal(transactionForEditSuccessfulStoreSignal, onTransactionForEditSuccessfulStore);
+
+            storeSelectedTransactionForEditSignal.dispatch(selectedTransaction);
         }
 
         private function onDeleteTransaction(isWallet:Boolean):void
@@ -114,6 +126,16 @@ package com.pauluz.bbapps.kontomierz.view.mediators
             if (view)
             {
                 view.showDetails(transaction);
+            }
+        }
+
+        private function onTransactionForEditSuccessfulStore():void
+        {
+            logger.debug(": onTransactionForEditSuccessfulStore");
+
+            if (view)
+            {
+                view.addEditView();
             }
         }
     }
