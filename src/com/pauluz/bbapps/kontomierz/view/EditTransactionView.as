@@ -11,7 +11,6 @@ package com.pauluz.bbapps.kontomierz.view
     import com.pauluz.bbapps.kontomierz.model.vo.CategoryVO;
     import com.pauluz.bbapps.kontomierz.model.vo.CurrencyVO;
     import com.pauluz.bbapps.kontomierz.model.vo.TransactionVO;
-    import com.pauluz.bbapps.kontomierz.model.vo.TransactionVO;
     import com.pauluz.bbapps.kontomierz.utils.LogUtil;
     import com.pauluz.bbapps.kontomierz.view.components.AddEditTransactionForm;
 
@@ -20,9 +19,8 @@ package com.pauluz.bbapps.kontomierz.view
     import org.osflash.signals.Signal;
 
     import qnx.fuse.ui.core.Action;
-    import qnx.fuse.ui.dialog.AlertDialog;
+    import qnx.fuse.ui.dialog.ToastBase;
     import qnx.fuse.ui.events.ActionEvent;
-    import qnx.fuse.ui.navigation.NavigationPaneProperties;
     import qnx.fuse.ui.navigation.TitlePage;
 
     public class EditTransactionView extends TitlePage
@@ -147,37 +145,12 @@ package com.pauluz.bbapps.kontomierz.view
 
         public function showAlertAndCleanUp():void
         {
-            form.directionRadioGroup.setSelectedRadioButton(form.withdrawalRadio);
-            form.amountTextInput.text = "";
-            form.datePicker.setDate(new Date());
-            form.descriptionTextInput.text = "";
-
-            form.selectedCategory = null;
-            form.selectedCurrency = null;
-
-            var category:CategoryVO;
-            for each (category in form.withdrawalCategoriesDP)
-            {
-                category.selected = false;
-            }
-
-            for each (category in form.depositCategoriesDP)
-            {
-                category.selected = false;
-            }
-
-            form.currencyBtn.label = ApplicationConstants.DEFAULT_CURRENCY_NAME + " (" + ApplicationConstants.DEFAULT_CURRENCY_FULL_NAME + ")";
-
-            for each (var currency:CurrencyVO in form.currenciesDP)
-            {
-                currency.selected = (currency.name == ApplicationConstants.DEFAULT_CURRENCY_NAME);
-            }
-
-            var successDialog:AlertDialog = new AlertDialog();
+            var successDialog:ToastBase = new ToastBase();
             successDialog.title = "Sukces";
-            successDialog.message = "Dodano transakcję!";
-            successDialog.addButton("OK");
+            successDialog.message = "Pomyślnie zaktualizowano transakcję!";
             successDialog.show();
+
+            popAndDeletePage();
         }
     }
 }

@@ -11,10 +11,12 @@ package com.pauluz.bbapps.kontomierz.view.mediators
     import com.pauluz.bbapps.kontomierz.signals.GetAllCategoriesSignal;
     import com.pauluz.bbapps.kontomierz.signals.GetAllCurrenciesSignal;
     import com.pauluz.bbapps.kontomierz.signals.RequestSelectedTransactionSignal;
+    import com.pauluz.bbapps.kontomierz.signals.UpdateTransactionSignal;
     import com.pauluz.bbapps.kontomierz.signals.signaltons.ProvideAllCurrenciesSignal;
     import com.pauluz.bbapps.kontomierz.signals.signaltons.ProvideAllDepositCategoriesSignal;
     import com.pauluz.bbapps.kontomierz.signals.signaltons.ProvideAllWithdrawalCategoriesSignal;
     import com.pauluz.bbapps.kontomierz.signals.signaltons.ProvideSelectedTransactionSignal;
+    import com.pauluz.bbapps.kontomierz.signals.signaltons.TransactionSuccessfullySavedSignal;
     import com.pauluz.bbapps.kontomierz.utils.LogUtil;
     import com.useitbetter.uDash;
 
@@ -46,6 +48,8 @@ package com.pauluz.bbapps.kontomierz.view.mediators
         [Inject]
         public var provideAllCurrenciesSignal:ProvideAllCurrenciesSignal;
 
+        [Inject]
+        public var transactionSuccessfullySavedSignal:TransactionSuccessfullySavedSignal;
 
         /**
          * SIGNAL -> COMMAND
@@ -58,6 +62,9 @@ package com.pauluz.bbapps.kontomierz.view.mediators
 
         [Inject]
         public var getAllCurrenciesSignal:GetAllCurrenciesSignal;
+
+        [Inject]
+        public var updateTransactionSignal:UpdateTransactionSignal;
 
         /** variables **/
         private var logger:ILogger;
@@ -99,8 +106,9 @@ package com.pauluz.bbapps.kontomierz.view.mediators
 
             addOnceToSignal(provideAllWithdrawalCategoriesSignal, onWithdrawalCategoriesData);
             addOnceToSignal(provideAllDepositCategoriesSignal, onDepositCategoriesData);
-
             addOnceToSignal(provideAllCurrenciesSignal, onCurrenciesData);
+
+            addToSignal(transactionSuccessfullySavedSignal, onSuccessfulSave);
         }
 
         private function onViewAdded():void
@@ -117,12 +125,9 @@ package com.pauluz.bbapps.kontomierz.view.mediators
 
         private function onEditTransaction(transaction:TransactionVO):void
         {
-            if (transaction.categoryId == -1)
-            {
-                transaction.categoryId = selectedTransaction.categoryId;
-            }
+            transaction.id = selectedTransaction.id;
 
-
+            updateTransactionSignal.dispatch(transaction);
         }
 
         private function onTransactionDetailsData(transaction:TransactionVO):void
@@ -182,6 +187,16 @@ package com.pauluz.bbapps.kontomierz.view.mediators
             {
                 currenciesDP = data;
                 dataFlag++;
+            }
+        }
+
+        private function onSuccessfulSave():void
+        {
+            logger.debug(": onSuccessfulSave");
+
+            if (view)
+            {
+                view.showAlertAndCleanUp();
             }
         }
     }

@@ -23,7 +23,7 @@ package com.pauluz.bbapps.kontomierz.services
     import com.pauluz.bbapps.kontomierz.signals.signaltons.ProvideAllWithdrawalCategoriesSignal;
     import com.pauluz.bbapps.kontomierz.signals.signaltons.ProvideAllCurrenciesSignal;
     import com.pauluz.bbapps.kontomierz.signals.signaltons.ProvideAllTransactionsSignal;
-    import com.pauluz.bbapps.kontomierz.signals.signaltons.TransactionSuccessfulySavedSignal;
+    import com.pauluz.bbapps.kontomierz.signals.signaltons.TransactionSuccessfullySavedSignal;
     import com.pauluz.bbapps.kontomierz.utils.LogUtil;
 
     import flash.events.ErrorEvent;
@@ -71,7 +71,7 @@ package com.pauluz.bbapps.kontomierz.services
         public var provideAllTransactionsSignal:ProvideAllTransactionsSignal;
 
         [Inject]
-        public var transactionSuccessfulySavedSignal:TransactionSuccessfulySavedSignal;
+        public var transactionSuccessfullySavedSignal:TransactionSuccessfullySavedSignal;
 
         [Inject]
         public var provideAllCategoriesSignal:ProvideAllWithdrawalCategoriesSignal;
@@ -288,7 +288,7 @@ package com.pauluz.bbapps.kontomierz.services
             if (responseStatus == 201)
             {
                 model.isWalletListExpired = true;
-                transactionSuccessfulySavedSignal.dispatch();
+                transactionSuccessfullySavedSignal.dispatch();
             }
             else
             {
@@ -308,10 +308,10 @@ package com.pauluz.bbapps.kontomierz.services
             loader.removeEventListener(Event.COMPLETE, updateTransactionCompleteHandler);
             removeLoaderListeners(loader);
 
-            if (responseStatus == 201)
+            if (responseStatus == 200)
             {
                 model.isWalletListExpired = true;
-//                transactionSuccessfulySavedSignal.dispatch();
+                transactionSuccessfullySavedSignal.dispatch();
             }
             else
             {

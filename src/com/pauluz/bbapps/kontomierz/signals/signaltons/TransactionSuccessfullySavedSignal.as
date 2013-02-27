@@ -9,9 +9,9 @@ package com.pauluz.bbapps.kontomierz.signals.signaltons
 {
     import org.osflash.signals.Signal;
 
-    public class TransactionSuccessfulySavedSignal extends Signal
+    public class TransactionSuccessfullySavedSignal extends Signal
     {
-        public function TransactionSuccessfulySavedSignal()
+        public function TransactionSuccessfullySavedSignal()
         {
             super();
         }

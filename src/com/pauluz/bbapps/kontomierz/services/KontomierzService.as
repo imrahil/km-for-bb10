@@ -184,11 +184,11 @@ package com.pauluz.bbapps.kontomierz.services
 
             var variables:URLVariables = new URLVariables();
             variables["money_transaction[currency_amount]"] = transaction.currencyAmount;
-            variables["money_transaction[currency_name]"] = transaction.currencyName;
             variables["money_transaction[name]"] = transaction.description;
             variables["money_transaction[transaction_on]"] = transaction.transactionOn.substr(8, 2) + "-" + transaction.transactionOn.substr(5, 2) + "-" + transaction.transactionOn.substr(0, 4);
             variables["money_transaction[direction]"] = transaction.direction;
             variables["money_transaction[category_id]"] = transaction.categoryId;
+            variables["money_transaction[currency_name]"] = transaction.currencyName;
             variables["money_transaction[client_assigned_id]"] = new Date().getMilliseconds();
             variables["api_key"] = model.apiKey;
             urlRequest.data = variables;
@@ -211,12 +211,12 @@ package com.pauluz.bbapps.kontomierz.services
             urlRequest.method = URLRequestMethod.PUT;
 
             var variables:URLVariables = new URLVariables();
-            variables["money_transaction[category_id]"] = transaction.categoryId;
             variables["money_transaction[currency_amount]"] = transaction.currencyAmount;
             variables["money_transaction[name]"] = transaction.description;
-            var apiDate:String = transaction.transactionOn.substr(8, 2) + "-" + transaction.transactionOn.substr(5, 2) + "-" + transaction.transactionOn.substr(0, 4);
-            variables["money_transaction[transaction_on]"] = apiDate;
+            variables["money_transaction[transaction_on]"] = transaction.transactionOn.substr(8, 2) + "-" + transaction.transactionOn.substr(5, 2) + "-" + transaction.transactionOn.substr(0, 4);
             variables["money_transaction[direction]"] = transaction.direction;
+            variables["money_transaction[category_id]"] = transaction.categoryId;
+            variables["money_transaction[currency_name]"] = transaction.currencyName;
             variables["api_key"] = model.apiKey;
             urlRequest.data = variables;
 

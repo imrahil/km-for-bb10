@@ -14,7 +14,7 @@ package com.pauluz.bbapps.kontomierz.view.mediators
     import com.pauluz.bbapps.kontomierz.signals.signaltons.ProvideAllDepositCategoriesSignal;
     import com.pauluz.bbapps.kontomierz.signals.signaltons.ProvideAllWithdrawalCategoriesSignal;
     import com.pauluz.bbapps.kontomierz.signals.signaltons.ProvideAllCurrenciesSignal;
-    import com.pauluz.bbapps.kontomierz.signals.signaltons.TransactionSuccessfulySavedSignal;
+    import com.pauluz.bbapps.kontomierz.signals.signaltons.TransactionSuccessfullySavedSignal;
     import com.pauluz.bbapps.kontomierz.utils.LogUtil;
     import com.useitbetter.uDash;
 
@@ -48,7 +48,7 @@ package com.pauluz.bbapps.kontomierz.view.mediators
         public var provideAllCurrenciesSignal:ProvideAllCurrenciesSignal;
 
         [Inject]
-        public var transactionSuccessfulySavedSignal:TransactionSuccessfulySavedSignal;
+        public var transactionSuccessfullySavedSignal:TransactionSuccessfullySavedSignal;
 
         /**
          * SIGNAL -> COMMAND
@@ -99,7 +99,7 @@ package com.pauluz.bbapps.kontomierz.view.mediators
             addOnceToSignal(provideAllDepositCategoriesSignal, onDepositCategoriesData);
 
             addOnceToSignal(provideAllCurrenciesSignal, onCurrenciesData);
-            addToSignal(transactionSuccessfulySavedSignal, onSuccessfulSave);
+            addToSignal(transactionSuccessfullySavedSignal, onSuccessfulSave);
         }
 
         private function onViewAdded():void

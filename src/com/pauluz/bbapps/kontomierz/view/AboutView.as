@@ -72,7 +72,7 @@ package com.pauluz.bbapps.kontomierz.view
             var infoLabel:Label = new Label();
             infoLabel.maxLines = 8;
             infoLabel.text = "Author:\nPaweł Szczepanek\n\n" +
-                    "Email:\npawel.szczepanek@gmail.com\n\n" +
+                    "Email:\nblackberry@pauluz.pl\n\n" +
                     "Website:\nhttp://www.pauluz.pl/";
 
             infoLabel.format = TextFormatUtil.setFormat(infoLabel.format, 45);

@@ -20,6 +20,7 @@ package com.pauluz.bbapps.kontomierz.view
 
     import qnx.fuse.ui.core.Action;
     import qnx.fuse.ui.dialog.AlertDialog;
+    import qnx.fuse.ui.dialog.ToastBase;
     import qnx.fuse.ui.events.ActionEvent;
     import qnx.fuse.ui.navigation.TitlePage;
 
@@ -139,10 +140,8 @@ package com.pauluz.bbapps.kontomierz.view
                 currency.selected = (currency.name == ApplicationConstants.DEFAULT_CURRENCY_NAME);
             }
 
-            var successDialog:AlertDialog = new AlertDialog();
-            successDialog.title = "Sukces";
-            successDialog.message = "Dodano transakcję!";
-            successDialog.addButton("OK");
+            var successDialog:ToastBase = new ToastBase();
+            successDialog.message = "Pomyślnie dodano transakcję!";
             successDialog.show();
         }
     }

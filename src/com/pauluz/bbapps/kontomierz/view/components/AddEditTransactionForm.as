@@ -338,7 +338,7 @@ package com.pauluz.bbapps.kontomierz.view.components
             newTransaction.direction = (directionRadioGroup.selection == withdrawalRadio) ? ApplicationConstants.TRANSACTION_DIRECTION_WITHDRAWAL : ApplicationConstants.TRANSACTION_DIRECTION_DEPOSIT;
 
             newTransaction.currencyName = (selectedCurrency) ? selectedCurrency.name : ApplicationConstants.DEFAULT_CURRENCY_NAME;
-            newTransaction.categoryId = (selectedCategory) ? selectedCategory.id : -1;
+            newTransaction.categoryId = selectedCategory.id;
 
             return newTransaction;
         }
