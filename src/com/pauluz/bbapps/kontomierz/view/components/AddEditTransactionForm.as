@@ -37,29 +37,29 @@ package com.pauluz.bbapps.kontomierz.view.components
 
     public class AddEditTransactionForm
     {
+        public var createDirection:Boolean = true;
+
+        public var directionLbl:Label;
         public var directionRadioGroup:RadioButtonGroup;
         public var withdrawalRadio:RadioButton;
         public var depositRadio:RadioButton;
         public var amountTextInput:TextInput;
-        public var expenseErrorLabel:Label;
         public var datePicker:DatePicker;
         public var descriptionTextInput:TextInput;
-        public var descriptionErrorLabel:Label;
         public var categoryBtn:LabelButton;
-        public var categoryErrorLabel:Label;
         public var currencyBtn:LabelButton;
 
         public var withdrawalCategoriesDP:Array = [];
         public var depositCategoriesDP:Array = [];
         public var currenciesDP:Array = [];
 
+        public var direction:String = ApplicationConstants.TRANSACTION_DIRECTION_WITHDRAWAL;
         public var selectedCategory:CategoryVO;
         public var selectedCurrency:CurrencyVO;
 
         public function createForm():Container
         {
             var textLabel:Label;
-            var labelContainer:Container;
 
             var container:Container = ContainerHelper.createContainer();
             container.scrollDirection = ScrollDirection.VERTICAL;
@@ -69,57 +69,68 @@ package com.pauluz.bbapps.kontomierz.view.components
             container.layoutData = gridData;
 
             // TRANSACTION DIRECTION
-            textLabel = new Label();
-            textLabel.text = "Kierunek:";
-            textLabel.format = TextFormatUtil.setFormat(textLabel.format, 45);
-            container.addChild(textLabel);
+            if (createDirection)
+            {
+                textLabel = new Label();
+                textLabel.text = "Kierunek:";
+                textLabel.format = TextFormatUtil.setFormat(textLabel.format, 45);
+                container.addChild(textLabel);
 
-            var directionsGrid:GridLayout = new GridLayout();
-            directionsGrid.numColumns = 2;
-            directionsGrid.hSpacing = 40;
-            var directionsContainer:Container = new Container();
-            directionsContainer.layout = directionsGrid;
+                var directionsGrid:GridLayout = new GridLayout();
+                directionsGrid.numColumns = 2;
+                directionsGrid.hSpacing = 40;
+                var directionsContainer:Container = new Container();
+                directionsContainer.layout = directionsGrid;
 
-            withdrawalRadio = new RadioButton();
-            withdrawalRadio.label = "Wydatek";
-            withdrawalRadio.selected = true;
-            withdrawalRadio.groupname = "direction";
-            withdrawalRadio.paddingLeft = 10;
-            withdrawalRadio.setTextFormatForState(TextFormatUtil.setFormat(withdrawalRadio.getTextFormatForState(SkinStates.UP), 45), SkinStates.UP);
-            withdrawalRadio.setTextFormatForState(TextFormatUtil.setFormat(withdrawalRadio.getTextFormatForState(SkinStates.DOWN), 45), SkinStates.DOWN);
-            withdrawalRadio.setTextFormatForState(TextFormatUtil.setFormat(withdrawalRadio.getTextFormatForState(SkinStates.SELECTED), 45), SkinStates.SELECTED);
-            withdrawalRadio.setTextFormatForState(TextFormatUtil.setFormat(withdrawalRadio.getTextFormatForState(SkinStates.DISABLED), 45), SkinStates.DISABLED);
+                withdrawalRadio = new RadioButton();
+                withdrawalRadio.label = "Wydatek";
+                withdrawalRadio.selected = true;
+                withdrawalRadio.groupname = "direction";
+                withdrawalRadio.paddingLeft = 10;
+                withdrawalRadio.setTextFormatForState(TextFormatUtil.setFormat(withdrawalRadio.getTextFormatForState(SkinStates.UP), 45), SkinStates.UP);
+                withdrawalRadio.setTextFormatForState(TextFormatUtil.setFormat(withdrawalRadio.getTextFormatForState(SkinStates.DOWN), 45), SkinStates.DOWN);
+                withdrawalRadio.setTextFormatForState(TextFormatUtil.setFormat(withdrawalRadio.getTextFormatForState(SkinStates.SELECTED), 45), SkinStates.SELECTED);
+                withdrawalRadio.setTextFormatForState(TextFormatUtil.setFormat(withdrawalRadio.getTextFormatForState(SkinStates.DISABLED), 45), SkinStates.DISABLED);
 
-            depositRadio = new RadioButton();
-            depositRadio.label = "Przychód";
-            depositRadio.groupname = "direction";
-            depositRadio.paddingLeft = 10;
-            depositRadio.setTextFormatForState(TextFormatUtil.setFormat(depositRadio.getTextFormatForState(SkinStates.UP), 45), SkinStates.UP);
-            depositRadio.setTextFormatForState(TextFormatUtil.setFormat(depositRadio.getTextFormatForState(SkinStates.DOWN), 45), SkinStates.DOWN);
-            depositRadio.setTextFormatForState(TextFormatUtil.setFormat(depositRadio.getTextFormatForState(SkinStates.SELECTED), 45), SkinStates.SELECTED);
-            depositRadio.setTextFormatForState(TextFormatUtil.setFormat(depositRadio.getTextFormatForState(SkinStates.DISABLED), 45), SkinStates.DISABLED);
+                depositRadio = new RadioButton();
+                depositRadio.label = "Przychód";
+                depositRadio.groupname = "direction";
+                depositRadio.paddingLeft = 10;
+                depositRadio.setTextFormatForState(TextFormatUtil.setFormat(depositRadio.getTextFormatForState(SkinStates.UP), 45), SkinStates.UP);
+                depositRadio.setTextFormatForState(TextFormatUtil.setFormat(depositRadio.getTextFormatForState(SkinStates.DOWN), 45), SkinStates.DOWN);
+                depositRadio.setTextFormatForState(TextFormatUtil.setFormat(depositRadio.getTextFormatForState(SkinStates.SELECTED), 45), SkinStates.SELECTED);
+                depositRadio.setTextFormatForState(TextFormatUtil.setFormat(depositRadio.getTextFormatForState(SkinStates.DISABLED), 45), SkinStates.DISABLED);
 
-            directionsContainer.addChild(withdrawalRadio);
-            directionsContainer.addChild(depositRadio);
+                directionsContainer.addChild(withdrawalRadio);
+                directionsContainer.addChild(depositRadio);
 
-            container.addChild(directionsContainer);
+                container.addChild(directionsContainer);
 
-            directionRadioGroup = RadioButtonGroup.getGroup("direction");
-            directionRadioGroup.addEventListener(Event.CHANGE, onDirectionChange);
+                directionRadioGroup = RadioButtonGroup.getGroup("direction");
+                directionRadioGroup.addEventListener(Event.CHANGE, onDirectionChange);
+            }
+            else
+            {
+                var twoColumnContainer:Container = new Container();
+                twoColumnContainer.layout = ContainerHelper.createTwoColumnGridData();
+
+                textLabel = new Label();
+                textLabel.text = "Kierunek:";
+                textLabel.format = TextFormatUtil.setFormat(textLabel.format, 45);
+                twoColumnContainer.addChild(textLabel);
+
+                directionLbl = new Label();
+                directionLbl.format = TextFormatUtil.setFormat(textLabel.format, 45);
+                twoColumnContainer.addChild(directionLbl);
+
+                container.addChild(twoColumnContainer)
+            }
 
             // AMOUNT LABEL
-            labelContainer = new Container();
-            labelContainer.layout = ContainerHelper.createTwoColumnGridData();
-
             textLabel = new Label();
             textLabel.text = "Kwota:";
             textLabel.format = TextFormatUtil.setFormat(textLabel.format, 45);
-            labelContainer.addChild(textLabel);
-
-            expenseErrorLabel = new Label();
-            expenseErrorLabel.format = TextFormatUtil.setFormat(textLabel.format, 45, 0xFF0000);
-            labelContainer.addChild(expenseErrorLabel);
-            container.addChild(labelContainer)
+            container.addChild(textLabel);
 
             // AMOUNT INPUT
             amountTextInput = new TextInput();
@@ -144,18 +155,10 @@ package com.pauluz.bbapps.kontomierz.view.components
 
 
             // DESCRIPTION LABEL
-            labelContainer = new Container();
-            labelContainer.layout = ContainerHelper.createTwoColumnGridData();
-
             textLabel = new Label();
             textLabel.text = "Opis:";
             textLabel.format = TextFormatUtil.setFormat(textLabel.format, 45);
-            labelContainer.addChild(textLabel);
-
-            descriptionErrorLabel = new Label();
-            descriptionErrorLabel.format = TextFormatUtil.setFormat(textLabel.format, 45, 0xFF0000);
-            labelContainer.addChild(descriptionErrorLabel);
-            container.addChild(labelContainer)
+            container.addChild(textLabel);
 
             // DESCRIPTION INPUT
             descriptionTextInput = new TextInput();
@@ -164,18 +167,10 @@ package com.pauluz.bbapps.kontomierz.view.components
 
 
             // CATEGORY LABEL
-            labelContainer = new Container();
-            labelContainer.layout = ContainerHelper.createTwoColumnGridData();
-
             textLabel = new Label();
             textLabel.text = "Kategoria:";
             textLabel.format = TextFormatUtil.setFormat(textLabel.format, 45);
-            labelContainer.addChild(textLabel);
-
-            categoryErrorLabel = new Label();
-            categoryErrorLabel.format = TextFormatUtil.setFormat(textLabel.format, 45, 0xFF0000);
-            labelContainer.addChild(categoryErrorLabel);
-            container.addChild(labelContainer)
+            container.addChild(textLabel);
 
             // CATEGORY BTN
             categoryBtn = new LabelButton();
@@ -218,6 +213,7 @@ package com.pauluz.bbapps.kontomierz.view.components
                 amountTextInput.prompt = "Wysokość wydatku";
                 descriptionTextInput.prompt = "Opis wydatku";
 
+                direction = ApplicationConstants.TRANSACTION_DIRECTION_WITHDRAWAL;
                 categoryBtn.label = ApplicationConstants.NO_CATEGORY_LABEL;
             }
             else
@@ -225,6 +221,7 @@ package com.pauluz.bbapps.kontomierz.view.components
                 amountTextInput.prompt = "Wysokość przychodu";
                 descriptionTextInput.prompt = "Opis przychodu";
 
+                direction = ApplicationConstants.TRANSACTION_DIRECTION_DEPOSIT;
                 categoryBtn.label = ApplicationConstants.NO_CATEGORY_LABEL;
             }
         }
@@ -237,7 +234,7 @@ package com.pauluz.bbapps.kontomierz.view.components
             listDialog.addButton("Anuluj");
 
             var category:CategoryVO;
-            if (directionRadioGroup.selection == withdrawalRadio)
+            if (direction == ApplicationConstants.TRANSACTION_DIRECTION_WITHDRAWAL)
             {
                 if (selectedCategory)
                 {
@@ -271,12 +268,10 @@ package com.pauluz.bbapps.kontomierz.view.components
             var listDialog:ListDialog = event.currentTarget as ListDialog;
             listDialog.removeEventListener(Event.SELECT, onCategorySelect);
 
+            // jesli wybrano OK
             if (listDialog.selectedIndex == 0)
             {
-                // jesli wybrano OK
-                categoryErrorLabel.text = "";
-
-                if (directionRadioGroup.selection == withdrawalRadio)
+                if (direction == ApplicationConstants.TRANSACTION_DIRECTION_WITHDRAWAL)
                 {
                     selectedCategory = withdrawalCategoriesDP[listDialog.listSelectedIndex] as CategoryVO;
                 }
@@ -335,7 +330,7 @@ package com.pauluz.bbapps.kontomierz.view.components
             newTransaction.transactionOn = datePicker.value;
             newTransaction.description = descriptionTextInput.text;
 
-            newTransaction.direction = (directionRadioGroup.selection == withdrawalRadio) ? ApplicationConstants.TRANSACTION_DIRECTION_WITHDRAWAL : ApplicationConstants.TRANSACTION_DIRECTION_DEPOSIT;
+            newTransaction.direction = direction;
 
             newTransaction.currencyName = (selectedCurrency) ? selectedCurrency.name : ApplicationConstants.DEFAULT_CURRENCY_NAME;
             newTransaction.categoryId = selectedCategory.id;
@@ -345,8 +340,12 @@ package com.pauluz.bbapps.kontomierz.view.components
 
         public function removeListeners():void
         {
+            if (directionRadioGroup)
+            {
+                directionRadioGroup.removeEventListener(Event.CHANGE, onDirectionChange);
+            }
+
             categoryBtn.removeEventListener(MouseEvent.CLICK, onCategoryBtnClick);
-            directionRadioGroup.removeEventListener(Event.CHANGE, onDirectionChange);
             currencyBtn.removeEventListener(MouseEvent.CLICK, onCurrencyBtnClick);
         }
     }

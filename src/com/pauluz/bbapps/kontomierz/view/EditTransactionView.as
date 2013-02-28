@@ -22,12 +22,15 @@ package com.pauluz.bbapps.kontomierz.view
     import qnx.fuse.ui.dialog.ToastBase;
     import qnx.fuse.ui.events.ActionEvent;
     import qnx.fuse.ui.navigation.TitlePage;
+    import qnx.fuse.ui.progress.ActivityIndicator;
+    import qnx.fuse.ui.skins.progress.ActivityIndicatorSkinMedium;
 
     public class EditTransactionView extends TitlePage
     {
         private var logger:ILogger;
 
         public var form:AddEditTransactionForm;
+        public var progressActivity:ActivityIndicator;
 
         private var saveAction:Action;
 
@@ -57,6 +60,7 @@ package com.pauluz.bbapps.kontomierz.view
             titleBar.addEventListener(ActionEvent.ACTION_SELECTED, onSaveAction);
 
             form = new AddEditTransactionForm();
+            form.createDirection = false;
 
             content = form.createForm();
 
@@ -75,11 +79,13 @@ package com.pauluz.bbapps.kontomierz.view
 
             if (transaction.currencyAmount > 0)
             {
-                form.depositRadio.selected = true;
+                form.direction = ApplicationConstants.TRANSACTION_DIRECTION_DEPOSIT;
+                form.directionLbl.text = "Przychód";
             }
             else
             {
-                form.withdrawalRadio.selected = true;
+                form.direction = ApplicationConstants.TRANSACTION_DIRECTION_WITHDRAWAL;
+                form.directionLbl.text = "Wydatek";
             }
 
             form.amountTextInput.text = transaction.currencyAmount.toString().replace("-", "");
@@ -99,41 +105,39 @@ package com.pauluz.bbapps.kontomierz.view
         {
             if (event.action == saveAction)
             {
+                var errorDialog:ToastBase = new ToastBase();
+
                 if (form.amountTextInput.text == "")
                 {
-                    form.expenseErrorLabel.text = "Proszę podać kwotę!";
+                    errorDialog.message = "Proszę podać kwotę transakcji!";
+                    errorDialog.show();
+
                     return;
-                }
-                else
-                {
-                    form.expenseErrorLabel.text = "";
                 }
 
                 if (form.descriptionTextInput.text == "")
                 {
-                    form.descriptionErrorLabel.text = "Proszę podać opis!";
+                    errorDialog.message = "Proszę podać opis transakcji!";
+                    errorDialog.show();
+
                     return;
-                }
-                else
-                {
-                    form.descriptionErrorLabel.text = "";
                 }
 
                 if (form.categoryBtn.label == ApplicationConstants.NO_CATEGORY_LABEL)
                 {
-                    form.categoryErrorLabel.text = "Proszę wybrać kategorię!";
+                    errorDialog.message = "Proszę wybrać kategorię!";
+                    errorDialog.show();
+
                     return;
                 }
-                else
-                {
-                    form.categoryErrorLabel.text = "";
-                }
 
-                form.expenseErrorLabel.text = "";
-                form.descriptionErrorLabel.text = "";
+                progressActivity = new ActivityIndicator();
+                progressActivity.animate(true);
+                progressActivity.setPosition(this.stage.stageWidth - 150, 130);
+                progressActivity.setSkin(ActivityIndicatorSkinMedium);
+                this.addChild(progressActivity);
 
                 var newTransaction:TransactionVO = form.provideTransactionData();
-
                 editTransactionSignal.dispatch(newTransaction);
             }
             else
@@ -145,6 +149,11 @@ package com.pauluz.bbapps.kontomierz.view
 
         public function showAlertAndCleanUp():void
         {
+            if (progressActivity && this.contains(progressActivity))
+            {
+                this.removeChild(progressActivity);
+            }
+
             var successDialog:ToastBase = new ToastBase();
             successDialog.title = "Sukces";
             successDialog.message = "Pomyślnie zaktualizowano transakcję!";

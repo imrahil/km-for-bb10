@@ -19,16 +19,18 @@ package com.pauluz.bbapps.kontomierz.view
     import org.osflash.signals.Signal;
 
     import qnx.fuse.ui.core.Action;
-    import qnx.fuse.ui.dialog.AlertDialog;
     import qnx.fuse.ui.dialog.ToastBase;
     import qnx.fuse.ui.events.ActionEvent;
     import qnx.fuse.ui.navigation.TitlePage;
+    import qnx.fuse.ui.progress.ActivityIndicator;
+    import qnx.fuse.ui.skins.progress.ActivityIndicatorSkinMedium;
 
     public class AddTransactionView extends TitlePage
     {
         private var logger:ILogger;
 
         public var form:AddEditTransactionForm;
+        public var progressActivity:ActivityIndicator;
 
         public var viewAddedSignal:Signal = new Signal();
         public var addTransactionSignal:Signal = new Signal(TransactionVO);
@@ -74,41 +76,39 @@ package com.pauluz.bbapps.kontomierz.view
 
         private function onAddExpenseAction(event:ActionEvent):void
         {
+            var errorDialog:ToastBase = new ToastBase();
+
             if (form.amountTextInput.text == "")
             {
-                form.expenseErrorLabel.text = "Proszę podać kwotę!";
+                errorDialog.message = "Proszę podać kwotę transakcji!";
+                errorDialog.show();
+
                 return;
-            }
-            else
-            {
-                form.expenseErrorLabel.text = "";
             }
 
             if (form.descriptionTextInput.text == "")
             {
-                form.descriptionErrorLabel.text = "Proszę podać opis!";
+                errorDialog.message = "Proszę podać opis transakcji!";
+                errorDialog.show();
+
                 return;
-            }
-            else
-            {
-                form.descriptionErrorLabel.text = "";
             }
 
             if (form.categoryBtn.label == ApplicationConstants.NO_CATEGORY_LABEL)
             {
-                form.categoryErrorLabel.text = "Proszę wybrać kategorię!";
+                errorDialog.message = "Proszę wybrać kategorię!";
+                errorDialog.show();
+
                 return;
             }
-            else
-            {
-                form.categoryErrorLabel.text = "";
-            }
 
-            form.expenseErrorLabel.text = "";
-            form.descriptionErrorLabel.text = "";
+            progressActivity = new ActivityIndicator();
+            progressActivity.animate(true);
+            progressActivity.setPosition(this.stage.stageWidth - 300, 10);
+            progressActivity.setSkin(ActivityIndicatorSkinMedium);
+            this.addChild(progressActivity);
 
             var newTransaction:TransactionVO = form.provideTransactionData();
-
             addTransactionSignal.dispatch(newTransaction);
         }
 
@@ -138,6 +138,11 @@ package com.pauluz.bbapps.kontomierz.view
             for each (var currency:CurrencyVO in form.currenciesDP)
             {
                 currency.selected = (currency.name == ApplicationConstants.DEFAULT_CURRENCY_NAME);
+            }
+
+            if (progressActivity && this.contains(progressActivity))
+            {
+                this.removeChild(progressActivity);
             }
 
             var successDialog:ToastBase = new ToastBase();
