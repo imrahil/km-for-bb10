@@ -25,6 +25,8 @@ package com.pauluz.bbapps.kontomierz.view.mediators
     import com.pauluz.bbapps.kontomierz.view.EditTransactionView;
     import org.robotlegs.mvcs.SignalMediator;
 
+    import qnx.ui.data.SectionDataProvider;
+
     public class EditTransactionViewMediator extends SignalMediator
     {
         /**
@@ -73,8 +75,8 @@ package com.pauluz.bbapps.kontomierz.view.mediators
 
         private var dataFlag:int = 0;
 
-        private var withdrawalCategoriesDP:Array = [];
-        private var depositCategoriesDP:Array = [];
+        private var withdrawalCategoriesDP:SectionDataProvider;
+        private var depositCategoriesDP:SectionDataProvider;
         private var currenciesDP:Array = [];
 
         private static const DATA_FLAG_COUNT:int = 3;
@@ -108,7 +110,7 @@ package com.pauluz.bbapps.kontomierz.view.mediators
             addOnceToSignal(provideAllDepositCategoriesSignal, onDepositCategoriesData);
             addOnceToSignal(provideAllCurrenciesSignal, onCurrenciesData);
 
-            addToSignal(transactionSuccessfullySavedSignal, onSuccessfulSave);
+            addOnceToSignal(transactionSuccessfullySavedSignal, onSuccessfulSave);
         }
 
         private function onViewAdded():void
@@ -145,7 +147,7 @@ package com.pauluz.bbapps.kontomierz.view.mediators
             }
         }
 
-        private function onWithdrawalCategoriesData(data:Array):void
+        private function onWithdrawalCategoriesData(data:SectionDataProvider):void
         {
             logger.debug(": onWithdrawalCategoriesData");
 
@@ -160,7 +162,7 @@ package com.pauluz.bbapps.kontomierz.view.mediators
             }
         }
 
-        private function onDepositCategoriesData(data:Array):void
+        private function onDepositCategoriesData(data:SectionDataProvider):void
         {
             logger.debug(": onDepositCategoriesData");
 

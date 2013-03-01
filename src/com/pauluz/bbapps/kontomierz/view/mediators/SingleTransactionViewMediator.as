@@ -84,7 +84,7 @@ package com.pauluz.bbapps.kontomierz.view.mediators
             addToSignal(view.editTransaction, onEditTransaction);
             addToSignal(view.deleteTransaction, onDeleteTransaction);
 
-            addOnceToSignal(provideSelectedTransactionSignal, onDetailsData);
+            addToSignal(provideSelectedTransactionSignal, onDetailsData);
         }
 
         private function onViewAdded():void

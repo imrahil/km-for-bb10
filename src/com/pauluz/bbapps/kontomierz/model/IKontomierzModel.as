@@ -28,11 +28,11 @@ package com.pauluz.bbapps.kontomierz.model
         function get isWalletListExpired():Boolean;
         function set isWalletListExpired(value:Boolean):void;
 
-        function get withdrawalCategoriesList():Array;
-        function set withdrawalCategoriesList(value:Array):void;
+        function get withdrawalCategoriesList():SectionDataProvider;
+        function set withdrawalCategoriesList(value:SectionDataProvider):void;
 
-        function get depositCategoriesList():Array;
-        function set depositCategoriesList(value:Array):void;
+        function get depositCategoriesList():SectionDataProvider;
+        function set depositCategoriesList(value:SectionDataProvider):void;
 
         function get selectedCategory():CategoryVO;
         function set selectedCategory(value:CategoryVO):void;

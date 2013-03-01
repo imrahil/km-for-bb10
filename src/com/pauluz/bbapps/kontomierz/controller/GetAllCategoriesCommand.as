@@ -40,11 +40,6 @@ package com.pauluz.bbapps.kontomierz.controller
 
             if (model.withdrawalCategoriesList && model.withdrawalCategoriesList.length > 0)
             {
-                for each (category in model.withdrawalCategoriesList)
-                {
-                    category.selected = false;
-                }
-
                 provideAllWithdrawalCategoriesSignal.dispatch(model.withdrawalCategoriesList);
             }
             else
@@ -54,11 +49,6 @@ package com.pauluz.bbapps.kontomierz.controller
 
             if (model.depositCategoriesList && model.depositCategoriesList.length > 0)
             {
-                for each (category in model.depositCategoriesList)
-                {
-                    category.selected = false;
-                }
-
                 provideAllDepositCategoriesSignal.dispatch(model.depositCategoriesList);
             }
             else

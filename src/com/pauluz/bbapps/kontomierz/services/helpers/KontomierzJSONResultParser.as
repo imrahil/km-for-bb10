@@ -168,11 +168,11 @@ package com.pauluz.bbapps.kontomierz.services.helpers
             return output;
         }
 
-        public function parseAllCategoriesResponse(result:String):Array
+        public function parseAllCategoriesResponse(result:String):SectionDataProvider
         {
             logger.debug(": parseAllCategoriesResponse");
 
-            var output:Array = [];
+            var output:SectionDataProvider = new SectionDataProvider();
 
             try {
                 var resultObject:Object = JSON.parse(result);
@@ -194,7 +194,7 @@ package com.pauluz.bbapps.kontomierz.services.helpers
                     category.color = item.color;
                     category.header = true;
 
-                    output.push(category);
+                    output.addItem(category);
 
                     if (item.categories && item.categories is Array && item.categories.length > 0)
                     {
@@ -207,7 +207,7 @@ package com.pauluz.bbapps.kontomierz.services.helpers
                             subCategory.position = subItem.position;
                             subCategory.color = subItem.color;
 
-                            output.push(subCategory);
+                            output.addChildToItem(subCategory, category);
                         }
                     }
                 }

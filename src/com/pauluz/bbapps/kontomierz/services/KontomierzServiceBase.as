@@ -23,6 +23,7 @@ package com.pauluz.bbapps.kontomierz.services
     import com.pauluz.bbapps.kontomierz.signals.signaltons.ProvideAllWithdrawalCategoriesSignal;
     import com.pauluz.bbapps.kontomierz.signals.signaltons.ProvideAllCurrenciesSignal;
     import com.pauluz.bbapps.kontomierz.signals.signaltons.ProvideAllTransactionsSignal;
+    import com.pauluz.bbapps.kontomierz.signals.signaltons.ProvideSelectedTransactionSignal;
     import com.pauluz.bbapps.kontomierz.signals.signaltons.TransactionSuccessfullySavedSignal;
     import com.pauluz.bbapps.kontomierz.utils.LogUtil;
 
@@ -48,6 +49,8 @@ package com.pauluz.bbapps.kontomierz.services
 
         protected var rememberMe:Boolean;
         protected var responseStatus:int;
+
+        protected var temporarySelectedTransaction:TransactionVO;
 
         /** MODEL **/
         [Inject]
@@ -93,6 +96,9 @@ package com.pauluz.bbapps.kontomierz.services
 
         [Inject]
         public var getAllWalletTransactionsSignal:GetAllWalletTransactionsSignal;
+
+        [Inject]
+        public var provideSelectedTransactionSignal:ProvideSelectedTransactionSignal;
 
 
         /** Constructor */
@@ -312,6 +318,8 @@ package com.pauluz.bbapps.kontomierz.services
             {
                 model.isWalletListExpired = true;
                 transactionSuccessfullySavedSignal.dispatch();
+
+                provideSelectedTransactionSignal.dispatch(temporarySelectedTransaction);
             }
             else
             {
@@ -376,7 +384,7 @@ package com.pauluz.bbapps.kontomierz.services
             loader.removeEventListener(Event.COMPLETE, getAllCategoriesWithdrawalCompleteHandler);
             removeLoaderListeners(loader);
 
-            var categoriesList:Array = _parser.parseAllCategoriesResponse(loader.data as String);
+            var categoriesList:SectionDataProvider = _parser.parseAllCategoriesResponse(loader.data as String);
 
             model.withdrawalCategoriesList = categoriesList;
             provideAllCategoriesSignal.dispatch(categoriesList);
@@ -391,7 +399,7 @@ package com.pauluz.bbapps.kontomierz.services
             loader.removeEventListener(Event.COMPLETE, getAllCategoriesDepositCompleteHandler);
             removeLoaderListeners(loader);
 
-            var categoriesList:Array = _parser.parseAllCategoriesResponse(loader.data as String);
+            var categoriesList:SectionDataProvider = _parser.parseAllCategoriesResponse(loader.data as String);
 
             model.depositCategoriesList = categoriesList;
             provideAllDepositCategoriesSignal.dispatch(categoriesList);

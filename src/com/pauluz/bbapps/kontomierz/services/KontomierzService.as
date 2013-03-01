@@ -204,6 +204,8 @@ package com.pauluz.bbapps.kontomierz.services
         {
             logger.debug(": updateTransaction service call");
 
+            temporarySelectedTransaction = transaction;
+
             var loader:URLLoader = new URLLoader();
             var urlRequest:URLRequest = new URLRequest();
 

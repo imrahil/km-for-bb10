@@ -24,6 +24,7 @@ package com.pauluz.bbapps.kontomierz.view
     import qnx.fuse.ui.navigation.TitlePage;
     import qnx.fuse.ui.progress.ActivityIndicator;
     import qnx.fuse.ui.skins.progress.ActivityIndicatorSkinMedium;
+    import qnx.ui.data.SectionDataProvider;
 
     public class AddTransactionView extends TitlePage
     {
@@ -62,7 +63,7 @@ package com.pauluz.bbapps.kontomierz.view
             viewAddedSignal.dispatch();
         }
 
-        public function addData(_withdrawalCategoriesData:Array, _depositCategoriesData:Array, _currenciesData:Array):void
+        public function addData(_withdrawalCategoriesData:SectionDataProvider, _depositCategoriesData:SectionDataProvider, _currenciesData:Array):void
         {
             titleBar.acceptAction.enabled = true;
 
@@ -121,17 +122,6 @@ package com.pauluz.bbapps.kontomierz.view
 
             form.selectedCategory = null;
             form.selectedCurrency = null;
-
-            var category:CategoryVO;
-            for each (category in form.withdrawalCategoriesDP)
-            {
-                category.selected = false;
-            }
-
-            for each (category in form.depositCategoriesDP)
-            {
-                category.selected = false;
-            }
 
             form.currencyBtn.label = ApplicationConstants.DEFAULT_CURRENCY_NAME + " (" + ApplicationConstants.DEFAULT_CURRENCY_FULL_NAME + ")";
 

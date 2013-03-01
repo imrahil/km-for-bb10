@@ -67,8 +67,8 @@ package com.pauluz.bbapps.kontomierz.view.mediators
 
         private var dataFlag:int = 0;
 
-        private var withdrawalCategoriesDP:Array = [];
-        private var depositCategoriesDP:Array = [];
+        private var withdrawalCategoriesDP:SectionDataProvider;
+        private var depositCategoriesDP:SectionDataProvider;
         private var currenciesDP:Array = [];
 
         /**
@@ -99,7 +99,7 @@ package com.pauluz.bbapps.kontomierz.view.mediators
             addOnceToSignal(provideAllDepositCategoriesSignal, onDepositCategoriesData);
 
             addOnceToSignal(provideAllCurrenciesSignal, onCurrenciesData);
-            addToSignal(transactionSuccessfullySavedSignal, onSuccessfulSave);
+            addOnceToSignal(transactionSuccessfullySavedSignal, onSuccessfulSave);
         }
 
         private function onViewAdded():void
@@ -119,7 +119,7 @@ package com.pauluz.bbapps.kontomierz.view.mediators
             addTransactionSignal.dispatch(transaction);
         }
 
-        private function onWithdrawalCategoriesData(data:Array):void
+        private function onWithdrawalCategoriesData(data:SectionDataProvider):void
         {
             logger.debug(": onWithdrawalCategoriesData");
 
@@ -134,7 +134,7 @@ package com.pauluz.bbapps.kontomierz.view.mediators
             }
         }
 
-        private function onDepositCategoriesData(data:Array):void
+        private function onDepositCategoriesData(data:SectionDataProvider):void
         {
             logger.debug(": onDepositCategoriesData");
 

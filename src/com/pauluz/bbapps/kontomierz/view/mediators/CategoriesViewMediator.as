@@ -93,7 +93,7 @@ package com.pauluz.bbapps.kontomierz.view.mediators
             storeSelectedCategorySignal.dispatch(category);
         }
 
-        private function onCategoriesData(data:Array):void
+        private function onCategoriesData(data:SectionDataProvider):void
         {
             logger.debug(": onCategoriesData");
 
