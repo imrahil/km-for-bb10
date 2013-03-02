@@ -17,6 +17,7 @@ package com.pauluz.bbapps.kontomierz.constants
         public static const KONTOMIERZ_DEMO_API_KEY:String = "e7cOI9zZTbprBddSHHnlniLsAvzBpfhqTIjeUid2be0fjb2REaWnudZqGSgxz1Lz";
 
         public static const KONTOMIERZ_SO_NAME:String = "kontomierzApiKeySharedObject";
+        public static const KONTOMIERZ_DB_FILE_NAME:String = "KontomierzOfflineData.db";
 
         public static const LOGIN_STATUS_NEW:String         = "userLoggedOut";
         public static const LOGIN_STATUS_REMEMBERED:String  = "userRemembered";

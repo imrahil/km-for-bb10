@@ -7,14 +7,18 @@
  */
 package com.pauluz.bbapps.kontomierz.controller.bootstraps
 {
+    import com.pauluz.bbapps.kontomierz.signals.configure.ConfigureMainViewSignal;
     import com.pauluz.bbapps.kontomierz.view.*;
     import com.pauluz.bbapps.kontomierz.view.mediators.*;
 
-    import org.robotlegs.core.IMediatorMap;
+    import org.robotlegs.mvcs.SignalCommand;
 
-    public class BootstrapViewMediators extends Object
+    public class ConfigureViewMediatorsCommand extends SignalCommand
     {
-        public function BootstrapViewMediators(mediatorMap:IMediatorMap)
+        [Inject]
+        public var nextStepSignal:ConfigureMainViewSignal;
+
+        override public function execute():void
         {
             mediatorMap.mapView(RootView, RootViewMediator);
             mediatorMap.mapView(MainView, MainViewMediator);
@@ -38,6 +42,8 @@ package com.pauluz.bbapps.kontomierz.controller.bootstraps
             mediatorMap.mapView(TagsView, TagsViewMediator);
             mediatorMap.mapView(ChartsView, ChartsViewMediator);
             mediatorMap.mapView(SettingsView, SettingsViewMediator);
+
+            nextStepSignal.dispatch();
         }
     }
 }

@@ -9,14 +9,20 @@ package com.pauluz.bbapps.kontomierz.controller.bootstraps
 {
     import com.pauluz.bbapps.kontomierz.model.IKontomierzModel;
     import com.pauluz.bbapps.kontomierz.model.KontomierzModel;
+    import com.pauluz.bbapps.kontomierz.signals.configure.ConfigureViewMediatorsSignal;
 
-    import org.robotlegs.core.IInjector;
+    import org.robotlegs.mvcs.SignalCommand;
 
-    public class BootstrapModels
+    public class ConfigureModelCommand extends SignalCommand
     {
-        public function BootstrapModels(injector:IInjector)
+        [Inject]
+        public var nextStepSignal:ConfigureViewMediatorsSignal;
+
+        override public function execute():void
         {
             injector.mapSingletonOf(IKontomierzModel, KontomierzModel);
+
+            nextStepSignal.dispatch();
         }
     }
 }

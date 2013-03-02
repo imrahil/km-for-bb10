@@ -101,6 +101,7 @@ package com.pauluz.bbapps.kontomierz.view
             form.categoryBtn.label = transaction.categoryName;
             form.currencyBtn.label = transaction.currencyName;
 
+            // przeszukujemy liste kategorii po categoryId i zaznaczamy wybrana dla transakcji
             for each (var category:CategoryVO in tempDP.data)
             {
                 var subTempDP:IDataProvider = tempDP.getChildrenForItem(category);

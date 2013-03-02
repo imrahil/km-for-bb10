@@ -31,3 +31,26 @@ Wersje:
 * wykresy!
 * wyszukiwanie po kategorii i dacie prosto ze szczegolow wybranej transakcji
 * rozszerzyc TransactionListCellRenderer tak aby wyswietlal kwote i date
+
+Scenariusz w przypadku braku sieci:
+1. pierwsze uruchomienie
+- sprawdzamy czy jest siec nim wyslemy login/haslo
+    * jesli nie ma sieci to blokada programu
+    * blokada trybu demo jesli nie ma sieci
+- czyszczenie danych przy wylogowaniu
+
+2. zapamietany login
+    * jest siec
+        * normalne logowanie 
+        * sync danych jesli byly zmiany w trybie offline
+        * pobranie swiezych danych (kategorie, waluty)
+        * zapis danych do SQLite na wypadek przejscia w tryb offline
+            * zapis do kolejki jesli nieudana proba zapisu/edycji
+            * proba wyslania danych z kolejki przy nastepnym wywolaniu API
+    * brak sieci - proba pobrania danych z SQLite
+        * pobranie jesli byly wczesniej zapisane 
+        * blokada jesli brak danych
+        
+        * zapis zmian do SQLite
+        * sync jesli pojawi sie dostep do sieci
+        
