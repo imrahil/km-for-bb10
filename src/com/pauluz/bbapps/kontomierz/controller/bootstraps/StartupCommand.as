@@ -8,6 +8,9 @@
 package com.pauluz.bbapps.kontomierz.controller.bootstraps
 {
     import com.pauluz.bbapps.kontomierz.signals.configure.*;
+    import com.pauluz.bbapps.kontomierz.utils.LogUtil;
+
+    import mx.logging.ILogger;
 
     import org.osflash.signals.ISignal;
 
@@ -17,6 +20,9 @@ package com.pauluz.bbapps.kontomierz.controller.bootstraps
     {
         override public function execute():void
         {
+            var logger:ILogger = LogUtil.getLogger(this);
+            logger.debug(": execute");
+
             signalCommandMap.mapSignalClass(ConfigureControllerSignal, ConfigureControllerCommand);
             signalCommandMap.mapSignalClass(ConfigureSignaltonsSignal, ConfigureSignaltonsCommand);
             signalCommandMap.mapSignalClass(ConfigureDatabaseSignal, ConfigureDatabaseCommand);
