@@ -35,9 +35,13 @@ package com.pauluz.bbapps.kontomierz.services.helpers
         [Embed(source="/assets/sql/CreateCurrenciesTable.sql", mimeType="application/octet-stream")]
         private static const CreateCurrenciesTableStatementText:Class;
 
+        [Embed(source="/assets/sql/CreateUserTable.sql", mimeType="application/octet-stream")]
+        private static const CreateUserTableStatementText:Class;
+
         private static const CREATE_ACCOUNTS_TABLE_SQL:String = new CreateAccountsTableStatementText();
         private static const CREATE_CATEGORIES_TABLE_SQL:String = new CreateCategoriesTableStatementText();
         private static const CREATE_CURRENCIES_TABLE_SQL:String = new CreateCurrenciesTableStatementText();
+        private static const CREATE_USER_TABLE_SQL:String = new CreateUserTableStatementText();
 
         public function createDatabaseStructure():void
         {
@@ -45,6 +49,7 @@ package com.pauluz.bbapps.kontomierz.services.helpers
             stmts[stmts.length] = new QueuedStatement(CREATE_ACCOUNTS_TABLE_SQL);
             stmts[stmts.length] = new QueuedStatement(CREATE_CATEGORIES_TABLE_SQL);
             stmts[stmts.length] = new QueuedStatement(CREATE_CURRENCIES_TABLE_SQL);
+            stmts[stmts.length] = new QueuedStatement(CREATE_USER_TABLE_SQL);
 
             sqlRunner.executeModify(stmts, executeBatchComplete, executeBatchError, null);
         }

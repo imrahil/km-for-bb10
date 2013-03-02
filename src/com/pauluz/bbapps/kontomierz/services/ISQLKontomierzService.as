@@ -4,6 +4,10 @@ package com.pauluz.bbapps.kontomierz.services
 
     public interface ISQLKontomierzService
     {
+        function saveUserAPIKey(apiKey:String):void
+        function retrieveUserAPIKey():void
+        function deleteUserAPIKey():void
+
         function getAllAccounts():void
 
         function getAllTransactions(accountId:int, wallet:Boolean):void;

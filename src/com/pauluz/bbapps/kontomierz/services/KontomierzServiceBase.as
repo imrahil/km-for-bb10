@@ -15,6 +15,7 @@ package com.pauluz.bbapps.kontomierz.services
     import com.pauluz.bbapps.kontomierz.services.helpers.IResultParser;
     import com.pauluz.bbapps.kontomierz.signals.GetAllTransactionsSignal;
     import com.pauluz.bbapps.kontomierz.signals.GetAllWalletTransactionsSignal;
+    import com.pauluz.bbapps.kontomierz.signals.SaveAPIKeySignal;
     import com.pauluz.bbapps.kontomierz.signals.StoreDefaultWalletIdSignal;
     import com.pauluz.bbapps.kontomierz.signals.signaltons.ErrorSignal;
     import com.pauluz.bbapps.kontomierz.signals.signaltons.LoginSuccessfulSignal;
@@ -66,6 +67,9 @@ package com.pauluz.bbapps.kontomierz.services
         /** NOTIFICATION SIGNALS */
         [Inject]
         public var loginSuccessfulSignal:LoginSuccessfulSignal;
+
+        [Inject]
+        public var saveAPIKeySignal:SaveAPIKeySignal;
 
         [Inject]
         public var provideAllAccountsDataSignal:ProvideAllAccountsDataSignal;
@@ -208,9 +212,7 @@ package com.pauluz.bbapps.kontomierz.services
 
                 if (rememberMe)
                 {
-                    var sessionSO:SharedObject = SharedObject.getLocal(ApplicationConstants.KONTOMIERZ_SO_NAME);
-                    sessionSO.data.apiKey = apiKey;
-                    sessionSO.flush();
+                    saveAPIKeySignal.dispatch(apiKey);
                 }
 
                 loginSuccessfulSignal.dispatch();

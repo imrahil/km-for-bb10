@@ -9,6 +9,7 @@ package com.pauluz.bbapps.kontomierz.controller
 {
     import com.pauluz.bbapps.kontomierz.constants.ApplicationConstants;
     import com.pauluz.bbapps.kontomierz.model.IKontomierzModel;
+    import com.pauluz.bbapps.kontomierz.services.ISQLKontomierzService;
 
     import flash.net.SharedObject;
 
@@ -20,13 +21,15 @@ package com.pauluz.bbapps.kontomierz.controller
         [Inject]
         public var model:IKontomierzModel;
 
+        [Inject]
+        public var sqlService:ISQLKontomierzService;
+
         /**
          * Method handle the logic for <code>LogoutCommand</code>
          */        
         override public function execute():void    
         {
-            var sessionSO:SharedObject = SharedObject.getLocal(ApplicationConstants.KONTOMIERZ_SO_NAME);
-            sessionSO.clear();
+            sqlService.deleteUserAPIKey();
 
             model.apiKey = "";
 
