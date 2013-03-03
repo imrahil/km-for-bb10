@@ -188,7 +188,7 @@ package com.pauluz.bbapps.kontomierz.services.helpers
                 {
                     var category:CategoryVO = new CategoryVO();
 
-                    category.id = item.id;
+                    category.categoryId = item.id;
                     category.name = item.name;
                     category.position = item.position;
                     category.color = item.color;
@@ -202,10 +202,11 @@ package com.pauluz.bbapps.kontomierz.services.helpers
                         {
                             var subCategory:CategoryVO = new CategoryVO();
 
-                            subCategory.id = subItem.id;
+                            subCategory.categoryId = subItem.id;
                             subCategory.name = subItem.name;
                             subCategory.position = subItem.position;
                             subCategory.color = subItem.color;
+                            subCategory.parentId = item.id;
 
                             output.addChildToItem(subCategory, category);
                         }
@@ -235,7 +236,7 @@ package com.pauluz.bbapps.kontomierz.services.helpers
                 for each (var item:Object in resultObject.currencies)
                 {
                     var currency:CurrencyVO = new CurrencyVO();
-                    currency.id = item.id;
+                    currency.currencyId = item.id;
                     currency.name = item.name;
                     currency.fullName = item.full_name;
 

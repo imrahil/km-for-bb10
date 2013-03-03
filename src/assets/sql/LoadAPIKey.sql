@@ -1,1 +1,3 @@
-SELECT apiKEY from user;
+SELECT
+  apiKEY
+FROM user;

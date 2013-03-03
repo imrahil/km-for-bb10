@@ -318,7 +318,7 @@ package com.pauluz.bbapps.kontomierz.view.components
             newTransaction.direction = direction;
 
             newTransaction.currencyName = (selectedCurrency) ? selectedCurrency.name : ApplicationConstants.DEFAULT_CURRENCY_NAME;
-            newTransaction.categoryId = selectedCategory.id;
+            newTransaction.categoryId = selectedCategory.categoryId;
             newTransaction.categoryName = (selectedCategory) ? categoryBtn.label : "";
 
             return newTransaction;

@@ -9,6 +9,7 @@ package com.pauluz.bbapps.kontomierz.controller
 {
     import com.pauluz.bbapps.kontomierz.model.IKontomierzModel;
     import com.pauluz.bbapps.kontomierz.services.IKontomierzService;
+    import com.pauluz.bbapps.kontomierz.services.ISQLKontomierzService;
     import com.pauluz.bbapps.kontomierz.signals.signaltons.ProvideAllCurrenciesSignal;
 
     import org.robotlegs.mvcs.SignalCommand;
@@ -19,7 +20,7 @@ package com.pauluz.bbapps.kontomierz.controller
         public var model:IKontomierzModel;
 
         [Inject]
-        public var kontomierzService:IKontomierzService;
+        public var sqlService:ISQLKontomierzService;
 
         [Inject]
         public var provideAllCurrenciesSignal:ProvideAllCurrenciesSignal;
@@ -35,7 +36,7 @@ package com.pauluz.bbapps.kontomierz.controller
             }
             else
             {
-                kontomierzService.getAllCurrencies();
+                sqlService.checkOfflinCurrencies();
             }
         }
     }

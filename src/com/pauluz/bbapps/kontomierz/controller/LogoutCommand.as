@@ -7,11 +7,8 @@
  */
 package com.pauluz.bbapps.kontomierz.controller 
 {
-    import com.pauluz.bbapps.kontomierz.constants.ApplicationConstants;
     import com.pauluz.bbapps.kontomierz.model.IKontomierzModel;
     import com.pauluz.bbapps.kontomierz.services.ISQLKontomierzService;
-
-    import flash.net.SharedObject;
 
     import org.robotlegs.mvcs.SignalCommand;
 
@@ -30,6 +27,8 @@ package com.pauluz.bbapps.kontomierz.controller
         override public function execute():void    
         {
             sqlService.deleteUserAPIKey();
+            sqlService.deleteCategories();
+            sqlService.deleteCurrencies();
 
             model.apiKey = "";
 
@@ -38,6 +37,9 @@ package com.pauluz.bbapps.kontomierz.controller
             model.selectedTransaction = null;
             model.defaultWalletId = 0;
             model.walletTransactionsList = null;
+
+            model.withdrawalCategoriesList = null;
+            model.depositCategoriesList = null;
 
             model.selectedCategory = null;
         }

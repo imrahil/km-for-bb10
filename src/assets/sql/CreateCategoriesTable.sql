@@ -1,6 +1,9 @@
 CREATE TABLE categories
 (
-	categoryId INTEGER PRIMARY KEY,
-	name STRING NOT NULL,
-  header INTEGER
+  id         INTEGER PRIMARY KEY AUTOINCREMENT,
+  categoryId INTEGER,
+  name       STRING,
+  header     INTEGER,
+  direction  String,
+  parentId   INTEGER
 );

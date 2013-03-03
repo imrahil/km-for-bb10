@@ -107,7 +107,7 @@ package com.pauluz.bbapps.kontomierz.view
                 var subTempDP:IDataProvider = tempDP.getChildrenForItem(category);
                 for each (var subCategory:CategoryVO in subTempDP.data)
                 {
-                    if (subCategory.id == transaction.categoryId)
+                    if (subCategory.categoryId == transaction.categoryId)
                     {
                         form.selectedCategory = subCategory;
                         break;

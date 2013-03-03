@@ -16,6 +16,7 @@ package com.pauluz.bbapps.kontomierz.model.vo
     public class CurrencyVO extends ListDialogBaseVO
     {
         public var id:int;
+        public var currencyId:int;
         public var name:String;
         public var fullName:String;
 

@@ -11,6 +11,7 @@ package com.pauluz.bbapps.kontomierz.controller
     import com.pauluz.bbapps.kontomierz.model.IKontomierzModel;
     import com.pauluz.bbapps.kontomierz.model.vo.CategoryVO;
     import com.pauluz.bbapps.kontomierz.services.IKontomierzService;
+    import com.pauluz.bbapps.kontomierz.services.ISQLKontomierzService;
     import com.pauluz.bbapps.kontomierz.signals.signaltons.ProvideAllDepositCategoriesSignal;
     import com.pauluz.bbapps.kontomierz.signals.signaltons.ProvideAllWithdrawalCategoriesSignal;
 
@@ -23,7 +24,7 @@ package com.pauluz.bbapps.kontomierz.controller
         public var model:IKontomierzModel;
 
         [Inject]
-        public var kontomierzService:IKontomierzService;
+        public var sqlService:ISQLKontomierzService;
 
         [Inject]
         public var provideAllWithdrawalCategoriesSignal:ProvideAllWithdrawalCategoriesSignal;
@@ -36,15 +37,13 @@ package com.pauluz.bbapps.kontomierz.controller
          */        
         override public function execute():void    
         {
-            var category:CategoryVO;
-
             if (model.withdrawalCategoriesList && model.withdrawalCategoriesList.length > 0)
             {
                 provideAllWithdrawalCategoriesSignal.dispatch(model.withdrawalCategoriesList);
             }
             else
             {
-                kontomierzService.getAllWithdrawalCategories();
+                sqlService.checkOfflineCategories(ApplicationConstants.TRANSACTION_DIRECTION_WITHDRAWAL);
             }
 
             if (model.depositCategoriesList && model.depositCategoriesList.length > 0)
@@ -53,7 +52,7 @@ package com.pauluz.bbapps.kontomierz.controller
             }
             else
             {
-                kontomierzService.getAllDepositCategories();
+                sqlService.checkOfflineCategories(ApplicationConstants.TRANSACTION_DIRECTION_DEPOSIT);
             }
         }
     }

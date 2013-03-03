@@ -8,8 +8,10 @@
 package com.pauluz.bbapps.kontomierz.controller.bootstraps
 {
     import com.pauluz.bbapps.kontomierz.controller.*;
+    import com.pauluz.bbapps.kontomierz.controller.offline.*;
     import com.pauluz.bbapps.kontomierz.signals.*;
     import com.pauluz.bbapps.kontomierz.signals.configure.ConfigureSignaltonsSignal;
+    import com.pauluz.bbapps.kontomierz.signals.offline.*;
     import com.pauluz.bbapps.kontomierz.utils.LogUtil;
 
     import mx.logging.ILogger;
@@ -31,8 +33,6 @@ package com.pauluz.bbapps.kontomierz.controller.bootstraps
             signalCommandMap.mapSignalClass(LoginSignal, LoginCommand);
             signalCommandMap.mapSignalClass(RegisterSignal, RegisterCommand);
             signalCommandMap.mapSignalClass(LogoutSignal, LogoutCommand);
-
-            signalCommandMap.mapSignalClass(SaveAPIKeySignal, SaveAPIKeyCommand);
 
             // accounts
             signalCommandMap.mapSignalClass(GetAllAccountsSignal, GetAllAccountsCommand);
@@ -57,11 +57,19 @@ package com.pauluz.bbapps.kontomierz.controller.bootstraps
 
             // categories
             signalCommandMap.mapSignalClass(GetAllCategoriesSignal, GetAllCategoriesCommand);
+            signalCommandMap.mapSignalClass(GetAllCategoriesOnlineSignal, GetAllCategoriesOnlineCommand);
             signalCommandMap.mapSignalClass(StoreSelectedCategorySignal, StoreSelectedCategoryCommand);
             signalCommandMap.mapSignalClass(GetAllCategoryTransactionsSignal, GetAllCategoryTransactionsCommand);
 
             // currencies
             signalCommandMap.mapSignalClass(GetAllCurrenciesSignal, GetAllCurrenciesCommand);
+            signalCommandMap.mapSignalClass(GetAllCurrenciesOnlineSignal, GetAllCurrenciesOnlineCommand);
+
+
+            // OFFLINE
+            signalCommandMap.mapSignalClass(SaveAPIKeySignal, SaveAPIKeyCommand);
+            signalCommandMap.mapSignalClass(SaveCategoriesSignal, SaveCategoriesCommand);
+            signalCommandMap.mapSignalClass(SaveCurrenciesSignal, SaveCurrenciesCommand);
 
             nextStepSignal.dispatch();
         }

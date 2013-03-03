@@ -15,17 +15,9 @@ package com.pauluz.bbapps.kontomierz.services
     import com.pauluz.bbapps.kontomierz.services.helpers.IResultParser;
     import com.pauluz.bbapps.kontomierz.signals.GetAllTransactionsSignal;
     import com.pauluz.bbapps.kontomierz.signals.GetAllWalletTransactionsSignal;
-    import com.pauluz.bbapps.kontomierz.signals.SaveAPIKeySignal;
     import com.pauluz.bbapps.kontomierz.signals.StoreDefaultWalletIdSignal;
-    import com.pauluz.bbapps.kontomierz.signals.signaltons.ErrorSignal;
-    import com.pauluz.bbapps.kontomierz.signals.signaltons.LoginSuccessfulSignal;
-    import com.pauluz.bbapps.kontomierz.signals.signaltons.ProvideAllAccountsDataSignal;
-    import com.pauluz.bbapps.kontomierz.signals.signaltons.ProvideAllDepositCategoriesSignal;
-    import com.pauluz.bbapps.kontomierz.signals.signaltons.ProvideAllWithdrawalCategoriesSignal;
-    import com.pauluz.bbapps.kontomierz.signals.signaltons.ProvideAllCurrenciesSignal;
-    import com.pauluz.bbapps.kontomierz.signals.signaltons.ProvideAllTransactionsSignal;
-    import com.pauluz.bbapps.kontomierz.signals.signaltons.ProvideSelectedTransactionSignal;
-    import com.pauluz.bbapps.kontomierz.signals.signaltons.TransactionSuccessfullySavedSignal;
+    import com.pauluz.bbapps.kontomierz.signals.offline.*;
+    import com.pauluz.bbapps.kontomierz.signals.signaltons.*;
     import com.pauluz.bbapps.kontomierz.utils.LogUtil;
 
     import flash.events.ErrorEvent;
@@ -33,7 +25,6 @@ package com.pauluz.bbapps.kontomierz.services
     import flash.events.HTTPStatusEvent;
     import flash.events.IOErrorEvent;
     import flash.events.SecurityErrorEvent;
-    import flash.net.SharedObject;
     import flash.net.URLLoader;
 
     import mx.logging.ILogger;
@@ -69,9 +60,6 @@ package com.pauluz.bbapps.kontomierz.services
         public var loginSuccessfulSignal:LoginSuccessfulSignal;
 
         [Inject]
-        public var saveAPIKeySignal:SaveAPIKeySignal;
-
-        [Inject]
         public var provideAllAccountsDataSignal:ProvideAllAccountsDataSignal;
 
         [Inject]
@@ -81,7 +69,7 @@ package com.pauluz.bbapps.kontomierz.services
         public var transactionSuccessfullySavedSignal:TransactionSuccessfullySavedSignal;
 
         [Inject]
-        public var provideAllCategoriesSignal:ProvideAllWithdrawalCategoriesSignal;
+        public var provideAllWithdrawalCategoriesSignal:ProvideAllWithdrawalCategoriesSignal;
 
         [Inject]
         public var provideAllDepositCategoriesSignal:ProvideAllDepositCategoriesSignal;
@@ -103,6 +91,16 @@ package com.pauluz.bbapps.kontomierz.services
 
         [Inject]
         public var provideSelectedTransactionSignal:ProvideSelectedTransactionSignal;
+
+        // OFFLINE COMMANDS
+        [Inject]
+        public var saveAPIKeySignal:SaveAPIKeySignal;
+
+        [Inject]
+        public var saveCategoriesSignal:SaveCategoriesSignal;
+
+        [Inject]
+        public var saveCurrenciesSignal:SaveCurrenciesSignal;
 
 
         /** Constructor */
@@ -389,7 +387,9 @@ package com.pauluz.bbapps.kontomierz.services
             var categoriesList:SectionDataProvider = _parser.parseAllCategoriesResponse(loader.data as String);
 
             model.withdrawalCategoriesList = categoriesList;
-            provideAllCategoriesSignal.dispatch(categoriesList);
+            provideAllWithdrawalCategoriesSignal.dispatch(categoriesList);
+
+            saveCategoriesSignal.dispatch(categoriesList, ApplicationConstants.TRANSACTION_DIRECTION_WITHDRAWAL);
         }
 
         protected function getAllCategoriesDepositCompleteHandler(event:Event):void
@@ -405,6 +405,8 @@ package com.pauluz.bbapps.kontomierz.services
 
             model.depositCategoriesList = categoriesList;
             provideAllDepositCategoriesSignal.dispatch(categoriesList);
+
+            saveCategoriesSignal.dispatch(categoriesList, ApplicationConstants.TRANSACTION_DIRECTION_DEPOSIT);
         }
 
         protected function getAllCurrenciesCompleteHandler(event:Event):void
@@ -420,6 +422,8 @@ package com.pauluz.bbapps.kontomierz.services
 
             model.currenciesList = currenciesList;
             provideAllCurrenciesSignal.dispatch(currenciesList);
+
+            saveCurrenciesSignal.dispatch(currenciesList);
         }
 
         protected function addLoaderListeners(loader:URLLoader):void

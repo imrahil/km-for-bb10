@@ -2,10 +2,12 @@ package com.pauluz.bbapps.kontomierz.services
 {
     import com.pauluz.bbapps.kontomierz.model.vo.TransactionVO;
 
+    import qnx.ui.data.SectionDataProvider;
+
     public interface ISQLKontomierzService
     {
         function saveUserAPIKey(apiKey:String):void
-        function retrieveUserAPIKey():void
+        function loadUserAPIKey():void
         function deleteUserAPIKey():void
 
         function getAllAccounts():void
@@ -19,6 +21,15 @@ package com.pauluz.bbapps.kontomierz.services
 
         function getAllWithdrawalCategories():void;
         function getAllDepositCategories():void;
-        function getAllCurrencies():void;
+
+        function saveCategories(categoriesList:SectionDataProvider, direction:String):void;
+        function checkOfflineCategories(direction:String):void;
+        function loadCategories(direction:String):void;
+        function deleteCategories():void;
+
+        function saveCurrencies(currenciesList:Array):void;
+        function checkOfflinCurrencies():void;
+        function loadCurrencies():void;
+        function deleteCurrencies():void;
     }
 }

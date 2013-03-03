@@ -5,24 +5,28 @@
  @project  Kontomierz
  @internal
  */
-package com.pauluz.bbapps.kontomierz.controller 
+package com.pauluz.bbapps.kontomierz.controller.offline
 {
     import com.pauluz.bbapps.kontomierz.services.ISQLKontomierzService;
 
     import org.robotlegs.mvcs.SignalCommand;
 
-    public final class ProvideLoginStatusCommand extends SignalCommand
+    public final class SaveAPIKeyCommand extends SignalCommand
     {
+        /** PARAMETERS **/
+        [Inject]
+        public var apiKey:String;
+
         /** INJECTIONS **/
         [Inject]
         public var sqlService:ISQLKontomierzService;
 
         /**
-         * Method handle the logic for <code>ProvideLoginStatusCommand</code>
+         * Method handle the logic for <code>SaveAPIKeyCommand</code>
          */        
         override public function execute():void    
         {
-            sqlService.loadUserAPIKey();
+            sqlService.saveUserAPIKey(apiKey);
         }
     }
 }

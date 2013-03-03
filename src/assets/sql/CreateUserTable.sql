@@ -1,4 +1,4 @@
 CREATE TABLE user
 (
-	apiKey STRING NOT NULL
+  apiKey STRING NOT NULL
 );

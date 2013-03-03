@@ -5,24 +5,33 @@
  @project  Kontomierz
  @internal
  */
-package com.pauluz.bbapps.kontomierz.controller 
+package com.pauluz.bbapps.kontomierz.controller.offline
 {
     import com.pauluz.bbapps.kontomierz.services.ISQLKontomierzService;
 
     import org.robotlegs.mvcs.SignalCommand;
 
-    public final class ProvideLoginStatusCommand extends SignalCommand
+    import qnx.ui.data.SectionDataProvider;
+
+    public final class SaveCategoriesCommand extends SignalCommand 
     {
+        /** PARAMETERS **/
+        [Inject]
+        public var categoriesList:SectionDataProvider;
+
+        [Inject]
+        public var direction:String;
+
         /** INJECTIONS **/
         [Inject]
         public var sqlService:ISQLKontomierzService;
 
         /**
-         * Method handle the logic for <code>ProvideLoginStatusCommand</code>
+         * Method handle the logic for <code>SaveCategoriesCommand</code>
          */        
         override public function execute():void    
         {
-            sqlService.loadUserAPIKey();
+            sqlService.saveCategories(categoriesList, direction);
         }
     }
 }

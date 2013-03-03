@@ -5,15 +5,15 @@
  @project  Kontomierz
  @internal
  */
-package com.pauluz.bbapps.kontomierz.signals
+package com.pauluz.bbapps.kontomierz.signals.offline
 {
     import org.osflash.signals.Signal;
 
-    public class SaveAPIKeySignal extends Signal
+    public class SaveCurrenciesSignal extends Signal
     {
-        public function SaveAPIKeySignal()
+        public function SaveCurrenciesSignal()
         {
-            super(String);
+            super(Array);
         }
     }
 }

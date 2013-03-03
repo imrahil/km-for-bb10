@@ -2,7 +2,7 @@ INSERT INTO user
 (
   apiKey
 )
-VALUES
-(
-  :apiKey
-)
+  VALUES
+  (
+    :apiKey
+  )

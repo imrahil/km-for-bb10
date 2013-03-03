@@ -7,25 +7,22 @@
  */
 package com.pauluz.bbapps.kontomierz.controller 
 {
-    import com.pauluz.bbapps.kontomierz.model.IKontomierzModel;
     import com.pauluz.bbapps.kontomierz.services.IKontomierzService;
 
     import org.robotlegs.mvcs.SignalCommand;
 
-    public final class GetAllCategoryTransactionsCommand extends SignalCommand
+    public final class GetAllCurrenciesOnlineCommand extends SignalCommand 
     {
-        [Inject]
-        public var model:IKontomierzModel;
-
+        /** INJECTIONS **/
         [Inject]
         public var kontomierzService:IKontomierzService;
 
         /**
-         * Method handle the logic for <code>GetAllCategoryTransactionsCommand</code>
+         * Method handle the logic for <code>GetAllCurrenciesOnlineCommand</code>
          */        
         override public function execute():void    
         {
-            kontomierzService.getAllTransactionsForCategory(model.selectedCategory.categoryId);
+            kontomierzService.getAllCurrencies();
         }
     }
 }
