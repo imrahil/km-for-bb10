@@ -18,17 +18,13 @@ package com.pauluz.bbapps.kontomierz.view.components
     import flash.events.MouseEvent;
 
     import qnx.fuse.ui.buttons.LabelButton;
-
     import qnx.fuse.ui.buttons.RadioButton;
-
     import qnx.fuse.ui.buttons.RadioButtonGroup;
     import qnx.fuse.ui.core.Container;
     import qnx.fuse.ui.core.SizeOptions;
-
     import qnx.fuse.ui.dialog.ListDialog;
     import qnx.fuse.ui.events.ExpandableEvent;
     import qnx.fuse.ui.layouts.gridLayout.GridData;
-    import qnx.fuse.ui.layouts.gridLayout.GridLayout;
     import qnx.fuse.ui.listClasses.ScrollDirection;
     import qnx.fuse.ui.skins.SkinStates;
     import qnx.fuse.ui.text.KeyboardType;
@@ -51,7 +47,9 @@ package com.pauluz.bbapps.kontomierz.view.components
         public var currencyBtn:LabelButton;
 
         public var withdrawalCategoriesDP:SectionDataProvider;
+        public var withdrawalCategoriesLength:int;
         public var depositCategoriesDP:SectionDataProvider;
+        public var depositCategoriesLength:int;
         public var currenciesDP:Array = [];
 
         public var direction:String = ApplicationConstants.TRANSACTION_DIRECTION_WITHDRAWAL;
@@ -70,19 +68,15 @@ package com.pauluz.bbapps.kontomierz.view.components
             container.layoutData = gridData;
 
             // TRANSACTION DIRECTION
+            var multiColumnContainer:Container = ContainerHelper.createMultiColumnContainer(3);
+
+            textLabel = new Label();
+            textLabel.text = "Kierunek:";
+            textLabel.format = TextFormatUtil.setFormat(textLabel.format, 45);
+            multiColumnContainer.addChild(textLabel);
+
             if (createDirection)
             {
-                textLabel = new Label();
-                textLabel.text = "Kierunek:";
-                textLabel.format = TextFormatUtil.setFormat(textLabel.format, 45);
-                container.addChild(textLabel);
-
-                var directionsGrid:GridLayout = new GridLayout();
-                directionsGrid.numColumns = 2;
-                directionsGrid.hSpacing = 40;
-                var directionsContainer:Container = new Container();
-                directionsContainer.layout = directionsGrid;
-
                 withdrawalRadio = new RadioButton();
                 withdrawalRadio.label = "Wydatek";
                 withdrawalRadio.selected = true;
@@ -102,30 +96,20 @@ package com.pauluz.bbapps.kontomierz.view.components
                 depositRadio.setTextFormatForState(TextFormatUtil.setFormat(depositRadio.getTextFormatForState(SkinStates.SELECTED), 45), SkinStates.SELECTED);
                 depositRadio.setTextFormatForState(TextFormatUtil.setFormat(depositRadio.getTextFormatForState(SkinStates.DISABLED), 45), SkinStates.DISABLED);
 
-                directionsContainer.addChild(withdrawalRadio);
-                directionsContainer.addChild(depositRadio);
-
-                container.addChild(directionsContainer);
+                multiColumnContainer.addChild(withdrawalRadio);
+                multiColumnContainer.addChild(depositRadio);
 
                 directionRadioGroup = RadioButtonGroup.getGroup("direction");
                 directionRadioGroup.addEventListener(Event.CHANGE, onDirectionChange);
             }
             else
             {
-                var twoColumnContainer:Container = new Container();
-                twoColumnContainer.layout = ContainerHelper.createTwoColumnGridData();
-
-                textLabel = new Label();
-                textLabel.text = "Kierunek:";
-                textLabel.format = TextFormatUtil.setFormat(textLabel.format, 45);
-                twoColumnContainer.addChild(textLabel);
-
                 directionLbl = new Label();
                 directionLbl.format = TextFormatUtil.setFormat(textLabel.format, 45);
-                twoColumnContainer.addChild(directionLbl);
-
-                container.addChild(twoColumnContainer)
+                multiColumnContainer.addChild(directionLbl);
             }
+
+            container.addChild(multiColumnContainer);
 
             // AMOUNT LABEL
             textLabel = new Label();
@@ -238,11 +222,11 @@ package com.pauluz.bbapps.kontomierz.view.components
 
             if (direction == ApplicationConstants.TRANSACTION_DIRECTION_WITHDRAWAL)
             {
-                listDialog.items = withdrawalCategoriesDP;
+                listDialog.items(withdrawalCategoriesDP, withdrawalCategoriesLength);
             }
             else
             {
-                listDialog.items = depositCategoriesDP;
+                listDialog.items(depositCategoriesDP, depositCategoriesLength);
             }
 
             if (selectedCategory)

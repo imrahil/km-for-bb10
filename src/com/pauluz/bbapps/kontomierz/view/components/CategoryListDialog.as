@@ -42,22 +42,10 @@ package com.pauluz.bbapps.kontomierz.view.components
             container.addChild(this._list);
         }
 
-        public function set items(value:SectionDataProvider):void
+        public function items(value:SectionDataProvider, itemCount:int):void
         {
             this._list.dataProvider = value;
-
-            if (value)
-            {
-                var itemCount:int = this._list.dataProvider.length;
-                var childrenCount:int = 0;
-
-                for (var x:int = 0; x < itemCount; x++)
-                {
-                    childrenCount += (this._list.dataProvider as SectionDataProvider).getChildrenLengthAtIndex(x);
-                }
-
-                _itemCount = (itemCount + childrenCount);
-            }
+            this._itemCount = itemCount;
 
             layoutChanged = true;
             invalidateProperties();

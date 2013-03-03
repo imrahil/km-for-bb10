@@ -76,7 +76,11 @@ package com.pauluz.bbapps.kontomierz.view
             form.currencyBtn.enabled = true;
 
             form.withdrawalCategoriesDP = _withdrawalCategoriesData;
+            form.withdrawalCategoriesLength = provideDataProviderLength(_withdrawalCategoriesData);
+
             form.depositCategoriesDP = _depositCategoriesData;
+            form.depositCategoriesLength = provideDataProviderLength(_depositCategoriesData);
+
             form.currenciesDP = _currenciesData;
 
             var tempDP:SectionDataProvider;
@@ -117,6 +121,19 @@ package com.pauluz.bbapps.kontomierz.view
 
             form.selectedCurrency = new CurrencyVO();
             form.selectedCurrency.name = transaction.currencyName;
+        }
+
+        private static function provideDataProviderLength(list:SectionDataProvider):int
+        {
+            var itemCount:int = list.length;
+            var childrenCount:int = 0;
+
+            for (var x:int = 0; x < itemCount; x++)
+            {
+                childrenCount += list.getChildrenLengthAtIndex(x);
+            }
+
+            return (itemCount + childrenCount);
         }
 
         private function onSaveAction(event:ActionEvent):void
