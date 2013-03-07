@@ -7,7 +7,7 @@
  */
 package com.pauluz.bbapps.kontomierz.controller.bootstraps
 {
-    import com.pauluz.bbapps.kontomierz.signals.configure.ConfigureMainViewSignal;
+    import com.pauluz.bbapps.kontomierz.signals.configure.ConfigureNetworkConnectivitySignal;
     import com.pauluz.bbapps.kontomierz.utils.LogUtil;
     import com.pauluz.bbapps.kontomierz.view.*;
     import com.pauluz.bbapps.kontomierz.view.mediators.*;
@@ -19,7 +19,7 @@ package com.pauluz.bbapps.kontomierz.controller.bootstraps
     public class ConfigureViewMediatorsCommand extends SignalCommand
     {
         [Inject]
-        public var nextStepSignal:ConfigureMainViewSignal;
+        public var nextStepSignal:ConfigureNetworkConnectivitySignal;
 
         override public function execute():void
         {

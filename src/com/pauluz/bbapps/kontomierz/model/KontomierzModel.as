@@ -7,6 +7,7 @@
  */
 package com.pauluz.bbapps.kontomierz.model
 {
+    import com.pauluz.bbapps.kontomierz.constants.ApplicationConstants;
     import com.pauluz.bbapps.kontomierz.model.vo.AccountVO;
     import com.pauluz.bbapps.kontomierz.model.vo.CategoryVO;
     import com.pauluz.bbapps.kontomierz.model.vo.TransactionVO;
@@ -19,6 +20,8 @@ package com.pauluz.bbapps.kontomierz.model
 
     public class KontomierzModel extends Actor implements IKontomierzModel
     {
+        private var _networkStatus:int = ApplicationConstants.NETWORK_STATUS_UNKNOWN;
+
         private var _apiKey:String = "";
         private var _selectedAccount:AccountVO;
         private var _accountsList:DataProvider;
@@ -34,6 +37,16 @@ package com.pauluz.bbapps.kontomierz.model
         private var _selectedCategory:CategoryVO;
 
         private var _currenciesList:Array;
+
+        public function get networkStatus():int
+        {
+            return _networkStatus;
+        }
+
+        public function set networkStatus(value:int):void
+        {
+            _networkStatus = value;
+        }
 
         public function get apiKey():String
         {

@@ -13,7 +13,6 @@ package com.pauluz.bbapps.kontomierz.services
     import com.pauluz.bbapps.kontomierz.utils.LogUtil;
 
     import flash.events.Event;
-
     import flash.net.URLLoader;
     import flash.net.URLRequest;
     import flash.net.URLRequestMethod;
@@ -28,6 +27,7 @@ package com.pauluz.bbapps.kontomierz.services
             logger = LogUtil.getLogger(this);
             logger.debug(": constructor");
         }
+
 
         /**
          * LOGIN
@@ -92,6 +92,9 @@ package com.pauluz.bbapps.kontomierz.services
             loginSuccessfulSignal.dispatch();
         }
 
+        /**
+         * GET ALL ACCOUNTS
+         */
         override public function getAllAccounts():void
         {
             logger.debug(": getAllAccounts service call");
@@ -107,24 +110,36 @@ package com.pauluz.bbapps.kontomierz.services
             loader.load(urlRequest);
         }
 
+        /**
+         * CREATE WALLET
+         */
         override public function createWallet(name:String, balance:Number, currency:String, liquid:Boolean):void
         {
             logger.debug(": createWallet service call");
 
         }
 
+        /**
+         * UPDATE WALLET
+         */
         override public function updateWallet(id:int, name:String, balance:Number, currency:String, liquid:Boolean):void
         {
             logger.debug(": updateWallet service call");
 
         }
 
+        /**
+         * DELETE WALLET
+         */
         override public function deleteWallet(id:int):void
         {
             logger.debug(": deleteWallet service call");
 
         }
 
+        /**
+         * GET ALL TRANSACTIONS
+         */
         override public function getAllTransactions(accountId:int, wallet:Boolean):void
         {
             logger.debug(": getAllTransactions service call");
@@ -152,6 +167,9 @@ package com.pauluz.bbapps.kontomierz.services
             loader.load(urlRequest);
         }
 
+        /**
+         * GET ALL TRANSACTIONS FOR CATEGORY
+         */
         override public function getAllTransactionsForCategory(categoryId:int):void
         {
             logger.debug(": getAllTransactionsForCategory service call");
@@ -172,6 +190,9 @@ package com.pauluz.bbapps.kontomierz.services
         }
 
 
+        /**
+         * CREATE TRANSACTION
+         */
         override public function createTransaction(transaction:TransactionVO):void
         {
             logger.debug(": createTransaction service call");
@@ -200,6 +221,9 @@ package com.pauluz.bbapps.kontomierz.services
         }
 
 
+        /**
+         * UPDATE TRANSACTION
+         */
         override public function updateTransaction(transaction:TransactionVO):void
         {
             logger.debug(": updateTransaction service call");
@@ -228,6 +252,9 @@ package com.pauluz.bbapps.kontomierz.services
             loader.load(urlRequest);
         }
 
+        /**
+         * DELETE TRANSACTION
+         */
         override public function deleteTransaction(id:int, wallet:Boolean):void
         {
             logger.debug(": deleteTransaction service call");
@@ -252,6 +279,9 @@ package com.pauluz.bbapps.kontomierz.services
             loader.load(urlRequest);
         }
 
+        /**
+         * GET ALL WITHDRAWAL CATEGORIES
+         */
         override public function getAllWithdrawalCategories():void
         {
             logger.debug(": getAllCategoriesWithdrawal service call");
@@ -270,6 +300,9 @@ package com.pauluz.bbapps.kontomierz.services
             loader.load(urlRequest);
         }
 
+        /**
+         * GET ALL DEPOSIT ATEGORIES
+         */
         override public function getAllDepositCategories():void
         {
             logger.debug(": getAllCategoriesDeposit service call");
@@ -288,6 +321,9 @@ package com.pauluz.bbapps.kontomierz.services
             loader.load(urlRequest);
         }
 
+        /**
+         * GET ALL CURRENCIES
+         */
         override public function getAllCurrencies():void
         {
             logger.debug(": getAllCurrencies service call");

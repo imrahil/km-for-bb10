@@ -29,6 +29,7 @@ package com.pauluz.bbapps.kontomierz.controller.bootstraps
             signalCommandMap.mapSignalClass(ConfigureServiceSignal, ConfigureServiceCommand);
             signalCommandMap.mapSignalClass(ConfigureModelSignal, ConfigureModelCommand);
             signalCommandMap.mapSignalClass(ConfigureViewMediatorsSignal, ConfigureViewMediatorsCommand);
+            signalCommandMap.mapSignalClass(ConfigureNetworkConnectivitySignal, ConfigureNetworkConnectivityCommand);
             signalCommandMap.mapSignalClass(ConfigureMainViewSignal, ConfigureMainViewCommand);
 
             var nextStepSignal:ISignal = injector.getInstance(ConfigureControllerSignal);
