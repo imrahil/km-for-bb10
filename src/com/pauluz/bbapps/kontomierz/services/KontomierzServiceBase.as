@@ -9,6 +9,7 @@ package com.pauluz.bbapps.kontomierz.services
 {
     import com.pauluz.bbapps.kontomierz.constants.ApplicationConstants;
     import com.pauluz.bbapps.kontomierz.model.IKontomierzModel;
+    import com.pauluz.bbapps.kontomierz.model.vo.AccountVO;
     import com.pauluz.bbapps.kontomierz.model.vo.ErrorVO;
     import com.pauluz.bbapps.kontomierz.model.vo.TransactionVO;
     import com.pauluz.bbapps.kontomierz.model.vo.UserVO;
@@ -95,6 +96,9 @@ package com.pauluz.bbapps.kontomierz.services
         // OFFLINE COMMANDS
         [Inject]
         public var saveAPIKeySignal:SaveAPIKeySignal;
+
+        [Inject]
+        public var saveAccountsSignal:SaveAccountsSignal;
 
         [Inject]
         public var saveCategoriesSignal:SaveCategoriesSignal;
@@ -190,7 +194,7 @@ package com.pauluz.bbapps.kontomierz.services
          ********************/
         protected function loginCompleteHandler(event:Event):void
         {
-            logger.debug(": loginCompleteHandlere");
+            logger.debug(": loginCompleteHandler");
 
             var loader:URLLoader = event.currentTarget as URLLoader;
 
@@ -208,7 +212,7 @@ package com.pauluz.bbapps.kontomierz.services
                     model.apiKey = apiKey;
                 }
 
-                if (rememberMe)
+                if (rememberMe && !model.demoMode)
                 {
                     saveAPIKeySignal.dispatch(apiKey);
                 }
@@ -235,13 +239,32 @@ package com.pauluz.bbapps.kontomierz.services
 
             if (responseStatus == 200)
             {
-                var accountsData:DataProvider = _parser.parseAllAccountsResponse(loader.data as String);
+                var allAccountsData:Array = _parser.parseAllAccountsResponse(loader.data as String);
+                var accountsList:DataProvider = new DataProvider();
+                var defaultWalletId:int;
 
-                model.accountsList = accountsData;
-                provideAllAccountsDataSignal.dispatch(accountsData);
+                for each (var account:AccountVO in allAccountsData)
+                {
+                    if (account.bankPluginName != ApplicationConstants.WALLET_ACCOUNT_NAME)
+                    {
+                        accountsList.addItem(account);
+                    }
 
-                var defaultWalletId:int = _parser.parseAllAccountsResponseAndFindDefaultWalletId(loader.data as String);
+                    if (account.is_default_wallet)
+                    {
+                        defaultWalletId = account.accountId;
+                    }
+                }
+
+                model.accountsList = accountsList;
+                provideAllAccountsDataSignal.dispatch(accountsList);
+
                 storeDefaultWalletIdSignal.dispatch(defaultWalletId);
+
+                if (!model.demoMode)
+                {
+                    saveAccountsSignal.dispatch(accountsList.data);
+                }
             }
             else
             {

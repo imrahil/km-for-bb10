@@ -20,7 +20,9 @@ package com.pauluz.bbapps.kontomierz.model
 
     public class KontomierzModel extends Actor implements IKontomierzModel
     {
-        private var _networkStatus:int = ApplicationConstants.NETWORK_STATUS_UNKNOWN;
+        private var _isConnected:Boolean;
+
+        private var _demoMode:Boolean;
 
         private var _apiKey:String = "";
         private var _selectedAccount:AccountVO;
@@ -38,14 +40,25 @@ package com.pauluz.bbapps.kontomierz.model
 
         private var _currenciesList:Array;
 
-        public function get networkStatus():int
+        public function get isConnected():Boolean
         {
-            return _networkStatus;
+            return _isConnected;
         }
 
-        public function set networkStatus(value:int):void
+        public function set isConnected(value:Boolean):void
         {
-            _networkStatus = value;
+            _isConnected = value;
+        }
+
+
+        public function get demoMode():Boolean
+        {
+            return _demoMode;
+        }
+
+        public function set demoMode(value:Boolean):void
+        {
+            _demoMode = value;
         }
 
         public function get apiKey():String

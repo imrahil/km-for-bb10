@@ -5,13 +5,13 @@
  @project  Kontomierz
  @internal
  */
-package com.pauluz.bbapps.kontomierz.signals.configure
+package com.pauluz.bbapps.kontomierz.signals.offline
 {
     import org.osflash.signals.Signal;
 
-    public class ConfigureMainViewSignal extends Signal
+    public class GetAllAccountsOfflineSignal extends Signal
     {
-        public function ConfigureMainViewSignal()
+        public function GetAllAccountsOfflineSignal()
         {
             super();
         }

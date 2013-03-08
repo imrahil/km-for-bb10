@@ -16,6 +16,7 @@ package com.pauluz.bbapps.kontomierz.model.vo
     public class AccountVO
     {
         public var id:int;
+        public var accountId:int;
         public var balance:Number = 0;
         public var bankName:String = "";
         public var bankPluginName:String = "";

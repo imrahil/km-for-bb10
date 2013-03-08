@@ -7,23 +7,15 @@
  */
 package com.pauluz.bbapps.kontomierz.services.helpers
 {
-    import air.net.URLMonitor;
-
-    import com.pauluz.bbapps.kontomierz.constants.ApplicationConstants;
     import com.pauluz.bbapps.kontomierz.model.IKontomierzModel;
-    import com.pauluz.bbapps.kontomierz.signals.configure.ConfigureMainViewSignal;
+    import com.pauluz.bbapps.kontomierz.signals.configure.ConfigureRootViewSignal;
     import com.pauluz.bbapps.kontomierz.utils.LogUtil;
 
     import flash.events.Event;
 
-    import flash.events.StatusEvent;
-    import flash.net.URLRequest;
-
     import mx.logging.ILogger;
 
     import org.robotlegs.mvcs.Actor;
-
-    import qnx.fuse.ui.dialog.ToastBase;
 
     import qnx.net.NetworkManager;
 
@@ -33,7 +25,7 @@ package com.pauluz.bbapps.kontomierz.services.helpers
         public var model:IKontomierzModel;
 
         [Inject]
-        public var nextStepSignal:ConfigureMainViewSignal;
+        public var nextStepSignal:ConfigureRootViewSignal;
 
         private var logger:ILogger;
 
@@ -59,9 +51,9 @@ package com.pauluz.bbapps.kontomierz.services.helpers
 
         private function checkNetwork():void
         {
-            model.networkStatus = (NetworkManager.networkManager.isConnected()) ? ApplicationConstants.NETWORK_STATUS_AVAILABLE : ApplicationConstants.NETWORK_STATUS_DENIED;
+            model.isConnected = NetworkManager.networkManager.isConnected();
 
-            logger.debug(": network status - " + model.networkStatus);
+            logger.debug(": network status - " + model.isConnected);
         }
     }
 }

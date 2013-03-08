@@ -37,10 +37,12 @@ package com.pauluz.bbapps.kontomierz.controller
          */        
         override public function execute():void    
         {
-            if (model.networkStatus == ApplicationConstants.NETWORK_STATUS_AVAILABLE)
+            if (model.isConnected)
             {
                 if (user.email == ApplicationConstants.KONTOMIERZ_DEMO_EMAIL)
                 {
+                    model.demoMode = true;
+
                     kontomierzService.demo();
                 }
                 else

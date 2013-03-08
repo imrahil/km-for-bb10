@@ -52,11 +52,11 @@ package com.pauluz.bbapps.kontomierz.services.helpers
             }
         }
 
-        public function parseAllAccountsResponse(result:String):DataProvider
+        public function parseAllAccountsResponse(result:String):Array
         {
             logger.debug(": parseAllAccountsResponse");
 
-            var output:DataProvider = new DataProvider();
+            var output:Array = [];
 
             try {
                 var resultObject:Object = JSON.parse(result);
@@ -70,12 +70,12 @@ package com.pauluz.bbapps.kontomierz.services.helpers
             {
                 for each (var item:Object in resultObject)
                 {
-                    if (item && item.user_account && item.user_account.bank_plugin_name != ApplicationConstants.WALLET_ACCOUNT_NAME)
+                    if (item && item.user_account)
                     {
                         var rawAccount:Object = item.user_account;
                         var account:AccountVO = new AccountVO();
 
-                        account.id = rawAccount.id;
+                        account.accountId = rawAccount.id;
                         account.balance = rawAccount.balance;
                         account.bankName = rawAccount.bank_name;
                         account.bankPluginName = rawAccount.bank_plugin_name;
@@ -86,43 +86,12 @@ package com.pauluz.bbapps.kontomierz.services.helpers
                         account.ibanChecksum = rawAccount.iban_checksum;
                         account.is_default_wallet = rawAccount.is_default_wallet;
 
-                        output.addItem(account);
+                        output.push(account);
                     }
                 }
             }
 
             return output;
-        }
-
-        public function parseAllAccountsResponseAndFindDefaultWalletId(result:String):int
-        {
-            logger.debug(": parseAllAccountsResponseAndFindDefaultWalletId");
-
-            try {
-                var resultObject:Object = JSON.parse(result);
-            }
-            catch (e:Error)
-            {
-                logger.error("JSON Parse Error - parseAllAccountsResponseAndFindDefaultWalletId");
-            }
-
-            if (resultObject && resultObject is Array && resultObject.length > 0)
-            {
-                for each (var item:Object in resultObject)
-                {
-                    if (item && item.user_account)
-                    {
-                        var rawAccount:Object = item.user_account;
-
-                        if (rawAccount.bank_plugin_name == ApplicationConstants.WALLET_ACCOUNT_NAME && rawAccount.is_default_wallet)
-                        {
-                            return rawAccount.id;
-                        }
-                    }
-                }
-            }
-
-            return -1;
         }
 
         public function parseAllTransactionsResponse(result:String):DataProvider

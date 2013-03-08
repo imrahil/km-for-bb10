@@ -8,8 +8,11 @@ package com.pauluz.bbapps.kontomierz.model
 
     public interface IKontomierzModel
     {
-        function get networkStatus():int;
-        function set networkStatus(value:int):void;
+        function get isConnected():Boolean;
+        function set isConnected(value:Boolean):void;
+
+        function get demoMode():Boolean;
+        function set demoMode(value:Boolean):void;
 
         function get apiKey():String;
         function set apiKey(value:String):void;

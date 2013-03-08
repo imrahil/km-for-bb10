@@ -15,7 +15,7 @@ package com.pauluz.bbapps.kontomierz.controller.bootstraps
 
     import org.robotlegs.mvcs.SignalCommand;
 
-    public class ConfigureMainViewCommand extends SignalCommand
+    public class ConfigureRootViewCommand extends SignalCommand
     {
         [Inject]
         public var nextStepSignal:RequestLoginStatusSignal;

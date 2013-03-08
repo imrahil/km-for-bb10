@@ -36,7 +36,7 @@ package com.pauluz.bbapps.kontomierz.controller
             }
             else
             {
-                sqlService.checkOfflinCurrencies();
+                sqlService.checkOfflineCurrencies();
             }
         }
     }

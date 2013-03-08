@@ -27,8 +27,11 @@ package com.pauluz.bbapps.kontomierz.controller
         override public function execute():void    
         {
             sqlService.deleteUserAPIKey();
+            sqlService.deleteAccounts();
             sqlService.deleteCategories();
             sqlService.deleteCurrencies();
+
+            model.demoMode = false;
 
             model.apiKey = "";
 
