@@ -37,11 +37,11 @@ package com.pauluz.bbapps.kontomierz.controller
         {
             if (model.isConnected)
             {
-                kontomierzService.deleteTransaction(transaction.id, false);
+                kontomierzService.deleteTransaction(transaction.transactionId, false);
             }
             else
             {
-                sqlService.deleteTransaction(transaction.id, false);
+                sqlService.deleteTransaction(transaction.transactionId, false);
             }
         }
     }

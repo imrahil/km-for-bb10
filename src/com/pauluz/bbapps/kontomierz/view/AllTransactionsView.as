@@ -77,6 +77,8 @@ package com.pauluz.bbapps.kontomierz.view
 
             content = ContainerHelper.createSpinner();
 
+            titleBar.acceptAction = new Action("Odśwież");
+
             viewAddedSignal.dispatch();
         }
 

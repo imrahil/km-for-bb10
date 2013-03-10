@@ -30,6 +30,8 @@ package com.pauluz.bbapps.kontomierz.constants
         public static const TRANSACTION_DIRECTION_DEPOSIT:String  = "deposit";
 
         public static const NO_CATEGORY_LABEL:String  = "-- brak kategorii --";
+        public static const CATEGORIES_ALL:String  = "categoriesAll";
+        public static const CATEGORIES_USED:String  = "categoriesUsed";
 
         public static const DEFAULT_CURRENCY_NAME:String  = "PLN";
         public static const DEFAULT_CURRENCY_FULL_NAME:String  = "złoty polski";

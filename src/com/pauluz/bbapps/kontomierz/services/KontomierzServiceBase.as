@@ -14,7 +14,7 @@ package com.pauluz.bbapps.kontomierz.services
     import com.pauluz.bbapps.kontomierz.model.vo.TransactionVO;
     import com.pauluz.bbapps.kontomierz.model.vo.UserVO;
     import com.pauluz.bbapps.kontomierz.services.helpers.IResultParser;
-    import com.pauluz.bbapps.kontomierz.signals.GetAllTransactionsSignal;
+    import com.pauluz.bbapps.kontomierz.signals.GetAllTransactionsOnlineSignal;
     import com.pauluz.bbapps.kontomierz.signals.GetAllWalletTransactionsSignal;
     import com.pauluz.bbapps.kontomierz.signals.StoreDefaultWalletIdSignal;
     import com.pauluz.bbapps.kontomierz.signals.offline.*;
@@ -85,7 +85,7 @@ package com.pauluz.bbapps.kontomierz.services
         public var errorSignal:ErrorSignal;
 
         [Inject]
-        public var getAllTransactionsSignal:GetAllTransactionsSignal;
+        public var getAllTransactionsSignal:GetAllTransactionsOnlineSignal;
 
         [Inject]
         public var getAllWalletTransactionsSignal:GetAllWalletTransactionsSignal;
@@ -99,6 +99,9 @@ package com.pauluz.bbapps.kontomierz.services
 
         [Inject]
         public var saveAccountsSignal:SaveAccountsSignal;
+
+        [Inject]
+        public var saveTransactionsSignal:SaveTransactionsSignal;
 
         [Inject]
         public var saveCategoriesSignal:SaveCategoriesSignal;
@@ -263,7 +266,7 @@ package com.pauluz.bbapps.kontomierz.services
 
                 if (!model.demoMode)
                 {
-                    saveAccountsSignal.dispatch(accountsList.data);
+                    saveAccountsSignal.dispatch(allAccountsData);
                 }
             }
             else
@@ -284,7 +287,26 @@ package com.pauluz.bbapps.kontomierz.services
             loader.removeEventListener(Event.COMPLETE, getAllTransactionsCompleteHandler);
             removeLoaderListeners(loader);
 
-            var transactionsData:DataProvider = _parser.parseAllTransactionsResponse(loader.data as String);
+            var transactionsData:DataProvider = _parser.parseAllTransactionsResponse(loader.data as String, false);
+
+            provideAllTransactionsSignal.dispatch(transactionsData);
+
+            if (!model.demoMode)
+            {
+                saveTransactionsSignal.dispatch(transactionsData.data);
+            }
+        }
+
+        protected function getAllTransactionsForCategoryCompleteHandler(event:Event):void
+        {
+            logger.debug(": getAllTransactionsForCategoryCompleteHandler");
+
+            var loader:URLLoader = event.currentTarget as URLLoader;
+
+            loader.removeEventListener(Event.COMPLETE, getAllTransactionsForCategoryCompleteHandler);
+            removeLoaderListeners(loader);
+
+            var transactionsData:DataProvider = _parser.parseAllTransactionsResponse(loader.data as String, false);
 
             provideAllTransactionsSignal.dispatch(transactionsData);
         }
@@ -298,7 +320,7 @@ package com.pauluz.bbapps.kontomierz.services
             loader.removeEventListener(Event.COMPLETE, getAllTransactionsForWalletCompleteHandler);
             removeLoaderListeners(loader);
 
-            var transactionsData:DataProvider = _parser.parseAllTransactionsResponse(loader.data as String);
+            var transactionsData:DataProvider = _parser.parseAllTransactionsResponse(loader.data as String, true);
 
             model.walletTransactionsList = transactionsData;
             model.isWalletListExpired = false;

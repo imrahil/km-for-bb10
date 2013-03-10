@@ -4,6 +4,6 @@ CREATE TABLE categories
   categoryId INTEGER,
   name       STRING,
   header     INTEGER,
-  direction  String,
+  direction  STRING,
   parentId   INTEGER
 );

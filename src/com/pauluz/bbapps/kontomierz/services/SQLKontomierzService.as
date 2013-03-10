@@ -17,11 +17,14 @@ package com.pauluz.bbapps.kontomierz.services
     import com.pauluz.bbapps.kontomierz.signals.GetAllAccountsOnlineSignal;
     import com.pauluz.bbapps.kontomierz.signals.GetAllCategoriesOnlineSignal;
     import com.pauluz.bbapps.kontomierz.signals.GetAllCurrenciesOnlineSignal;
+    import com.pauluz.bbapps.kontomierz.signals.GetAllTransactionsOnlineSignal;
     import com.pauluz.bbapps.kontomierz.signals.StoreDefaultWalletIdSignal;
+    import com.pauluz.bbapps.kontomierz.signals.offline.GetAllTransactionsOfflineSignal;
     import com.pauluz.bbapps.kontomierz.signals.signaltons.ErrorSignal;
     import com.pauluz.bbapps.kontomierz.signals.signaltons.ProvideAllAccountsDataSignal;
     import com.pauluz.bbapps.kontomierz.signals.signaltons.ProvideAllCurrenciesSignal;
     import com.pauluz.bbapps.kontomierz.signals.signaltons.ProvideAllDepositCategoriesSignal;
+    import com.pauluz.bbapps.kontomierz.signals.signaltons.ProvideAllTransactionsSignal;
     import com.pauluz.bbapps.kontomierz.signals.signaltons.ProvideAllWithdrawalCategoriesSignal;
     import com.pauluz.bbapps.kontomierz.signals.signaltons.ProvideLoginStatusSignal;
     import com.pauluz.bbapps.kontomierz.utils.LogUtil;
@@ -64,11 +67,17 @@ package com.pauluz.bbapps.kontomierz.services
         public var provideAllAccountsDataSignal:ProvideAllAccountsDataSignal;
 
         [Inject]
+        public var provideAllTransactionsSignal:ProvideAllTransactionsSignal;
+
+        [Inject]
         public var provideAllWithdrawalCategoriesSignal:ProvideAllWithdrawalCategoriesSignal;
 
         [Inject]
         public var provideAllDepositCategoriesSignal:ProvideAllDepositCategoriesSignal;
 
+
+        [Inject]
+        public var getAllTransactionsOnlineSignal:GetAllTransactionsOnlineSignal;
 
         [Inject]
         public var getAllCategoriesOnlineSignal:GetAllCategoriesOnlineSignal;
@@ -156,7 +165,10 @@ package com.pauluz.bbapps.kontomierz.services
 
             for each (var account:AccountVO in result.data)
             {
-                accountsList.addItem(account);
+                if (account.bankPluginName != ApplicationConstants.WALLET_ACCOUNT_NAME)
+                {
+                    accountsList.addItem(account);
+                }
 
                 if (account.is_default_wallet)
                 {
@@ -199,7 +211,7 @@ package com.pauluz.bbapps.kontomierz.services
                 params["displayName"] = account.displayName;
                 params["iban"] = account.iban;
                 params["ibanChecksum"] = account.ibanChecksum;
-                params["is_default_wallet"] = 0;
+                params["is_default_wallet"] = (account.is_default_wallet) ? 1 : 0;
 
                 stmts[stmts.length] = new QueuedStatement(INSERT_ACCOUNT_SQL, params);
             }
@@ -222,9 +234,46 @@ package com.pauluz.bbapps.kontomierz.services
         /*
          *  GET ALL TRANSACTIONS
          */
-        public function getAllTransactions(accountId:int, wallet:Boolean):void
+        public function getAllTransactions(accountId:int, isWallet:Boolean):void
         {
-            throw new Error("Override this method!");
+            logger.debug(": getAllTransactions - isWallet: " + isWallet);
+
+            if (isWallet)
+            {
+                var wallet:int = (isWallet) ? 1 : 0;
+                sqlRunner.execute(LOAD_TRANSACTIONS_SQL, {userAccountId: accountId, isWallet: wallet}, loadWalletTransactionsResult, TransactionVO, databaseErrorHandler);
+            }
+            else
+            {
+                sqlRunner.execute(LOAD_TRANSACTIONS_SQL, {userAccountId: accountId, isWallet: isWallet}, loadTransactionsResult, TransactionVO, databaseErrorHandler);
+            }
+        }
+
+        private function loadWalletTransactionsResult(result:SQLResult):void
+        {
+            logger.debug(": loadWalletTransactionsResult");
+
+            if (result.data != null && result.data.length > 0)
+            {
+
+            }
+        }
+
+        private function loadTransactionsResult(result:SQLResult):void
+        {
+            logger.debug(": loadTransactionsResult");
+
+            if (result.data != null && result.data.length > 0)
+            {
+                model.selectedAccount.isValid = true;
+
+                var transactionsData:DataProvider = new DataProvider(result.data);
+                provideAllTransactionsSignal.dispatch(transactionsData);
+            }
+            else
+            {
+                getAllTransactionsOnlineSignal.dispatch();
+            }
         }
 
 
@@ -234,6 +283,49 @@ package com.pauluz.bbapps.kontomierz.services
         public function getAllTransactionsForCategory(categoryId:int):void
         {
             throw new Error("Override this method!");
+        }
+
+
+        /*
+         *  SAVE ALL TRANSACTIONS
+         */
+        public function saveAllTransactions(transactionsList:Array):void
+        {
+            logger.debug(": saveAllTransactions");
+
+            var stmts:Vector.<QueuedStatement> = new Vector.<QueuedStatement>();
+            var params:Object;
+
+            stmts[stmts.length] = new QueuedStatement(DELETE_TRANSACTIONS_FROM_ACCOUNT_SQL, {userAccountId: model.selectedAccount.accountId});
+
+            for each (var transaction:TransactionVO in transactionsList)
+            {
+                params = {};
+
+                params["transactionId"] = transaction.transactionId;
+                params["userAccountId"] = transaction.userAccountId;
+                params["currencyAmount"] = transaction.currencyAmount;
+                params["currencyName"] = transaction.currencyName;
+                params["amount"] = transaction.amount;
+                params["transactionOn"] = transaction.transactionOn;
+                params["bookedOn"] = transaction.bookedOn;
+                params["description"] = transaction.description;
+                params["categoryName"] = transaction.categoryName;
+                params["categoryId"] = transaction.categoryId;
+                params["tagString"] = transaction.tagString;
+                params["direction"] = transaction.direction;
+
+                params["isWallet"] = (transaction.isWallet) ? 1 : 0;
+
+                stmts[stmts.length] = new QueuedStatement(INSERT_TRANSACTION_SQL, params);
+            }
+
+            sqlRunner.executeModify(stmts, onSaveAllTransactionsComplete, databaseErrorHandler);
+        }
+
+        private function onSaveAllTransactionsComplete(results:Vector.<SQLResult>):void
+        {
+            model.selectedAccount.isValid = true;
         }
 
 
@@ -302,33 +394,6 @@ package com.pauluz.bbapps.kontomierz.services
 
 
         /*
-         *  CHECK OFFLINE CATEGORIES
-         */
-        public function checkOfflineCategories(direction:String):void
-        {
-            logger.debug(": checkOfflineCategories");
-
-            sqlRunner.execute(CHECK_OFFLINE_CATEGORIES_SQL, {direction: direction}, function(result:SQLResult):void { checkOfflineCategoriesResult(result, direction)}, null, databaseErrorHandler);
-        }
-
-        private function checkOfflineCategoriesResult(result:SQLResult, direction:String):void
-        {
-            logger.debug(": checkOfflineCategoriesResult");
-
-            if (result.data != null && result.data[0].counter > 0)
-            {
-                logger.debug("Categories exist offline - count: " + result.data[0].counter);
-                this.loadCategories(direction);
-            }
-            else
-            {
-                logger.debug("No " + direction + " categories offline!");
-                getAllCategoriesOnlineSignal.dispatch(direction);
-            }
-        }
-
-
-        /*
          *  LOAD CATEGORIES
          */
         public function loadCategories(direction:String):void
@@ -372,6 +437,48 @@ package com.pauluz.bbapps.kontomierz.services
                     provideAllDepositCategoriesSignal.dispatch(output);
                 }
             }
+            else
+            {
+                getAllCategoriesOnlineSignal.dispatch(direction);
+            }
+        }
+
+
+        /*
+         *  LOAD USED CATEGORIES
+         */
+        public function loadUsedCategories():void
+        {
+            logger.debug(": loadCategories");
+
+            sqlRunner.execute(LOAD_USED_CATEGORIES_SQL, null, loadUsedCategoriesResult, CategoryVO, databaseErrorHandler);
+        }
+
+        private function loadUsedCategoriesResult(result:SQLResult):void
+        {
+            logger.debug(": loadUsedCategoriesResult");
+
+            if (result.data != null && result.data.length > 0)
+            {
+                var output:SectionDataProvider = new SectionDataProvider();
+
+                var mainCategory:CategoryVO = new CategoryVO();
+                mainCategory.header = true;
+                mainCategory.name = "Używane kategorie";
+                output.addItem(mainCategory);
+
+                for each (var category:CategoryVO in result.data)
+                {
+                    output.addChildToItem(category, mainCategory);
+                }
+
+                provideAllWithdrawalCategoriesSignal.dispatch(output);
+            }
+            else
+            {
+                var error:ErrorVO = new ErrorVO("Brak danych offline. Musisz przejrzeć przynajmniej jeden ze swoich rachunków.");
+                errorSignal.dispatch(error);
+            }
         }
 
 
@@ -410,31 +517,6 @@ package com.pauluz.bbapps.kontomierz.services
 
 
         /*
-         *  CHECK OFFLINE CURRENCIES
-         */
-        public function checkOfflineCurrencies():void
-        {
-            logger.debug(": checkOfflineCurrencies");
-
-            sqlRunner.execute(CHECK_OFFLINE_CURRENCIES_SQL, null, checkOfflineCurrenciesResult, null, databaseErrorHandler);
-        }
-
-        private function checkOfflineCurrenciesResult(result:SQLResult):void
-        {
-            logger.debug(": checkOfflineCurrenciesResult");
-
-            if (result.data != null && result.data[0].counter > 0)
-            {
-                logger.debug("Currencies exist offline - count: " + result.data[0].counter);
-                this.loadCurrencies();
-            }
-            else
-            {
-                getAllCurrenciesOnlineSignal.dispatch();
-            }
-        }
-
-        /*
          *  LOAD CURRENCIES
          */
         public function loadCurrencies():void
@@ -448,18 +530,25 @@ package com.pauluz.bbapps.kontomierz.services
         {
             logger.debug(": loadCurrenciesResult");
 
-            model.currenciesList = result.data;
-
-            for each (var currency:CurrencyVO in model.currenciesList)
+            if (result.data != null && result.data.length > 0)
             {
-                if (currency.name == ApplicationConstants.DEFAULT_CURRENCY_NAME)
-                {
-                    currency.selected = true;
-                    break;
-                }
-            }
+                model.currenciesList = result.data;
 
-            provideAllCurrenciesSignal.dispatch(model.currenciesList);
+                for each (var currency:CurrencyVO in model.currenciesList)
+                {
+                    if (currency.name == ApplicationConstants.DEFAULT_CURRENCY_NAME)
+                    {
+                        currency.selected = true;
+                        break;
+                    }
+                }
+
+                provideAllCurrenciesSignal.dispatch(model.currenciesList);
+            }
+            else
+            {
+                getAllCurrenciesOnlineSignal.dispatch();
+            }
         }
 
 
@@ -484,7 +573,9 @@ package com.pauluz.bbapps.kontomierz.services
             errorSignal.dispatch(error);
         }
 
-          // ------- SQL statements -------
+        // ------- SQL statements -------
+
+        // API
         [Embed(source="/assets/sql/InsertAPIKey.sql", mimeType="application/octet-stream")]
         private static const InsertAPIKeyStatementText:Class;
         private static const INSERT_API_KEY_SQL:String = new InsertAPIKeyStatementText();
@@ -498,6 +589,7 @@ package com.pauluz.bbapps.kontomierz.services
         private static const DELETE_API_KEY_SQL:String = new DeleteAPIKeyStatementText();
 
 
+        // ACCOUNTS
         [Embed(source="/assets/sql/InsertAccount.sql", mimeType="application/octet-stream")]
         private static const InsertAccountStatementText:Class;
         private static const INSERT_ACCOUNT_SQL:String = new InsertAccountStatementText();
@@ -511,6 +603,25 @@ package com.pauluz.bbapps.kontomierz.services
         private static const DELETE_ACCOUNTS_SQL:String = new DeleteAccountsStatementText();
 
 
+        // TRANSACTIONS
+        [Embed(source="/assets/sql/InsertTransaction.sql", mimeType="application/octet-stream")]
+        private static const InsertTransactionStatementText:Class;
+        private static const INSERT_TRANSACTION_SQL:String = new InsertTransactionStatementText();
+
+        [Embed(source="/assets/sql/DeleteTransactions.sql", mimeType="application/octet-stream")]
+        private static const DeleteTransactionsStatementText:Class;
+        private static const DELETE_TRANSACTIONS_SQL:String = new DeleteTransactionsStatementText();
+
+        [Embed(source="/assets/sql/DeleteTransactionsFromAccount.sql", mimeType="application/octet-stream")]
+        private static const DeleteTransactionsFromAccountStatementText:Class;
+        private static const DELETE_TRANSACTIONS_FROM_ACCOUNT_SQL:String = new DeleteTransactionsFromAccountStatementText();
+
+        [Embed(source="/assets/sql/LoadTransactions.sql", mimeType="application/octet-stream")]
+        private static const LoadTransactionsStatementText:Class;
+        private static const LOAD_TRANSACTIONS_SQL:String = new LoadTransactionsStatementText();
+
+
+        // CATEGORIES
         [Embed(source="/assets/sql/InsertCategory.sql", mimeType="application/octet-stream")]
         private static const InsertCategoryStatementText:Class;
         private static const INSERT_CATEGORY_SQL:String = new InsertCategoryStatementText();
@@ -523,11 +634,12 @@ package com.pauluz.bbapps.kontomierz.services
         private static const LoadCategoriesStatementText:Class;
         private static const LOAD_CATEGORIES_SQL:String = new LoadCategoriesStatementText();
 
-        [Embed(source="/assets/sql/CheckOfflineCategories.sql", mimeType="application/octet-stream")]
-        private static const CheckOfflineCategoriesStatementText:Class;
-        private static const CHECK_OFFLINE_CATEGORIES_SQL:String = new CheckOfflineCategoriesStatementText();
+        [Embed(source="/assets/sql/LoadUsedCategories.sql", mimeType="application/octet-stream")]
+        private static const LoadUsedCategoriesStatementText:Class;
+        private static const LOAD_USED_CATEGORIES_SQL:String = new LoadUsedCategoriesStatementText();
 
 
+        // CURRENCIES
         [Embed(source="/assets/sql/InsertCurrency.sql", mimeType="application/octet-stream")]
         private static const InsertCurrencyStatementText:Class;
         private static const INSERT_CURRENCY_SQL:String = new InsertCurrencyStatementText();
@@ -539,10 +651,6 @@ package com.pauluz.bbapps.kontomierz.services
         [Embed(source="/assets/sql/LoadCurrencies.sql", mimeType="application/octet-stream")]
         private static const LoadCurrenciesStatementText:Class;
         private static const LOAD_CURRENCIES_SQL:String = new LoadCurrenciesStatementText();
-
-        [Embed(source="/assets/sql/CheckOfflineCurrencies.sql", mimeType="application/octet-stream")]
-        private static const CheckOfflineCurrenciesStatementText:Class;
-        private static const CHECK_OFFLINE_CURRENCIES_SQL:String = new CheckOfflineCurrenciesStatementText();
 
     }
 }

@@ -94,7 +94,7 @@ package com.pauluz.bbapps.kontomierz.services.helpers
             return output;
         }
 
-        public function parseAllTransactionsResponse(result:String):DataProvider
+        public function parseAllTransactionsResponse(result:String, isWallet:Boolean):DataProvider
         {
             logger.debug(": parseAllTransactionsResponse");
 
@@ -117,7 +117,7 @@ package com.pauluz.bbapps.kontomierz.services.helpers
                         var rawTransaction:Object = item.money_transaction;
                         var transaction:TransactionVO = new TransactionVO();
 
-                        transaction.id = rawTransaction.id;
+                        transaction.transactionId = rawTransaction.id;
                         transaction.userAccountId = rawTransaction.user_account_id;
                         transaction.currencyAmount = rawTransaction.currency_amount;
                         transaction.currencyName = rawTransaction.currency_name;
@@ -128,6 +128,8 @@ package com.pauluz.bbapps.kontomierz.services.helpers
                         transaction.categoryName = rawTransaction.category_name;
                         transaction.categoryId = rawTransaction.category_id;
                         transaction.tagString = rawTransaction.tag_string;
+
+                        transaction.isWallet = isWallet;
 
                         output.addItem(transaction);
                     }

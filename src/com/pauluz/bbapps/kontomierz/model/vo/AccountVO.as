@@ -26,5 +26,7 @@ package com.pauluz.bbapps.kontomierz.model.vo
         public var iban:String = "";
         public var ibanChecksum:String = "";
         public var is_default_wallet:Boolean;
+
+        public var isValid:Boolean;
     }
 }

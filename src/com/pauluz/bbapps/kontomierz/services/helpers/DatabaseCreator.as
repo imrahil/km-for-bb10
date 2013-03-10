@@ -29,6 +29,9 @@ package com.pauluz.bbapps.kontomierz.services.helpers
         [Embed(source="/assets/sql/CreateAccountsTable.sql", mimeType="application/octet-stream")]
         private static const CreateAccountsTableStatementText:Class;
 
+        [Embed(source="/assets/sql/CreateTransactionsTable.sql", mimeType="application/octet-stream")]
+        private static const CreateTransactionsTableStatementText:Class;
+
         [Embed(source="/assets/sql/CreateCategoriesTable.sql", mimeType="application/octet-stream")]
         private static const CreateCategoriesTableStatementText:Class;
 
@@ -39,6 +42,7 @@ package com.pauluz.bbapps.kontomierz.services.helpers
         private static const CreateUserTableStatementText:Class;
 
         private static const CREATE_ACCOUNTS_TABLE_SQL:String = new CreateAccountsTableStatementText();
+        private static const CREATE_TRANSACTIONS_TABLE_SQL:String = new CreateTransactionsTableStatementText();
         private static const CREATE_CATEGORIES_TABLE_SQL:String = new CreateCategoriesTableStatementText();
         private static const CREATE_CURRENCIES_TABLE_SQL:String = new CreateCurrenciesTableStatementText();
         private static const CREATE_USER_TABLE_SQL:String = new CreateUserTableStatementText();
@@ -47,6 +51,7 @@ package com.pauluz.bbapps.kontomierz.services.helpers
         {
             var stmts:Vector.<QueuedStatement> = new Vector.<QueuedStatement>();
             stmts[stmts.length] = new QueuedStatement(CREATE_ACCOUNTS_TABLE_SQL);
+            stmts[stmts.length] = new QueuedStatement(CREATE_TRANSACTIONS_TABLE_SQL);
             stmts[stmts.length] = new QueuedStatement(CREATE_CATEGORIES_TABLE_SQL);
             stmts[stmts.length] = new QueuedStatement(CREATE_CURRENCIES_TABLE_SQL);
             stmts[stmts.length] = new QueuedStatement(CREATE_USER_TABLE_SQL);

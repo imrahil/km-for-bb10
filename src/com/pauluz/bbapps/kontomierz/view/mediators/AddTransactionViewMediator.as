@@ -7,6 +7,7 @@
  */
 package com.pauluz.bbapps.kontomierz.view.mediators
 {
+    import com.pauluz.bbapps.kontomierz.constants.ApplicationConstants;
     import com.pauluz.bbapps.kontomierz.model.vo.TransactionVO;
     import com.pauluz.bbapps.kontomierz.signals.AddTransactionSignal;
     import com.pauluz.bbapps.kontomierz.signals.GetAllCategoriesSignal;
@@ -108,7 +109,7 @@ package com.pauluz.bbapps.kontomierz.view.mediators
 
             dataFlag = 0;
 
-            getAllCategoriesSignal.dispatch();
+            getAllCategoriesSignal.dispatch(ApplicationConstants.CATEGORIES_ALL);
             getAllCurrenciesSignal.dispatch();
         }
 

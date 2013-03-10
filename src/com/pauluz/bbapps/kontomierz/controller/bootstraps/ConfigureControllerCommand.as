@@ -41,7 +41,8 @@ package com.pauluz.bbapps.kontomierz.controller.bootstraps
             signalCommandMap.mapSignalClass(StoreSelectedAccountSignal, StoreSelectedAccountCommand);
 
             // transactions
-            signalCommandMap.mapSignalClass(GetAllTransactionsSignal, GetAllTransactionsCommand);
+            signalCommandMap.mapSignalClass(GetAllTransactionsOfflineSignal, GetAllTransactionsOfflineCommand);
+            signalCommandMap.mapSignalClass(GetAllTransactionsOnlineSignal, GetAllTransactionsOnlineCommand);
             signalCommandMap.mapSignalClass(StoreSelectedTransactionSignal, StoreSelectedTransactionCommand);
             signalCommandMap.mapSignalClass(StoreSelectedTransactionForEditSignal, StoreSelectedTransactionForEditCommand);
             signalCommandMap.mapSignalClass(RequestSelectedTransactionSignal, ProvideSelectedTransactionCommand);
@@ -71,6 +72,7 @@ package com.pauluz.bbapps.kontomierz.controller.bootstraps
             // OFFLINE
             signalCommandMap.mapSignalClass(SaveAPIKeySignal, SaveAPIKeyCommand);
             signalCommandMap.mapSignalClass(SaveAccountsSignal, SaveAccountsCommand);
+            signalCommandMap.mapSignalClass(SaveTransactionsSignal, SaveTransactionsCommand);
             signalCommandMap.mapSignalClass(SaveCategoriesSignal, SaveCategoriesCommand);
             signalCommandMap.mapSignalClass(SaveCurrenciesSignal, SaveCurrenciesCommand);
 

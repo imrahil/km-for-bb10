@@ -9,11 +9,11 @@ package com.pauluz.bbapps.kontomierz.signals
 {
     import org.osflash.signals.Signal;
 
-    public class GetAllCategoriesSignal extends Signal
+    public class GetAllTransactionsOnlineSignal extends Signal
     {
-        public function GetAllCategoriesSignal()
+        public function GetAllTransactionsOnlineSignal()
         {
-            super(String);
+            super();
         }
     }
 }

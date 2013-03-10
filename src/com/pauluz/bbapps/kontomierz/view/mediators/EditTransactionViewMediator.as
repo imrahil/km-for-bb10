@@ -7,6 +7,7 @@
  */
 package com.pauluz.bbapps.kontomierz.view.mediators
 {
+    import com.pauluz.bbapps.kontomierz.constants.ApplicationConstants;
     import com.pauluz.bbapps.kontomierz.model.vo.TransactionVO;
     import com.pauluz.bbapps.kontomierz.signals.GetAllCategoriesSignal;
     import com.pauluz.bbapps.kontomierz.signals.GetAllCurrenciesSignal;
@@ -121,13 +122,13 @@ package com.pauluz.bbapps.kontomierz.view.mediators
 
             requestSelectedTransactionSignal.dispatch();
 
-            getAllCategoriesSignal.dispatch();
+            getAllCategoriesSignal.dispatch(ApplicationConstants.CATEGORIES_ALL);
             getAllCurrenciesSignal.dispatch();
         }
 
         private function onEditTransaction(transaction:TransactionVO):void
         {
-            transaction.id = selectedTransaction.id;
+            transaction.transactionId = selectedTransaction.transactionId;
 
             updateTransactionSignal.dispatch(transaction);
         }

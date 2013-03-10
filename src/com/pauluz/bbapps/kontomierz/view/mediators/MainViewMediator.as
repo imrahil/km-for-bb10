@@ -7,6 +7,7 @@
  */
 package com.pauluz.bbapps.kontomierz.view.mediators
 {
+    import com.pauluz.bbapps.kontomierz.constants.ApplicationConstants;
     import com.pauluz.bbapps.kontomierz.signals.GetAllCategoriesSignal;
     import com.pauluz.bbapps.kontomierz.signals.GetAllCurrenciesSignal;
     import com.pauluz.bbapps.kontomierz.utils.LogUtil;
@@ -59,7 +60,7 @@ package com.pauluz.bbapps.kontomierz.view.mediators
         {
             logger.debug(": onRegister");
 
-            getAllCategoriesSignal.dispatch();
+            getAllCategoriesSignal.dispatch(ApplicationConstants.CATEGORIES_ALL);
             getAllCurrenciesSignal.dispatch();
         }
     }

@@ -5,15 +5,15 @@
  @project  Kontomierz
  @internal
  */
-package com.pauluz.bbapps.kontomierz.signals
+package com.pauluz.bbapps.kontomierz.signals.offline
 {
     import org.osflash.signals.Signal;
 
-    public class GetAllCategoriesSignal extends Signal
+    public class SaveTransactionsSignal extends Signal
     {
-        public function GetAllCategoriesSignal()
+        public function SaveTransactionsSignal()
         {
-            super(String);
+            super(Array);
         }
     }
 }

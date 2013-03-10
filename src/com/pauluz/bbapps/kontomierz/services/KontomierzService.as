@@ -183,7 +183,7 @@ package com.pauluz.bbapps.kontomierz.services
             url += "&api_key=" + model.apiKey;
             urlRequest.url = url;
 
-            loader.addEventListener(Event.COMPLETE, getAllTransactionsCompleteHandler);
+            loader.addEventListener(Event.COMPLETE, getAllTransactionsForCategoryCompleteHandler);
             addLoaderListeners(loader);
 
             loader.load(urlRequest);
@@ -233,7 +233,7 @@ package com.pauluz.bbapps.kontomierz.services
             var loader:URLLoader = new URLLoader();
             var urlRequest:URLRequest = new URLRequest();
 
-            urlRequest.url = ApplicationConstants.KONTOMIERZ_API_ENDPOINT + "money_transactions/" + transaction.id + ApplicationConstants.KONTOMIERZ_API_FORMAT_JSON;
+            urlRequest.url = ApplicationConstants.KONTOMIERZ_API_ENDPOINT + "money_transactions/" + transaction.transactionId + ApplicationConstants.KONTOMIERZ_API_FORMAT_JSON;
             urlRequest.method = URLRequestMethod.PUT;
 
             var variables:URLVariables = new URLVariables();

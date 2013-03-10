@@ -10,5 +10,4 @@ SELECT
   iban,
   ibanChecksum,
   is_default_wallet
-FROM accounts
-WHERE bankPluginName != "Wallets";
+FROM accounts;
