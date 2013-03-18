@@ -8,6 +8,7 @@
 package com.pauluz.bbapps.kontomierz.services
 {
     import com.pauluz.bbapps.kontomierz.constants.ApplicationConstants;
+    import com.pauluz.bbapps.kontomierz.constants.SQLStatements;
     import com.pauluz.bbapps.kontomierz.model.IKontomierzModel;
     import com.pauluz.bbapps.kontomierz.model.vo.AccountVO;
     import com.pauluz.bbapps.kontomierz.model.vo.CategoryVO;
@@ -20,6 +21,7 @@ package com.pauluz.bbapps.kontomierz.services
     import com.pauluz.bbapps.kontomierz.signals.GetAllTransactionsOnlineSignal;
     import com.pauluz.bbapps.kontomierz.signals.StoreDefaultWalletIdSignal;
     import com.pauluz.bbapps.kontomierz.signals.offline.GetAllTransactionsOfflineSignal;
+    import com.pauluz.bbapps.kontomierz.signals.offline.SyncOfflineChangesSignal;
     import com.pauluz.bbapps.kontomierz.signals.signaltons.ErrorSignal;
     import com.pauluz.bbapps.kontomierz.signals.signaltons.ProvideAllAccountsDataSignal;
     import com.pauluz.bbapps.kontomierz.signals.signaltons.ProvideAllCurrenciesSignal;
@@ -77,6 +79,9 @@ package com.pauluz.bbapps.kontomierz.services
 
 
         [Inject]
+        public var syncOfflineChangesSignal:SyncOfflineChangesSignal;
+
+        [Inject]
         public var getAllTransactionsOnlineSignal:GetAllTransactionsOnlineSignal;
 
         [Inject]
@@ -93,6 +98,28 @@ package com.pauluz.bbapps.kontomierz.services
 
         [Inject]
         public var errorSignal:ErrorSignal;
+
+        private static const INSERT_API_KEY_SQL:String = new SQLStatements.InsertAPIKeyStatementText();
+        private static const LOAD_API_KEY_SQL:String = new SQLStatements.LoadAPIKeyStatementText();
+        private static const DELETE_API_KEY_SQL:String = new SQLStatements.DeleteAPIKeyStatementText();
+
+        private static const INSERT_ACCOUNT_SQL:String = new SQLStatements.InsertAccountStatementText();
+        private static const LOAD_ACCOUNTS_SQL:String = new SQLStatements.LoadAccountsStatementText();
+        private static const DELETE_ACCOUNTS_SQL:String = new SQLStatements.DeleteAccountsStatementText();
+
+        private static const INSERT_TRANSACTION_SQL:String = new SQLStatements.InsertTransactionStatementText();
+        private static const DELETE_TRANSACTIONS_SQL:String = new SQLStatements.DeleteTransactionsStatementText();
+        private static const DELETE_TRANSACTIONS_FROM_ACCOUNT_SQL:String = new SQLStatements.DeleteTransactionsFromAccountStatementText();
+        private static const LOAD_TRANSACTIONS_SQL:String = new SQLStatements.LoadTransactionsStatementText();
+
+        private static const INSERT_CATEGORY_SQL:String = new SQLStatements.InsertCategoryStatementText();
+        private static const DELETE_CATEGORIES_SQL:String = new SQLStatements.DeleteCategoriesStatementText();
+        private static const LOAD_CATEGORIES_SQL:String = new SQLStatements.LoadCategoriesStatementText();
+        private static const LOAD_USED_CATEGORIES_SQL:String = new SQLStatements.LoadUsedCategoriesStatementText();
+
+        private static const INSERT_CURRENCY_SQL:String = new SQLStatements.InsertCurrencyStatementText();
+        private static const DELETE_CURRENCIES_SQL:String = new SQLStatements.DeleteCurrenciesStatementText();
+        private static const LOAD_CURRENCIES_SQL:String = new SQLStatements.LoadCurrenciesStatementText();
 
         /** Constructor */
         public function SQLKontomierzService()
@@ -126,7 +153,14 @@ package com.pauluz.bbapps.kontomierz.services
             {
                 model.apiKey = result.data[0].apiKey;
 
-                provideLoginStatusSignal.dispatch(ApplicationConstants.LOGIN_STATUS_REMEMBERED);
+                if (model.isConnected)
+                {
+                    syncOfflineChangesSignal.dispatch();
+                }
+                else
+                {
+                    provideLoginStatusSignal.dispatch(ApplicationConstants.LOGIN_STATUS_REMEMBERED);
+                }
             }
             else
             {
@@ -326,6 +360,15 @@ package com.pauluz.bbapps.kontomierz.services
         private function onSaveAllTransactionsComplete(results:Vector.<SQLResult>):void
         {
             model.selectedAccount.isValid = true;
+        }
+
+
+        /*
+         *  SYNC MODIFIED TRANSACTIONS
+         */
+        public function syncModifiedTransactions():void
+        {
+
         }
 
 
@@ -572,85 +615,5 @@ package com.pauluz.bbapps.kontomierz.services
             var error:ErrorVO = new ErrorVO(sqlError.details);
             errorSignal.dispatch(error);
         }
-
-        // ------- SQL statements -------
-
-        // API
-        [Embed(source="/assets/sql/InsertAPIKey.sql", mimeType="application/octet-stream")]
-        private static const InsertAPIKeyStatementText:Class;
-        private static const INSERT_API_KEY_SQL:String = new InsertAPIKeyStatementText();
-
-        [Embed(source="/assets/sql/LoadAPIKey.sql", mimeType="application/octet-stream")]
-        private static const LoadAPIKeyStatementText:Class;
-        private static const LOAD_API_KEY_SQL:String = new LoadAPIKeyStatementText();
-
-        [Embed(source="/assets/sql/DeleteAPIKey.sql", mimeType="application/octet-stream")]
-        private static const DeleteAPIKeyStatementText:Class;
-        private static const DELETE_API_KEY_SQL:String = new DeleteAPIKeyStatementText();
-
-
-        // ACCOUNTS
-        [Embed(source="/assets/sql/InsertAccount.sql", mimeType="application/octet-stream")]
-        private static const InsertAccountStatementText:Class;
-        private static const INSERT_ACCOUNT_SQL:String = new InsertAccountStatementText();
-
-        [Embed(source="/assets/sql/LoadAccounts.sql", mimeType="application/octet-stream")]
-        private static const LoadAccountsStatementText:Class;
-        private static const LOAD_ACCOUNTS_SQL:String = new LoadAccountsStatementText();
-
-        [Embed(source="/assets/sql/DeleteAccounts.sql", mimeType="application/octet-stream")]
-        private static const DeleteAccountsStatementText:Class;
-        private static const DELETE_ACCOUNTS_SQL:String = new DeleteAccountsStatementText();
-
-
-        // TRANSACTIONS
-        [Embed(source="/assets/sql/InsertTransaction.sql", mimeType="application/octet-stream")]
-        private static const InsertTransactionStatementText:Class;
-        private static const INSERT_TRANSACTION_SQL:String = new InsertTransactionStatementText();
-
-        [Embed(source="/assets/sql/DeleteTransactions.sql", mimeType="application/octet-stream")]
-        private static const DeleteTransactionsStatementText:Class;
-        private static const DELETE_TRANSACTIONS_SQL:String = new DeleteTransactionsStatementText();
-
-        [Embed(source="/assets/sql/DeleteTransactionsFromAccount.sql", mimeType="application/octet-stream")]
-        private static const DeleteTransactionsFromAccountStatementText:Class;
-        private static const DELETE_TRANSACTIONS_FROM_ACCOUNT_SQL:String = new DeleteTransactionsFromAccountStatementText();
-
-        [Embed(source="/assets/sql/LoadTransactions.sql", mimeType="application/octet-stream")]
-        private static const LoadTransactionsStatementText:Class;
-        private static const LOAD_TRANSACTIONS_SQL:String = new LoadTransactionsStatementText();
-
-
-        // CATEGORIES
-        [Embed(source="/assets/sql/InsertCategory.sql", mimeType="application/octet-stream")]
-        private static const InsertCategoryStatementText:Class;
-        private static const INSERT_CATEGORY_SQL:String = new InsertCategoryStatementText();
-
-        [Embed(source="/assets/sql/DeleteCategories.sql", mimeType="application/octet-stream")]
-        private static const DeleteCategoriesStatementText:Class;
-        private static const DELETE_CATEGORIES_SQL:String = new DeleteCategoriesStatementText();
-
-        [Embed(source="/assets/sql/LoadCategories.sql", mimeType="application/octet-stream")]
-        private static const LoadCategoriesStatementText:Class;
-        private static const LOAD_CATEGORIES_SQL:String = new LoadCategoriesStatementText();
-
-        [Embed(source="/assets/sql/LoadUsedCategories.sql", mimeType="application/octet-stream")]
-        private static const LoadUsedCategoriesStatementText:Class;
-        private static const LOAD_USED_CATEGORIES_SQL:String = new LoadUsedCategoriesStatementText();
-
-
-        // CURRENCIES
-        [Embed(source="/assets/sql/InsertCurrency.sql", mimeType="application/octet-stream")]
-        private static const InsertCurrencyStatementText:Class;
-        private static const INSERT_CURRENCY_SQL:String = new InsertCurrencyStatementText();
-
-        [Embed(source="/assets/sql/DeleteCurrencies.sql", mimeType="application/octet-stream")]
-        private static const DeleteCurrenciesStatementText:Class;
-        private static const DELETE_CURRENCIES_SQL:String = new DeleteCurrenciesStatementText();
-
-        [Embed(source="/assets/sql/LoadCurrencies.sql", mimeType="application/octet-stream")]
-        private static const LoadCurrenciesStatementText:Class;
-        private static const LOAD_CURRENCIES_SQL:String = new LoadCurrenciesStatementText();
-
     }
 }

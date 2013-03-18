@@ -20,6 +20,8 @@ package com.pauluz.bbapps.kontomierz.services
         function getAllTransactionsForCategory(categoryId:int):void;
         function saveAllTransactions(transactionsList:Array):void;
 
+        function syncModifiedTransactions():void;
+
         function createTransaction(transaction:TransactionVO):void;
         function updateTransaction(transaction:TransactionVO):void;
         function deleteTransaction(id:int, wallet:Boolean):void;
