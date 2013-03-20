@@ -31,7 +31,7 @@ package com.pauluz.bbapps.kontomierz.controller.offline
          */
         override public function execute():void
         {
-            if (model.defaultWallet.isValid && model.walletTransactionsList && model.walletTransactionsList.length > 0)
+            if (model.defaultWallet.isValid && model.walletTransactionsList)
             {
                 provideAllTransactionsSignal.dispatch(model.walletTransactionsList);
             }

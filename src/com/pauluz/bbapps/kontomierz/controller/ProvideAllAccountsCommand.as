@@ -34,7 +34,7 @@ package com.pauluz.bbapps.kontomierz.controller
          */
         override public function execute():void
         {
-            if (model.accountsList && model.accountsList.length > 0)
+            if (model.accountsList)
             {
                 provideAllAccountsDataSignal.dispatch(model.accountsList);
             }
