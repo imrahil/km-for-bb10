@@ -26,19 +26,17 @@ package com.pauluz.bbapps.kontomierz.controller
          */        
         override public function execute():void    
         {
-            sqlService.deleteUserAPIKey();
-            sqlService.deleteAccounts();
-            sqlService.deleteCategories();
-            sqlService.deleteCurrencies();
+            sqlService.deleteOnLogout();
 
             model.demoMode = false;
+            model.rememberMe = false;
 
             model.apiKey = "";
 
             model.selectedAccount = null;
+            model.defaultWallet = null;
             model.accountsList = null;
             model.selectedTransaction = null;
-            model.defaultWalletId = 0;
             model.walletTransactionsList = null;
 
             model.withdrawalCategoriesList = null;

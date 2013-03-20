@@ -23,16 +23,16 @@ package com.pauluz.bbapps.kontomierz.model
         private var _isConnected:Boolean;
 
         private var _demoMode:Boolean;
+        private var _rememberMe:Boolean;
 
         private var _apiKey:String = "";
         private var _selectedAccount:AccountVO;
+        private var _defaultWallet:AccountVO;
         private var _accountsList:DataProvider;
 
         private var _selectedTransaction:TransactionVO;
 
-        private var _defaultWalletId:int;
         private var _walletTransactionsList:DataProvider;
-        private var _isWalletListExpired:Boolean;
 
         private var _withdrawalCategoriesList:SectionDataProvider;
         private var _depositCategoriesList:SectionDataProvider;
@@ -61,6 +61,16 @@ package com.pauluz.bbapps.kontomierz.model
             _demoMode = value;
         }
 
+        public function get rememberMe():Boolean
+        {
+            return _rememberMe;
+        }
+
+        public function set rememberMe(value:Boolean):void
+        {
+            _rememberMe = value;
+        }
+
         public function get apiKey():String
         {
             return _apiKey;
@@ -79,6 +89,16 @@ package com.pauluz.bbapps.kontomierz.model
         public function set selectedAccount(value:AccountVO):void
         {
             _selectedAccount = value;
+        }
+
+        public function get defaultWallet():AccountVO
+        {
+            return _defaultWallet;
+        }
+
+        public function set defaultWallet(value:AccountVO):void
+        {
+            _defaultWallet = value;
         }
 
         public function get accountsList():DataProvider
@@ -101,16 +121,6 @@ package com.pauluz.bbapps.kontomierz.model
             _selectedTransaction = value;
         }
 
-        public function get defaultWalletId():int
-        {
-            return _defaultWalletId;
-        }
-
-        public function set defaultWalletId(value:int):void
-        {
-            _defaultWalletId = value;
-        }
-
         public function get walletTransactionsList():DataProvider
         {
             return _walletTransactionsList;
@@ -119,16 +129,6 @@ package com.pauluz.bbapps.kontomierz.model
         public function set walletTransactionsList(value:DataProvider):void
         {
             _walletTransactionsList = value;
-        }
-
-        public function get isWalletListExpired():Boolean
-        {
-            return _isWalletListExpired;
-        }
-
-        public function set isWalletListExpired(value:Boolean):void
-        {
-            _isWalletListExpired = value;
         }
 
         public function get withdrawalCategoriesList():SectionDataProvider

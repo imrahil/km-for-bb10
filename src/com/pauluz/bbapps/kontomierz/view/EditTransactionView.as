@@ -75,6 +75,8 @@ package com.pauluz.bbapps.kontomierz.view
             form.categoryBtn.enabled = true;
             form.currencyBtn.enabled = true;
 
+            form.selectedTransaction = transaction;
+
             form.withdrawalCategoriesDP = _withdrawalCategoriesData;
             form.withdrawalCategoriesLength = provideDataProviderLength(_withdrawalCategoriesData);
 

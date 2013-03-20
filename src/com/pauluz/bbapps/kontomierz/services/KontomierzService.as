@@ -37,10 +37,10 @@ package com.pauluz.bbapps.kontomierz.services
             logger.debug(": login service call - email: " + user.email + ", password: " + user.password);
 
             // save value for future
-            rememberMe = user.rememberMe;
+            model.rememberMe = user.rememberMe;
 
             var loader:URLLoader = new URLLoader();
-            var urlRequest:URLRequest = new URLRequest();
+            var urlRequest:URLRequest = prepareRequest();
 
             urlRequest.url = ApplicationConstants.KONTOMIERZ_API_ENDPOINT + "session" + ApplicationConstants.KONTOMIERZ_API_FORMAT_JSON;
             urlRequest.method = URLRequestMethod.POST;
@@ -64,7 +64,7 @@ package com.pauluz.bbapps.kontomierz.services
             logger.debug(": register service call");
 
             var loader:URLLoader = new URLLoader();
-            var urlRequest:URLRequest = new URLRequest();
+            var urlRequest:URLRequest = prepareRequest();
 
             urlRequest.url = ApplicationConstants.KONTOMIERZ_API_ENDPOINT + "users" + ApplicationConstants.KONTOMIERZ_API_FORMAT_JSON;
             urlRequest.method = URLRequestMethod.POST;
@@ -100,7 +100,7 @@ package com.pauluz.bbapps.kontomierz.services
             logger.debug(": getAllAccounts service call");
 
             var loader:URLLoader = new URLLoader();
-            var urlRequest:URLRequest = new URLRequest();
+            var urlRequest:URLRequest = prepareRequest();
 
             urlRequest.url = ApplicationConstants.KONTOMIERZ_API_ENDPOINT + "user_accounts" + ApplicationConstants.KONTOMIERZ_API_FORMAT_JSON + "?api_key=" + model.apiKey;
 
@@ -111,41 +111,14 @@ package com.pauluz.bbapps.kontomierz.services
         }
 
         /**
-         * CREATE WALLET
-         */
-        override public function createWallet(name:String, balance:Number, currency:String, liquid:Boolean):void
-        {
-            logger.debug(": createWallet service call");
-
-        }
-
-        /**
-         * UPDATE WALLET
-         */
-        override public function updateWallet(id:int, name:String, balance:Number, currency:String, liquid:Boolean):void
-        {
-            logger.debug(": updateWallet service call");
-
-        }
-
-        /**
-         * DELETE WALLET
-         */
-        override public function deleteWallet(id:int):void
-        {
-            logger.debug(": deleteWallet service call");
-
-        }
-
-        /**
          * GET ALL TRANSACTIONS
          */
-        override public function getAllTransactions(accountId:int, wallet:Boolean):void
+        override public function getAllTransactions(accountId:int):void
         {
             logger.debug(": getAllTransactions service call");
 
             var loader:URLLoader = new URLLoader();
-            var urlRequest:URLRequest = new URLRequest();
+            var urlRequest:URLRequest = prepareRequest();
 
             var url:String = ApplicationConstants.KONTOMIERZ_API_ENDPOINT + "money_transactions" + ApplicationConstants.KONTOMIERZ_API_FORMAT_JSON;
             url += "?user_account_id=" + accountId;
@@ -153,15 +126,29 @@ package com.pauluz.bbapps.kontomierz.services
             url += "&api_key=" + model.apiKey;
             urlRequest.url = url;
 
-            if (wallet)
-            {
-                loader.addEventListener(Event.COMPLETE, getAllTransactionsForWalletCompleteHandler);
-            }
-            else
-            {
-                loader.addEventListener(Event.COMPLETE, getAllTransactionsCompleteHandler);
-            }
+            loader.addEventListener(Event.COMPLETE, getAllTransactionsCompleteHandler);
+            addLoaderListeners(loader);
 
+            loader.load(urlRequest);
+        }
+
+        /**
+         * GET ALL WALLET TRANSACTIONS
+         */
+        override public function getAllWalletTransactions():void
+        {
+            logger.debug(": getAllWalletTransactions service call");
+
+            var loader:URLLoader = new URLLoader();
+            var urlRequest:URLRequest = prepareRequest();
+
+            var url:String = ApplicationConstants.KONTOMIERZ_API_ENDPOINT + "money_transactions" + ApplicationConstants.KONTOMIERZ_API_FORMAT_JSON;
+            url += "?user_account_id=" + model.defaultWallet.accountId;
+            url += "&start_on=01-01-2011";
+            url += "&api_key=" + model.apiKey;
+            urlRequest.url = url;
+
+            loader.addEventListener(Event.COMPLETE, getAllTransactionsForWalletCompleteHandler);
             addLoaderListeners(loader);
 
             loader.load(urlRequest);
@@ -175,7 +162,7 @@ package com.pauluz.bbapps.kontomierz.services
             logger.debug(": getAllTransactionsForCategory service call");
 
             var loader:URLLoader = new URLLoader();
-            var urlRequest:URLRequest = new URLRequest();
+            var urlRequest:URLRequest = prepareRequest();
 
             var url:String = ApplicationConstants.KONTOMIERZ_API_ENDPOINT + "money_transactions" + ApplicationConstants.KONTOMIERZ_API_FORMAT_JSON;
             url += "?category_id=" + categoryId;
@@ -198,18 +185,18 @@ package com.pauluz.bbapps.kontomierz.services
             logger.debug(": createTransaction service call");
 
             var loader:URLLoader = new URLLoader();
-            var urlRequest:URLRequest = new URLRequest();
+            var urlRequest:URLRequest = prepareRequest();
 
             urlRequest.url = ApplicationConstants.KONTOMIERZ_API_ENDPOINT + "money_transactions" + ApplicationConstants.KONTOMIERZ_API_FORMAT_JSON;
             urlRequest.method = URLRequestMethod.POST;
 
             var variables:URLVariables = new URLVariables();
             variables["money_transaction[currency_amount]"] = transaction.currencyAmount;
-            variables["money_transaction[name]"] = transaction.description;
-            variables["money_transaction[transaction_on]"] = transaction.transactionOn.substr(8, 2) + "-" + transaction.transactionOn.substr(5, 2) + "-" + transaction.transactionOn.substr(0, 4);
-            variables["money_transaction[direction]"] = transaction.direction;
-            variables["money_transaction[category_id]"] = transaction.categoryId;
             variables["money_transaction[currency_name]"] = transaction.currencyName;
+            variables["money_transaction[transaction_on]"] = transaction.transactionOn.substr(8, 2) + "-" + transaction.transactionOn.substr(5, 2) + "-" + transaction.transactionOn.substr(0, 4);
+            variables["money_transaction[name]"] = transaction.description;
+            variables["money_transaction[category_id]"] = transaction.categoryId;
+            variables["money_transaction[direction]"] = transaction.direction;
             variables["money_transaction[client_assigned_id]"] = new Date().getMilliseconds();
             variables["api_key"] = model.apiKey;
             urlRequest.data = variables;
@@ -231,18 +218,18 @@ package com.pauluz.bbapps.kontomierz.services
             temporarySelectedTransaction = transaction;
 
             var loader:URLLoader = new URLLoader();
-            var urlRequest:URLRequest = new URLRequest();
+            var urlRequest:URLRequest = prepareRequest();
 
             urlRequest.url = ApplicationConstants.KONTOMIERZ_API_ENDPOINT + "money_transactions/" + transaction.transactionId + ApplicationConstants.KONTOMIERZ_API_FORMAT_JSON;
             urlRequest.method = URLRequestMethod.PUT;
 
             var variables:URLVariables = new URLVariables();
             variables["money_transaction[currency_amount]"] = transaction.currencyAmount;
-            variables["money_transaction[name]"] = transaction.description;
-            variables["money_transaction[transaction_on]"] = transaction.transactionOn.substr(8, 2) + "-" + transaction.transactionOn.substr(5, 2) + "-" + transaction.transactionOn.substr(0, 4);
-            variables["money_transaction[direction]"] = transaction.direction;
-            variables["money_transaction[category_id]"] = transaction.categoryId;
             variables["money_transaction[currency_name]"] = transaction.currencyName;
+            variables["money_transaction[transaction_on]"] = transaction.transactionOn.substr(8, 2) + "-" + transaction.transactionOn.substr(5, 2) + "-" + transaction.transactionOn.substr(0, 4);
+            variables["money_transaction[name]"] = transaction.description;
+            variables["money_transaction[category_id]"] = transaction.categoryId;
+            variables["money_transaction[direction]"] = transaction.direction;
             variables["api_key"] = model.apiKey;
             urlRequest.data = variables;
 
@@ -260,7 +247,7 @@ package com.pauluz.bbapps.kontomierz.services
             logger.debug(": deleteTransaction service call");
 
             var loader:URLLoader = new URLLoader();
-            var urlRequest:URLRequest = new URLRequest();
+            var urlRequest:URLRequest = prepareRequest();
 
             urlRequest.url = ApplicationConstants.KONTOMIERZ_API_ENDPOINT + "money_transactions/" + id + ApplicationConstants.KONTOMIERZ_API_FORMAT_JSON + "?api_key=" + model.apiKey;
             urlRequest.method = URLRequestMethod.DELETE;
@@ -287,7 +274,7 @@ package com.pauluz.bbapps.kontomierz.services
             logger.debug(": getAllCategoriesWithdrawal service call");
 
             var loader:URLLoader = new URLLoader();
-            var urlRequest:URLRequest = new URLRequest();
+            var urlRequest:URLRequest = prepareRequest();
 
             var url:String = ApplicationConstants.KONTOMIERZ_API_ENDPOINT + "categories" + ApplicationConstants.KONTOMIERZ_API_FORMAT_JSON;
             url += "?direction=withdrawal&in_wallet=true";
@@ -308,7 +295,7 @@ package com.pauluz.bbapps.kontomierz.services
             logger.debug(": getAllCategoriesDeposit service call");
 
             var loader:URLLoader = new URLLoader();
-            var urlRequest:URLRequest = new URLRequest();
+            var urlRequest:URLRequest = prepareRequest();
 
             var url:String = ApplicationConstants.KONTOMIERZ_API_ENDPOINT + "categories" + ApplicationConstants.KONTOMIERZ_API_FORMAT_JSON;
             url += "?direction=deposit&in_wallet=true";
@@ -329,7 +316,7 @@ package com.pauluz.bbapps.kontomierz.services
             logger.debug(": getAllCurrencies service call");
 
             var loader:URLLoader = new URLLoader();
-            var urlRequest:URLRequest = new URLRequest();
+            var urlRequest:URLRequest = prepareRequest();
 
             var url:String = ApplicationConstants.KONTOMIERZ_API_ENDPOINT + "currencies" + ApplicationConstants.KONTOMIERZ_API_FORMAT_JSON;
             url += "?api_key=" + model.apiKey;

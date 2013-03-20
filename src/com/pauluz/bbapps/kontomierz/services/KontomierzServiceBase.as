@@ -15,11 +15,12 @@ package com.pauluz.bbapps.kontomierz.services
     import com.pauluz.bbapps.kontomierz.model.vo.UserVO;
     import com.pauluz.bbapps.kontomierz.services.helpers.IResultParser;
     import com.pauluz.bbapps.kontomierz.signals.GetAllTransactionsOnlineSignal;
-    import com.pauluz.bbapps.kontomierz.signals.GetAllWalletTransactionsSignal;
-    import com.pauluz.bbapps.kontomierz.signals.StoreDefaultWalletIdSignal;
+    import com.pauluz.bbapps.kontomierz.signals.StoreDefaultWalletSignal;
     import com.pauluz.bbapps.kontomierz.signals.offline.*;
     import com.pauluz.bbapps.kontomierz.signals.signaltons.*;
     import com.pauluz.bbapps.kontomierz.utils.LogUtil;
+
+    import flash.desktop.NativeApplication;
 
     import flash.events.ErrorEvent;
     import flash.events.Event;
@@ -27,6 +28,7 @@ package com.pauluz.bbapps.kontomierz.services
     import flash.events.IOErrorEvent;
     import flash.events.SecurityErrorEvent;
     import flash.net.URLLoader;
+    import flash.net.URLRequest;
 
     import mx.logging.ILogger;
 
@@ -37,10 +39,11 @@ package com.pauluz.bbapps.kontomierz.services
 
     public class KontomierzServiceBase extends Actor implements IKontomierzService
     {
+        protected var userAgent:String;
+
         protected var _parser:IResultParser;
         protected var logger:ILogger;
 
-        protected var rememberMe:Boolean;
         protected var responseStatus:int;
 
         protected var temporarySelectedTransaction:TransactionVO;
@@ -79,7 +82,7 @@ package com.pauluz.bbapps.kontomierz.services
         public var provideAllCurrenciesSignal:ProvideAllCurrenciesSignal;
 
         [Inject]
-        public var storeDefaultWalletIdSignal:StoreDefaultWalletIdSignal;
+        public var storeDefaultWalletSignal:StoreDefaultWalletSignal;
 
         [Inject]
         public var errorSignal:ErrorSignal;
@@ -88,7 +91,7 @@ package com.pauluz.bbapps.kontomierz.services
         public var getAllTransactionsSignal:GetAllTransactionsOnlineSignal;
 
         [Inject]
-        public var getAllWalletTransactionsSignal:GetAllWalletTransactionsSignal;
+        public var getAllWalletTransactionsSignal:GetAllWalletTransactionsOfflineSignal;
 
         [Inject]
         public var provideSelectedTransactionSignal:ProvideSelectedTransactionSignal;
@@ -115,6 +118,11 @@ package com.pauluz.bbapps.kontomierz.services
         {
             logger = LogUtil.getLogger(this);
             logger.debug(": constructor");
+
+            var app_xml:XML = NativeApplication.nativeApplication.applicationDescriptor;
+            var ns:Namespace = app_xml.namespace();
+            var versionNumber:String = app_xml.ns::versionNumber;
+            userAgent = ApplicationConstants.WYDATKI_USER_AGENT + versionNumber;
         }
 
         public function login(user:UserVO):void
@@ -152,7 +160,12 @@ package com.pauluz.bbapps.kontomierz.services
             throw new Error("Override this method!");
         }
 
-        public function getAllTransactions(accountId:int, wallet:Boolean):void
+        public function getAllTransactions(accountId:int):void
+        {
+            throw new Error("Override this method!");
+        }
+
+        public function getAllWalletTransactions():void
         {
             throw new Error("Override this method!");
         }
@@ -215,7 +228,7 @@ package com.pauluz.bbapps.kontomierz.services
                     model.apiKey = apiKey;
                 }
 
-                if (rememberMe && !model.demoMode)
+                if (model.rememberMe && !model.demoMode)
                 {
                     saveAPIKeySignal.dispatch(apiKey);
                 }
@@ -244,7 +257,7 @@ package com.pauluz.bbapps.kontomierz.services
             {
                 var allAccountsData:Array = _parser.parseAllAccountsResponse(loader.data as String);
                 var accountsList:DataProvider = new DataProvider();
-                var defaultWalletId:int;
+                var defaultWallet:AccountVO;
 
                 for each (var account:AccountVO in allAccountsData)
                 {
@@ -255,16 +268,16 @@ package com.pauluz.bbapps.kontomierz.services
 
                     if (account.is_default_wallet)
                     {
-                        defaultWalletId = account.accountId;
+                        defaultWallet = account;
                     }
                 }
 
                 model.accountsList = accountsList;
                 provideAllAccountsDataSignal.dispatch(accountsList);
 
-                storeDefaultWalletIdSignal.dispatch(defaultWalletId);
+                storeDefaultWalletSignal.dispatch(defaultWallet);
 
-                if (!model.demoMode)
+                if (model.rememberMe && !model.demoMode)
                 {
                     saveAccountsSignal.dispatch(allAccountsData);
                 }
@@ -289,11 +302,38 @@ package com.pauluz.bbapps.kontomierz.services
 
             var transactionsData:DataProvider = _parser.parseAllTransactionsResponse(loader.data as String, false);
 
-            provideAllTransactionsSignal.dispatch(transactionsData);
-
-            if (!model.demoMode)
+            if (model.rememberMe && !model.demoMode)
             {
-                saveTransactionsSignal.dispatch(transactionsData.data);
+                saveTransactionsSignal.dispatch(model.selectedAccount.accountId, false, transactionsData.data);
+            }
+            else
+            {
+                model.selectedAccount.isValid = true;
+                provideAllTransactionsSignal.dispatch(transactionsData);
+            }
+        }
+
+        protected function getAllTransactionsForWalletCompleteHandler(event:Event):void
+        {
+            logger.debug(": getAllTransactionsForWalletCompleteHandler");
+
+            var loader:URLLoader = event.currentTarget as URLLoader;
+
+            loader.removeEventListener(Event.COMPLETE, getAllTransactionsForWalletCompleteHandler);
+            removeLoaderListeners(loader);
+
+            var transactionsData:DataProvider = _parser.parseAllTransactionsResponse(loader.data as String, true);
+
+            model.walletTransactionsList = transactionsData;
+
+            if (model.rememberMe && !model.demoMode)
+            {
+                saveTransactionsSignal.dispatch(model.defaultWallet.accountId, true, transactionsData.data);
+            }
+            else
+            {
+                model.defaultWallet.isValid = true;
+                provideAllTransactionsSignal.dispatch(transactionsData);
             }
         }
 
@@ -311,22 +351,6 @@ package com.pauluz.bbapps.kontomierz.services
             provideAllTransactionsSignal.dispatch(transactionsData);
         }
 
-        protected function getAllTransactionsForWalletCompleteHandler(event:Event):void
-        {
-            logger.debug(": getAllTransactionsForWalletCompleteHandler");
-
-            var loader:URLLoader = event.currentTarget as URLLoader;
-
-            loader.removeEventListener(Event.COMPLETE, getAllTransactionsForWalletCompleteHandler);
-            removeLoaderListeners(loader);
-
-            var transactionsData:DataProvider = _parser.parseAllTransactionsResponse(loader.data as String, true);
-
-            model.walletTransactionsList = transactionsData;
-            model.isWalletListExpired = false;
-            provideAllTransactionsSignal.dispatch(transactionsData);
-        }
-
         protected function addTransactionCompleteHandler(event:Event):void
         {
             logger.debug(": addTransactionCompleteHandler");
@@ -338,7 +362,7 @@ package com.pauluz.bbapps.kontomierz.services
 
             if (responseStatus == 201)
             {
-                model.isWalletListExpired = true;
+//                model.isWalletListExpired = true;
                 transactionSuccessfullySavedSignal.dispatch();
             }
             else
@@ -361,7 +385,7 @@ package com.pauluz.bbapps.kontomierz.services
 
             if (responseStatus == 200)
             {
-                model.isWalletListExpired = true;
+//                model.isWalletListExpired = true;
                 transactionSuccessfullySavedSignal.dispatch();
 
                 provideSelectedTransactionSignal.dispatch(temporarySelectedTransaction);
@@ -408,7 +432,7 @@ package com.pauluz.bbapps.kontomierz.services
 
             if (responseStatus == 200)
             {
-                model.isWalletListExpired = true;
+//                model.isWalletListExpired = true;
                 getAllWalletTransactionsSignal.dispatch();
             }
             else
@@ -504,6 +528,15 @@ package com.pauluz.bbapps.kontomierz.services
             logger.debug(": onStatusEventHandler - status: " + event.status);
 
             responseStatus = event.status;
+        }
+
+        protected function prepareRequest():URLRequest
+        {
+            var urlRequest:URLRequest = new URLRequest();
+            urlRequest.userAgent = userAgent;
+            urlRequest.manageCookies = false;
+
+            return urlRequest;
         }
     }
 }

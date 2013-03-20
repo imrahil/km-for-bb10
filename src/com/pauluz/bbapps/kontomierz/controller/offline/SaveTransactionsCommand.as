@@ -15,6 +15,12 @@ package com.pauluz.bbapps.kontomierz.controller.offline
     {
         /** PARAMETERS **/
         [Inject]
+        public var accountId:int;
+
+        [Inject]
+        public var isWallet:Boolean;
+
+        [Inject]
         public var transactionsList:Array;
 
         /** INJECTIONS **/
@@ -26,7 +32,7 @@ package com.pauluz.bbapps.kontomierz.controller.offline
          */        
         override public function execute():void    
         {
-            sqlService.saveAllTransactions(transactionsList);
+            sqlService.saveAllTransactions(accountId, transactionsList, isWallet);
         }
     }
 }

@@ -46,6 +46,8 @@ package com.pauluz.bbapps.kontomierz.view.components
         public var categoryBtn:LabelButton;
         public var currencyBtn:LabelButton;
 
+        public var selectedTransaction:TransactionVO = new TransactionVO();
+
         public var withdrawalCategoriesDP:SectionDataProvider;
         public var withdrawalCategoriesLength:int;
         public var depositCategoriesDP:SectionDataProvider;
@@ -294,18 +296,17 @@ package com.pauluz.bbapps.kontomierz.view.components
 
         public function provideTransactionData():TransactionVO
         {
-            var newTransaction:TransactionVO = new TransactionVO();
-            newTransaction.currencyAmount = parseFloat(amountTextInput.text);
-            newTransaction.transactionOn = datePicker.value;
-            newTransaction.description = descriptionTextInput.text;
+            selectedTransaction.currencyAmount = parseFloat(amountTextInput.text);
+            selectedTransaction.transactionOn = datePicker.value;
+            selectedTransaction.description = descriptionTextInput.text;
 
-            newTransaction.direction = direction;
+            selectedTransaction.direction = direction;
 
-            newTransaction.currencyName = (selectedCurrency) ? selectedCurrency.name : ApplicationConstants.DEFAULT_CURRENCY_NAME;
-            newTransaction.categoryId = selectedCategory.categoryId;
-            newTransaction.categoryName = (selectedCategory) ? categoryBtn.label : "";
+            selectedTransaction.currencyName = (selectedCurrency) ? selectedCurrency.name : ApplicationConstants.DEFAULT_CURRENCY_NAME;
+            selectedTransaction.categoryId = selectedCategory.categoryId;
+            selectedTransaction.categoryName = (selectedCategory) ? categoryBtn.label : "";
 
-            return newTransaction;
+            return selectedTransaction;
         }
 
         public function removeListeners():void

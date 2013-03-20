@@ -9,31 +9,12 @@ package com.pauluz.bbapps.kontomierz.constants
 {
     public class SQLStatements
     {
-        // CREATE
+        // CREATE TABLES
         [Embed(source="/assets/sql/CreateAccountsTable.sql", mimeType="application/octet-stream")]
         public static const CreateAccountsTableStatementText:Class;
 
         [Embed(source="/assets/sql/CreateTransactionsTable.sql", mimeType="application/octet-stream")]
         public static const CreateTransactionsTableStatementText:Class;
-
-        [Embed(source="/assets/sql/CreateSyncInsertTable.sql", mimeType="application/octet-stream")]
-        public static const CreateSyncInsertTableStatementText:Class;
-
-        [Embed(source="/assets/sql/CreateSyncUpdateTable.sql", mimeType="application/octet-stream")]
-        public static const CreateSyncUpdateTableStatementText:Class;
-
-        [Embed(source="/assets/sql/CreateSyncDeleteTable.sql", mimeType="application/octet-stream")]
-        public static const CreateSyncDeleteTableStatementText:Class;
-
-        [Embed(source="/assets/sql/CreateSyncTransactionInsertTrigger.sql", mimeType="application/octet-stream")]
-        public static const CreateSyncTransactionInsertTriggerStatementText:Class;
-
-        [Embed(source="/assets/sql/CreateSyncTransactionUpdateTrigger.sql", mimeType="application/octet-stream")]
-        public static const CreateSyncTransactionUpdateTriggerStatementText:Class;
-
-        [Embed(source="/assets/sql/CreateSyncTransactionDeleteTrigger.sql", mimeType="application/octet-stream")]
-        public static const CreateSyncTransactionDeleteTriggerStatementText:Class;
-
 
         [Embed(source="/assets/sql/CreateCategoriesTable.sql", mimeType="application/octet-stream")]
         public static const CreateCategoriesTableStatementText:Class;
@@ -44,7 +25,39 @@ package com.pauluz.bbapps.kontomierz.constants
         [Embed(source="/assets/sql/CreateUserTable.sql", mimeType="application/octet-stream")]
         public static const CreateUserTableStatementText:Class;
 
-           // API
+
+        // SYNC TABLES
+        [Embed(source="/assets/sql/sync/CreateSyncInsertTable.sql", mimeType="application/octet-stream")]
+        public static const CreateSyncInsertTableStatementText:Class;
+
+        [Embed(source="/assets/sql/sync/CreateSyncUpdateTable.sql", mimeType="application/octet-stream")]
+        public static const CreateSyncUpdateTableStatementText:Class;
+
+        [Embed(source="/assets/sql/sync/CreateSyncDeleteTable.sql", mimeType="application/octet-stream")]
+        public static const CreateSyncDeleteTableStatementText:Class;
+
+
+        // TRIGGERS
+        [Embed(source="/assets/sql/sync/CreateSyncTransactionInsertTrigger.sql", mimeType="application/octet-stream")]
+        public static const CreateSyncTransactionInsertTriggerStatementText:Class;
+
+        [Embed(source="/assets/sql/sync/CreateSyncTransactionUpdateTrigger.sql", mimeType="application/octet-stream")]
+        public static const CreateSyncTransactionUpdateTriggerStatementText:Class;
+
+        [Embed(source="/assets/sql/sync/CreateSyncTransactionDeleteTrigger.sql", mimeType="application/octet-stream")]
+        public static const CreateSyncTransactionDeleteTriggerStatementText:Class;
+
+        [Embed(source="/assets/sql/sync/DropSyncTransactionInsertTrigger.sql", mimeType="application/octet-stream")]
+        public static const DropSyncTransactionInsertTriggerStatementText:Class;
+
+        [Embed(source="/assets/sql/sync/DropSyncTransactionUpdateTrigger.sql", mimeType="application/octet-stream")]
+        public static const DropSyncTransactionUpdateTriggerStatementText:Class;
+
+        [Embed(source="/assets/sql/sync/DropSyncTransactionDeleteTrigger.sql", mimeType="application/octet-stream")]
+        public static const DropSyncTransactionDeleteTriggerStatementText:Class;
+
+
+        // API
         [Embed(source="/assets/sql/InsertAPIKey.sql", mimeType="application/octet-stream")]
         public static const InsertAPIKeyStatementText:Class;
 
@@ -78,6 +91,25 @@ package com.pauluz.bbapps.kontomierz.constants
 
         [Embed(source="/assets/sql/LoadTransactions.sql", mimeType="application/octet-stream")]
         public static const LoadTransactionsStatementText:Class;
+
+        // TRANSACTIONS SYNC
+        [Embed(source="/assets/sql/sync/LoadSyncTransactionsInserted.sql", mimeType="application/octet-stream")]
+        public static const LoadSyncTransactionsInsertedStatementText:Class;
+
+        [Embed(source="/assets/sql/sync/LoadSyncTransactionsUpdated.sql", mimeType="application/octet-stream")]
+        public static const LoadSyncTransactionsUpdatedStatementText:Class;
+
+        [Embed(source="/assets/sql/sync/LoadSyncTransactionsDeleted.sql", mimeType="application/octet-stream")]
+        public static const LoadSyncTransactionsDeletedStatementText:Class;
+
+        [Embed(source="/assets/sql/sync/DeleteSyncTransactionsInserted.sql", mimeType="application/octet-stream")]
+        public static const DeleteSyncTransactionsInsertedStatementText:Class;
+
+        [Embed(source="/assets/sql/sync/DeleteSyncTransactionsUpdated.sql", mimeType="application/octet-stream")]
+        public static const DeleteSyncTransactionsUpdatedStatementText:Class;
+
+        [Embed(source="/assets/sql/sync/DeleteSyncTransactionsDeleted.sql", mimeType="application/octet-stream")]
+        public static const DeleteSyncTransactionsDeletedStatementText:Class;
 
 
         // CATEGORIES

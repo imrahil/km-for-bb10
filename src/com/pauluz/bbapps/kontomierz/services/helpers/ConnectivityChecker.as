@@ -9,6 +9,7 @@ package com.pauluz.bbapps.kontomierz.services.helpers
 {
     import com.pauluz.bbapps.kontomierz.model.IKontomierzModel;
     import com.pauluz.bbapps.kontomierz.signals.configure.ConfigureRootViewSignal;
+    import com.pauluz.bbapps.kontomierz.signals.offline.SyncOfflineChangesSignal;
     import com.pauluz.bbapps.kontomierz.utils.LogUtil;
 
     import flash.events.Event;
@@ -27,6 +28,9 @@ package com.pauluz.bbapps.kontomierz.services.helpers
         [Inject]
         public var nextStepSignal:ConfigureRootViewSignal;
 
+        [Inject]
+        public var syncOfflineChangesSignal:SyncOfflineChangesSignal;
+
         private var logger:ILogger;
 
         public function ConnectivityChecker()
@@ -39,7 +43,7 @@ package com.pauluz.bbapps.kontomierz.services.helpers
         {
             NetworkManager.networkManager.addEventListener(Event.CHANGE, onNetInfoChangeHandler);
 
-            checkNetwork();
+            checkNetwork(false);
 
             nextStepSignal.dispatch();
         }
@@ -49,9 +53,14 @@ package com.pauluz.bbapps.kontomierz.services.helpers
             checkNetwork();
         }
 
-        private function checkNetwork():void
+        private function checkNetwork(sync:Boolean = true):void
         {
             model.isConnected = NetworkManager.networkManager.isConnected();
+
+            if (model.isConnected && sync)
+            {
+                syncOfflineChangesSignal.dispatch();
+            }
 
             logger.debug(": network status - " + model.isConnected);
         }

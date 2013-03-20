@@ -9,11 +9,11 @@ package com.pauluz.bbapps.kontomierz.signals
 {
     import org.osflash.signals.Signal;
 
-    public class StoreDefaultWalletIdSignal extends Signal
+    public class GetAllWalletTransactionsOnlineSignal extends Signal
     {
-        public function StoreDefaultWalletIdSignal()
+        public function GetAllWalletTransactionsOnlineSignal()
         {
-            super(int);
+            super();
         }
     }
 }

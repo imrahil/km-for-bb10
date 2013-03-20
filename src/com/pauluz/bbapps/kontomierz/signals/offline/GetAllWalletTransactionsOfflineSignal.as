@@ -9,11 +9,11 @@ package com.pauluz.bbapps.kontomierz.signals.offline
 {
     import org.osflash.signals.Signal;
 
-    public class SaveTransactionsSignal extends Signal
+    public class GetAllWalletTransactionsOfflineSignal extends Signal
     {
-        public function SaveTransactionsSignal()
+        public function GetAllWalletTransactionsOfflineSignal()
         {
-            super(int, Boolean, Array);
+            super();
         }
     }
 }

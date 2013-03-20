@@ -11,7 +11,7 @@ package com.pauluz.bbapps.kontomierz.controller
 
     import org.robotlegs.mvcs.SignalCommand;
 
-    public final class GetAllAccountsCommand extends SignalCommand
+    public final class GetAllAccountsOnlineCommand extends SignalCommand
     {
         /** INJECTIONS **/
         [Inject]

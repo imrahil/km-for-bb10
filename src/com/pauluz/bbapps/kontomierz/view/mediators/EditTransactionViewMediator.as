@@ -128,8 +128,6 @@ package com.pauluz.bbapps.kontomierz.view.mediators
 
         private function onEditTransaction(transaction:TransactionVO):void
         {
-            transaction.transactionId = selectedTransaction.transactionId;
-
             updateTransactionSignal.dispatch(transaction);
         }
 

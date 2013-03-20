@@ -36,13 +36,17 @@ package com.pauluz.bbapps.kontomierz.controller.bootstraps
 
             // accounts
             signalCommandMap.mapSignalClass(GetAllAccountsSignal, ProvideAllAccountsCommand);
-            signalCommandMap.mapSignalClass(GetAllAccountsOnlineSignal, GetAllAccountsCommand);
+            signalCommandMap.mapSignalClass(GetAllAccountsOnlineSignal, GetAllAccountsOnlineCommand);
             signalCommandMap.mapSignalClass(GetAllAccountsOfflineSignal, GetAllAccountsOfflineCommand);
+
             signalCommandMap.mapSignalClass(StoreSelectedAccountSignal, StoreSelectedAccountCommand);
 
             // transactions
             signalCommandMap.mapSignalClass(GetAllTransactionsOfflineSignal, GetAllTransactionsOfflineCommand);
             signalCommandMap.mapSignalClass(GetAllTransactionsOnlineSignal, GetAllTransactionsOnlineCommand);
+            signalCommandMap.mapSignalClass(GetAllWalletTransactionsOfflineSignal, GetAllWalletTransactionsOfflineCommand);
+            signalCommandMap.mapSignalClass(GetAllWalletTransactionsOnlineSignal, GetAllWalletTransactionsOnlineCommand);
+
             signalCommandMap.mapSignalClass(StoreSelectedTransactionSignal, StoreSelectedTransactionCommand);
             signalCommandMap.mapSignalClass(StoreSelectedTransactionForEditSignal, StoreSelectedTransactionForEditCommand);
             signalCommandMap.mapSignalClass(RequestSelectedTransactionSignal, ProvideSelectedTransactionCommand);
@@ -52,8 +56,8 @@ package com.pauluz.bbapps.kontomierz.controller.bootstraps
             signalCommandMap.mapSignalClass(DeleteTransactionSignal, DeleteTransactionCommand);
 
             // wallet
-            signalCommandMap.mapSignalClass(GetAllWalletTransactionsSignal, GetAllWalletTransactionsCommand);
-            signalCommandMap.mapSignalClass(StoreDefaultWalletIdSignal, StoreDefaultWalletIdCommand);
+            signalCommandMap.mapSignalClass(GetAllWalletTransactionsOfflineSignal, GetAllWalletTransactionsOnlineCommand);
+            signalCommandMap.mapSignalClass(StoreDefaultWalletSignal, StoreDefaultWalletCommand);
 
             signalCommandMap.mapSignalClass(DeleteWalletTransactionSignal, DeleteWalletTransactionCommand);
             signalCommandMap.mapSignalClass(RefreshWalletSignal, RefreshWalletCommand);
@@ -75,6 +79,8 @@ package com.pauluz.bbapps.kontomierz.controller.bootstraps
             signalCommandMap.mapSignalClass(SaveTransactionsSignal, SaveTransactionsCommand);
             signalCommandMap.mapSignalClass(SaveCategoriesSignal, SaveCategoriesCommand);
             signalCommandMap.mapSignalClass(SaveCurrenciesSignal, SaveCurrenciesCommand);
+
+            signalCommandMap.mapSignalClass(SyncOfflineChangesSignal, SyncOfflineChangesCommand);
 
             nextStepSignal.dispatch();
         }

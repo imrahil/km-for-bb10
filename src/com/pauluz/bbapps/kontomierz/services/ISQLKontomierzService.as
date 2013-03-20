@@ -8,19 +8,18 @@ package com.pauluz.bbapps.kontomierz.services
 
     public interface ISQLKontomierzService
     {
-        function saveUserAPIKey(apiKey:String):void
         function loadUserAPIKey():void
-        function deleteUserAPIKey():void
+        function saveUserAPIKey(apiKey:String):void
 
         function getAllAccounts():void
         function saveAllAccounts(accountsList:Array):void
-        function deleteAccounts():void
 
-        function getAllTransactions(accountId:int, wallet:Boolean):void;
+        function getAllTransactions(accountId:int):void;
+        function getAllWalletTransactions():void;
         function getAllTransactionsForCategory(categoryId:int):void;
-        function saveAllTransactions(transactionsList:Array):void;
+        function saveAllTransactions(accountId:int, transactionsList:Array, isWallet:Boolean):void;
 
-        function syncModifiedTransactions():void;
+        function syncOfflineChanges():void;
 
         function createTransaction(transaction:TransactionVO):void;
         function updateTransaction(transaction:TransactionVO):void;
@@ -29,10 +28,10 @@ package com.pauluz.bbapps.kontomierz.services
         function saveCategories(categoriesList:SectionDataProvider, direction:String):void;
         function loadCategories(direction:String):void;
         function loadUsedCategories():void;
-        function deleteCategories():void;
 
         function saveCurrencies(currenciesList:Array):void;
         function loadCurrencies():void;
-        function deleteCurrencies():void;
+
+        function deleteOnLogout():void;
     }
 }

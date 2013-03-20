@@ -9,6 +9,8 @@ package com.pauluz.bbapps.kontomierz.constants
 {
     public class ApplicationConstants
     {
+        public static const WYDATKI_USER_AGENT:String = "Wydatki dla BlackBerry 10 - v. ";
+
         public static const KONTOMIERZ_API_ENDPOINT:String = "https://kontomierz.pl/k4/";
         public static const KONTOMIERZ_API_FORMAT_JSON:String = ".json";
         public static const KONTOMIERZ_API_FORMAT_XML:String = ".xml";

@@ -5,22 +5,23 @@
  @project  Kontomierz
  @internal
  */
-package com.pauluz.bbapps.kontomierz.controller 
+package com.pauluz.bbapps.kontomierz.controller.offline
 {
     import com.pauluz.bbapps.kontomierz.model.IKontomierzModel;
     import com.pauluz.bbapps.kontomierz.services.IKontomierzService;
+    import com.pauluz.bbapps.kontomierz.services.ISQLKontomierzService;
     import com.pauluz.bbapps.kontomierz.signals.signaltons.ProvideAllTransactionsSignal;
 
     import org.robotlegs.mvcs.SignalCommand;
 
-    public final class GetAllWalletTransactionsCommand extends SignalCommand
+    public final class GetAllWalletTransactionsOfflineCommand extends SignalCommand
     {
         /** INJECTIONS **/
         [Inject]
         public var model:IKontomierzModel;
 
         [Inject]
-        public var kontomierzService:IKontomierzService;
+        public var sqlService:ISQLKontomierzService;
 
         [Inject]
         public var provideAllTransactionsSignal:ProvideAllTransactionsSignal;
@@ -30,13 +31,13 @@ package com.pauluz.bbapps.kontomierz.controller
          */
         override public function execute():void
         {
-            if (!model.isWalletListExpired && model.walletTransactionsList && model.walletTransactionsList.length > 0)
+            if (model.defaultWallet.isValid && model.walletTransactionsList && model.walletTransactionsList.length > 0)
             {
                 provideAllTransactionsSignal.dispatch(model.walletTransactionsList);
             }
             else
             {
-                kontomierzService.getAllTransactions(model.defaultWalletId, true);
+                sqlService.getAllWalletTransactions();
             }
         }
     }

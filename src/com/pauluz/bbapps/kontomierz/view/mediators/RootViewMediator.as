@@ -87,7 +87,7 @@ package com.pauluz.bbapps.kontomierz.view.mediators
         /** methods **/
         private function startupLoginStatus(status:String):void
         {
-            logger.debug(":startupLoginStatus - " + status);
+            logger.debug(": startupLoginStatus - " + status);
 
             if (status == ApplicationConstants.LOGIN_STATUS_NEW)
             {

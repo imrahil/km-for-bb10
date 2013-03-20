@@ -22,7 +22,8 @@ package com.pauluz.bbapps.kontomierz.services
         function updateWallet(id:int, name:String, balance:Number, currency:String, liquid:Boolean):void
         function deleteWallet(id:int):void
 
-        function getAllTransactions(accountId:int, wallet:Boolean):void;
+        function getAllTransactions(accountId:int):void;
+        function getAllWalletTransactions():void;
         function getAllTransactionsForCategory(categoryId:int):void;
 
         function createTransaction(transaction:TransactionVO):void;
