@@ -7,16 +7,17 @@
  */
 package com.pauluz.bbapps.kontomierz.controller 
 {
+    import com.destroytoday.core.IPromise;
     import com.pauluz.bbapps.kontomierz.constants.ApplicationConstants;
     import com.pauluz.bbapps.kontomierz.model.IKontomierzModel;
     import com.pauluz.bbapps.kontomierz.model.vo.ErrorVO;
     import com.pauluz.bbapps.kontomierz.model.vo.UserVO;
     import com.pauluz.bbapps.kontomierz.services.IKontomierzService;
-    import com.pauluz.bbapps.kontomierz.signals.signaltons.ErrorSignal;
+    import com.pauluz.bbapps.kontomierz.services.helpers.IResultParser;
+    import com.pauluz.bbapps.kontomierz.signals.offline.SaveAPIKeySignal;
+    import com.pauluz.bbapps.kontomierz.signals.signaltons.LoginSuccessfulSignal;
 
-    import org.robotlegs.mvcs.SignalCommand;
-
-    public final class LoginCommand extends SignalCommand
+    public final class LoginCommand extends BaseOnlineCommand
     {
         /** PARAMETERS **/
         [Inject]
@@ -30,7 +31,15 @@ package com.pauluz.bbapps.kontomierz.controller
         public var kontomierzService:IKontomierzService;
 
         [Inject]
-        public var errorSignal:ErrorSignal;
+        public var parser:IResultParser;
+
+
+        /** NOTIFICATION SIGNALS */
+        [Inject]
+        public var loginSuccessfulSignal:LoginSuccessfulSignal;
+
+        [Inject]
+        public var saveAPIKeySignal:SaveAPIKeySignal;
 
         /**
          * Method handle the logic for <code>LoginCommand</code>
@@ -42,12 +51,19 @@ package com.pauluz.bbapps.kontomierz.controller
                 if (user.email == ApplicationConstants.KONTOMIERZ_DEMO_EMAIL)
                 {
                     model.demoMode = true;
+                    model.apiKey = ApplicationConstants.KONTOMIERZ_DEMO_API_KEY;
 
-                    kontomierzService.demo();
+                    loginSuccessfulSignal.dispatch();
                 }
                 else
                 {
-                    kontomierzService.login(user);
+                    // save value for future
+                    model.rememberMe = user.rememberMe;
+
+                    var promise:IPromise = kontomierzService.login(user);
+                    promise.addResultProcessor(parser.parseLoginRegisterResponse);
+                    promise.completed.addOnce(onLoginComplete);
+                    promise.failed.addOnce(onError);
                 }
             }
             else
@@ -55,6 +71,33 @@ package com.pauluz.bbapps.kontomierz.controller
                 var error:ErrorVO = new ErrorVO("Wymagane połączenie z internetem. Proszę spróbować później.", true);
                 errorSignal.dispatch(error);
             }
+        }
+
+        /*
+         *  COMPLETE HANDLER
+         */
+        private function onLoginComplete(promise:IPromise):void
+        {
+            if (promise.result != "")
+            {
+                model.apiKey = promise.result;
+            }
+
+            if (model.rememberMe && !model.demoMode)
+            {
+                saveAPIKeySignal.dispatch(promise.result);
+            }
+
+            loginSuccessfulSignal.dispatch();
+        }
+
+        /*
+         *  ERROR HANDLER
+         */
+        override protected function onError(promise:IPromise):void
+        {
+            var error:ErrorVO = new ErrorVO("Nieprawidłowy e-mail lub hasło.");
+            errorSignal.dispatch(error)
         }
     }
 }

@@ -2,8 +2,6 @@ package com.pauluz.bbapps.kontomierz.services
 {
     import com.pauluz.bbapps.kontomierz.model.vo.TransactionVO;
 
-    import qnx.ui.data.DataProvider;
-
     import qnx.ui.data.SectionDataProvider;
 
     public interface ISQLKontomierzService

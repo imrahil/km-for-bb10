@@ -15,7 +15,8 @@ package com.pauluz.bbapps.kontomierz.services.helpers
         function parseLoginRegisterResponse(result:String):String;
 
         function parseAllAccountsResponse(result:String):Array;
-        function parseAllTransactionsResponse(result:String, isWallet:Boolean):DataProvider;
+        function parseAllTransactionsResponse(result:String):DataProvider;
+        function parseAllWalletTransactionsResponse(result:String):DataProvider;
         function parseAllCategoriesResponse(result:String):SectionDataProvider;
         function parseAllCurrenciesResponse(result:String):Array;
     }

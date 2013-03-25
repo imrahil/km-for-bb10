@@ -94,7 +94,17 @@ package com.pauluz.bbapps.kontomierz.services.helpers
             return output;
         }
 
-        public function parseAllTransactionsResponse(result:String, isWallet:Boolean):DataProvider
+        public function parseAllTransactionsResponse(result:String):DataProvider
+        {
+            return parseAllTransactionsGeneric(result)
+        }
+
+        public function parseAllWalletTransactionsResponse(result:String):DataProvider
+        {
+            return parseAllTransactionsGeneric(result, true)
+        }
+
+        private function parseAllTransactionsGeneric(result:String, isWallet:Boolean = false):DataProvider
         {
             logger.debug(": parseAllTransactionsResponse");
 
