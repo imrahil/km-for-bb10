@@ -47,5 +47,14 @@ package com.pauluz.bbapps.kontomierz.model
         function get currenciesList():Array;
         function set currenciesList(value:Array):void;
 
+        function get syncRequired():Boolean;
+        function set syncRequired(value:Boolean):void;
+
+        function get syncInProgress():Boolean;
+        function set syncInProgress(value:Boolean):void;
+
+        function get totalSyncCount():int;
+        function set totalSyncCount(value:int):void;
+
     }
 }

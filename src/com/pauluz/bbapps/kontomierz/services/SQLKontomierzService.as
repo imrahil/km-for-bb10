@@ -15,13 +15,14 @@ package com.pauluz.bbapps.kontomierz.services
     import com.pauluz.bbapps.kontomierz.model.vo.CurrencyVO;
     import com.pauluz.bbapps.kontomierz.model.vo.ErrorVO;
     import com.pauluz.bbapps.kontomierz.model.vo.TransactionVO;
+    import com.pauluz.bbapps.kontomierz.signals.AddTransactionOnlineSignal;
     import com.pauluz.bbapps.kontomierz.signals.GetAllAccountsOnlineSignal;
     import com.pauluz.bbapps.kontomierz.signals.GetAllCategoriesOnlineSignal;
     import com.pauluz.bbapps.kontomierz.signals.GetAllCurrenciesOnlineSignal;
     import com.pauluz.bbapps.kontomierz.signals.GetAllTransactionsOnlineSignal;
     import com.pauluz.bbapps.kontomierz.signals.GetAllWalletTransactionsOnlineSignal;
     import com.pauluz.bbapps.kontomierz.signals.StoreDefaultWalletSignal;
-    import com.pauluz.bbapps.kontomierz.signals.offline.SyncOfflineChangesSignal;
+    import com.pauluz.bbapps.kontomierz.signals.offline.CheckSyncStatusSignal;
     import com.pauluz.bbapps.kontomierz.signals.signaltons.ErrorSignal;
     import com.pauluz.bbapps.kontomierz.signals.signaltons.ProvideAllAccountsDataSignal;
     import com.pauluz.bbapps.kontomierz.signals.signaltons.ProvideAllCurrenciesSignal;
@@ -83,7 +84,7 @@ package com.pauluz.bbapps.kontomierz.services
 
 
         [Inject]
-        public var syncOfflineChangesSignal:SyncOfflineChangesSignal;
+        public var checkSyncStatusSignal:CheckSyncStatusSignal;
 
         [Inject]
         public var getAllTransactionsOnlineSignal:GetAllTransactionsOnlineSignal;
@@ -104,6 +105,9 @@ package com.pauluz.bbapps.kontomierz.services
         public var storeDefaultWalletSignal:StoreDefaultWalletSignal;
 
         [Inject]
+        public var addTransactionOnlineSignal:AddTransactionOnlineSignal;
+
+        [Inject]
         public var errorSignal:ErrorSignal;
 
         private static const INSERT_API_KEY_SQL:String = new SQLStatements.InsertAPIKeyStatementText();
@@ -117,6 +121,7 @@ package com.pauluz.bbapps.kontomierz.services
 
         // TRANSACTIONS
         private static const INSERT_TRANSACTION_SQL:String = new SQLStatements.InsertTransactionStatementText();
+        private static const INSERT_NEW_TRANSACTION_SQL:String = new SQLStatements.InsertNewTransactionStatementText();
         private static const DELETE_TRANSACTIONS_SQL:String = new SQLStatements.DeleteTransactionsStatementText();
         private static const DELETE_TRANSACTIONS_FROM_ACCOUNT_SQL:String = new SQLStatements.DeleteTransactionsFromAccountStatementText();
         private static const LOAD_TRANSACTIONS_SQL:String = new SQLStatements.LoadTransactionsStatementText();
@@ -129,13 +134,18 @@ package com.pauluz.bbapps.kontomierz.services
         private static const DROP_SYNC_TRANSACTION_UPDATE_TRIGGER_SQL:String = new SQLStatements.DropSyncTransactionUpdateTriggerStatementText();
         private static const DROP_SYNC_TRANSACTION_DELETE_TRIGGER_SQL:String = new SQLStatements.DropSyncTransactionDeleteTriggerStatementText();
 
+        private static const CHECK_SYNC_STATUS:String = new SQLStatements.CheckSyncStatusStatementText();
+
         private static const LOAD_SYNC_TRANSACTIONS_INSERTED_SQL:String = new SQLStatements.LoadSyncTransactionsInsertedStatementText();
         private static const LOAD_SYNC_TRANSACTIONS_UPDATED_SQL:String = new SQLStatements.LoadSyncTransactionsUpdatedStatementText();
         private static const LOAD_SYNC_TRANSACTIONS_DELETED_SQL:String = new SQLStatements.LoadSyncTransactionsDeletedStatementText();
 
         private static const DELETE_SYNC_TRANSACTIONS_INSERTED_SQL:String = new SQLStatements.DeleteSyncTransactionsInsertedStatementText();
+        private static const DELETE_SYNC_TRANSACTIONS_INSERTED_BY_ID_SQL:String = new SQLStatements.DeleteSyncTransactionsInsertedByIdStatementText();
         private static const DELETE_SYNC_TRANSACTIONS_UPDATED_SQL:String = new SQLStatements.DeleteSyncTransactionsUpdatedStatementText();
+        private static const DELETE_SYNC_TRANSACTIONS_UPDATED_BY_ID_SQL:String = new SQLStatements.DeleteSyncTransactionsUpdatedByIdStatementText();
         private static const DELETE_SYNC_TRANSACTIONS_DELETED_SQL:String = new SQLStatements.DeleteSyncTransactionsDeletedStatementText();
+        private static const DELETE_SYNC_TRANSACTIONS_DELETED_BY_ID_SQL:String = new SQLStatements.DeleteSyncTransactionsDeletedByIdStatementText();
 
         // CATEGORIES
         private static const INSERT_CATEGORY_SQL:String = new SQLStatements.InsertCategoryStatementText();
@@ -176,7 +186,7 @@ package com.pauluz.bbapps.kontomierz.services
 
                 if (model.isConnected)
                 {
-                    syncOfflineChangesSignal.dispatch();
+                    checkSyncStatusSignal.dispatch();
                 }
 
                 provideLoginStatusSignal.dispatch(ApplicationConstants.LOGIN_STATUS_REMEMBERED);
@@ -414,14 +424,85 @@ package com.pauluz.bbapps.kontomierz.services
 
 
         /*
+         *  CHECK SYNC STATUS
+         */
+        public function checkSyncStatus():void
+        {
+            logger.debug(": checkSyncStatus");
+
+            sqlRunner.execute(CHECK_SYNC_STATUS, null, onCheckSyncStatus, null, databaseErrorHandler);
+        }
+
+        private function onCheckSyncStatus(result:SQLResult):void
+        {
+            if (result.data != null && result.data.length > 0)
+            {
+                var deletedItemsCount:int = result.data[0].count;
+                var insertedItemsCount:int = result.data[1].count;
+                var updatedItemsCount:int = result.data[2].count;
+
+                model.totalSyncCount = deletedItemsCount + insertedItemsCount + updatedItemsCount;
+
+                if (model.totalSyncCount > 0)
+                {
+                    model.syncRequired = true;
+
+                    if (model.isConnected)
+                    {
+                        syncOfflineChanges();
+                    }
+                }
+            }
+        }
+
+        /*
          *  SYNC OFFLINE CHANGES
          */
         public function syncOfflineChanges():void
         {
             logger.debug(": syncOfflineChanges");
 
+            model.syncInProgress = true;
+
+            syncDeletedItems();
+            syncInsertedItems();
+            syncUpdatedItems();
         }
 
+        private function syncDeletedItems():void
+        {
+            logger.debug(": syncDeletedItems");
+
+            sqlRunner.execute(LOAD_SYNC_TRANSACTIONS_DELETED_SQL, null, onSyncDeletedItems, null, databaseErrorHandler);
+        }
+
+        private function onSyncDeletedItems(result:SQLResult):void
+        {
+
+        }
+
+        private function syncInsertedItems():void
+        {
+            logger.debug(": syncInsertedItems");
+
+            sqlRunner.execute(LOAD_SYNC_TRANSACTIONS_INSERTED_SQL, null, onSyncInsertedItems, TransactionVO, databaseErrorHandler);
+        }
+
+        private function onSyncInsertedItems(result:SQLResult):void
+        {
+             if (result.data != null && result.data.length > 0)
+             {
+                 for each (var transaction:TransactionVO in result.data)
+                 {
+                     addTransactionOnlineSignal.dispatch(transaction);
+                 }
+             }
+        }
+
+        private function syncUpdatedItems():void
+        {
+
+        }
 
         /*
          *  CREATE TRANSACTION
@@ -432,6 +513,12 @@ package com.pauluz.bbapps.kontomierz.services
 
             var params:Object = {};
 
+            params["transactionId"] = -1;
+            params["amount"] = 0;
+            params["bookedOn"] = transaction.transactionOn;
+            params["tagString"] = "";
+
+            params["userAccountId"] = model.defaultWallet.accountId;
             params["currencyAmount"] = transaction.currencyAmount;
             params["currencyName"] = transaction.currencyName;
             params["transactionOn"] = transaction.transactionOn;
@@ -442,15 +529,27 @@ package com.pauluz.bbapps.kontomierz.services
 
             params["isWallet"] = 1;
 
-            sqlRunner.executeModify(Vector.<QueuedStatement>([new QueuedStatement(INSERT_TRANSACTION_SQL, params)]), onCreateTransactionComplete, databaseErrorHandler);
+            sqlRunner.executeModify(Vector.<QueuedStatement>([new QueuedStatement(INSERT_NEW_TRANSACTION_SQL, params)]), function(results:Vector.<SQLResult>):void { onCreateTransactionComplete(results, transaction) }, databaseErrorHandler);
         }
 
-        private function onCreateTransactionComplete(results:Vector.<SQLResult>):void
+        private function onCreateTransactionComplete(results:Vector.<SQLResult>, transaction:TransactionVO):void
         {
             logger.debug(": onCreateTransactionComplete");
 
-            model.defaultWallet.isValid = false;
-            transactionSuccessfullySavedSignal.dispatch();
+            if (model.isConnected)
+            {
+                if (results && results.length > 0)
+                {
+                    transaction.id = results[0].lastInsertRowID;
+                    addTransactionOnlineSignal.dispatch(transaction);
+                }
+            }
+            else
+            {
+                model.syncRequired = true;
+                model.defaultWallet.isValid = false;
+                transactionSuccessfullySavedSignal.dispatch();
+            }
         }
 
 
@@ -459,6 +558,8 @@ package com.pauluz.bbapps.kontomierz.services
          */
         public function updateTransaction(transaction:TransactionVO):void
         {
+            logger.debug(": updateTransaction");
+
             throw new Error("Override this method!");
         }
 
@@ -468,7 +569,42 @@ package com.pauluz.bbapps.kontomierz.services
          */
         public function deleteTransaction(id:int, wallet:Boolean):void
         {
+            logger.debug(": deleteTransaction");
+
             throw new Error("Override this method!");
+        }
+
+
+        /*
+         *  DELETE SYNC DELETED TRANSACTION
+         */
+        public function deleteSyncDeletedTransaction(id:int):void
+        {
+            logger.debug(": deleteSyncDeletedTransaction");
+
+            sqlRunner.executeModify(Vector.<QueuedStatement>([new QueuedStatement(DELETE_SYNC_TRANSACTIONS_DELETED_BY_ID_SQL, {id: id})]), null, databaseErrorHandler);
+        }
+
+
+        /*
+         *  DELETE SYNC INSERT TRANSACTION
+         */
+        public function deleteSyncInsertTransaction(id:int):void
+        {
+            logger.debug(": deleteSyncInsertTransaction");
+
+            sqlRunner.executeModify(Vector.<QueuedStatement>([new QueuedStatement(DELETE_SYNC_TRANSACTIONS_INSERTED_BY_ID_SQL, {id: id})]), null, databaseErrorHandler);
+        }
+
+
+        /*
+         *  DELETE SYNC UPDATED TRANSACTION
+         */
+        public function deleteSyncUpdatedTransaction(id:int):void
+        {
+            logger.debug(": deleteSyncUpdatedTransaction");
+
+            sqlRunner.executeModify(Vector.<QueuedStatement>([new QueuedStatement(DELETE_SYNC_TRANSACTIONS_UPDATED_BY_ID_SQL, {id: id})]), null, databaseErrorHandler);
         }
 
 

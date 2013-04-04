@@ -14,4 +14,5 @@ SELECT
   direction,
   isWallet
 FROM transactions
-WHERE userAccountId = :userAccountId;
+WHERE userAccountId = :userAccountId
+ORDER BY transactionOn DESC, transactionId ASC;

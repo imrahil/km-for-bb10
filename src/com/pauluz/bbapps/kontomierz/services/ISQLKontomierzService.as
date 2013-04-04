@@ -17,11 +17,16 @@ package com.pauluz.bbapps.kontomierz.services
         function getAllTransactionsForCategory(categoryId:int):void;
         function saveAllTransactions(accountId:int, transactionsList:Array, isWallet:Boolean):void;
 
+        function checkSyncStatus():void;
         function syncOfflineChanges():void;
 
         function createTransaction(transaction:TransactionVO):void;
         function updateTransaction(transaction:TransactionVO):void;
         function deleteTransaction(id:int, wallet:Boolean):void;
+
+        function deleteSyncDeletedTransaction(id:int):void;
+        function deleteSyncInsertTransaction(id:int):void;
+        function deleteSyncUpdatedTransaction(id:int):void;
 
         function saveCategories(categoriesList:SectionDataProvider, direction:String):void;
         function loadCategories(direction:String):void;

@@ -121,7 +121,7 @@ package com.pauluz.bbapps.kontomierz.view.mediators
         {
             logger.debug(": onDeleteTransaction");
 
-            deleteTransactionSignal.dispatch(transaction);
+            deleteTransactionSignal.dispatch(transaction.transactionId);
         }
 
         private function onTransactionsData(data:DataProvider):void

@@ -7,7 +7,6 @@
  */
 package com.pauluz.bbapps.kontomierz.model
 {
-    import com.pauluz.bbapps.kontomierz.constants.ApplicationConstants;
     import com.pauluz.bbapps.kontomierz.model.vo.AccountVO;
     import com.pauluz.bbapps.kontomierz.model.vo.CategoryVO;
     import com.pauluz.bbapps.kontomierz.model.vo.TransactionVO;
@@ -15,7 +14,6 @@ package com.pauluz.bbapps.kontomierz.model
     import org.robotlegs.mvcs.*;
 
     import qnx.ui.data.DataProvider;
-
     import qnx.ui.data.SectionDataProvider;
 
     public class KontomierzModel extends Actor implements IKontomierzModel
@@ -40,6 +38,10 @@ package com.pauluz.bbapps.kontomierz.model
 
         private var _currenciesList:Array;
 
+        private var _syncRequired:Boolean;
+        private var _syncInProgress:Boolean;
+        private var _totalSyncCount:int;
+
         public function get isConnected():Boolean
         {
             return _isConnected;
@@ -49,7 +51,6 @@ package com.pauluz.bbapps.kontomierz.model
         {
             _isConnected = value;
         }
-
 
         public function get demoMode():Boolean
         {
@@ -169,6 +170,36 @@ package com.pauluz.bbapps.kontomierz.model
         public function set currenciesList(value:Array):void
         {
             _currenciesList = value;
+        }
+
+        public function get syncRequired():Boolean
+        {
+            return _syncRequired;
+        }
+
+        public function set syncRequired(value:Boolean):void
+        {
+            _syncRequired = value;
+        }
+
+        public function get syncInProgress():Boolean
+        {
+            return _syncInProgress;
+        }
+
+        public function set syncInProgress(value:Boolean):void
+        {
+            _syncInProgress = value;
+        }
+
+        public function get totalSyncCount():int
+        {
+            return _totalSyncCount;
+        }
+
+        public function set totalSyncCount(value:int):void
+        {
+            _totalSyncCount = value;
         }
     }
 }

@@ -5,28 +5,21 @@
  @project  Kontomierz
  @internal
  */
-package com.pauluz.bbapps.kontomierz.controller 
+package com.pauluz.bbapps.kontomierz.controller.offline
 {
     import com.pauluz.bbapps.kontomierz.model.IKontomierzModel;
     import com.pauluz.bbapps.kontomierz.model.vo.TransactionVO;
-    import com.pauluz.bbapps.kontomierz.services.IKontomierzService;
     import com.pauluz.bbapps.kontomierz.services.ISQLKontomierzService;
 
     import org.robotlegs.mvcs.SignalCommand;
 
-    public final class AddTransactionCommand extends SignalCommand
+    public final class AddTransactionOfflineCommand extends SignalCommand
     {
         /** PARAMETERS **/
         [Inject]
         public var transaction:TransactionVO;
 
         /** INJECTIONS **/
-        [Inject]
-        public var model:IKontomierzModel;
-
-        [Inject]
-        public var kontomierzService:IKontomierzService;
-
         [Inject]
         public var sqlService:ISQLKontomierzService;
 
@@ -35,14 +28,7 @@ package com.pauluz.bbapps.kontomierz.controller
          */        
         override public function execute():void    
         {
-            if (model.isConnected)
-            {
-                kontomierzService.createTransaction(transaction);
-            }
-            else
-            {
-                sqlService.createTransaction(transaction);
-            }
+            sqlService.createTransaction(transaction);
         }
     }
 }

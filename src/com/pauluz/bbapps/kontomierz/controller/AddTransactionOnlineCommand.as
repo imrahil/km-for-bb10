@@ -12,48 +12,44 @@ package com.pauluz.bbapps.kontomierz.controller
     import com.pauluz.bbapps.kontomierz.model.vo.TransactionVO;
     import com.pauluz.bbapps.kontomierz.services.IKontomierzService;
     import com.pauluz.bbapps.kontomierz.services.ISQLKontomierzService;
+    import com.pauluz.bbapps.kontomierz.signals.signaltons.TransactionSuccessfullySavedSignal;
 
-    import org.robotlegs.mvcs.SignalCommand;
-
-    public final class DeleteTransactionCommand extends BaseOnlineCommand
+    public final class AddTransactionOnlineCommand extends BaseOnlineCommand
     {
         /** PARAMETERS **/
         [Inject]
-        public var transactionId:int;
+        public var transaction:TransactionVO;
 
-        /** INJECTIONS **/
+        /** MODEL **/
         [Inject]
         public var model:IKontomierzModel;
 
+        /** INJECTIONS **/
         [Inject]
         public var kontomierzService:IKontomierzService;
 
         [Inject]
         public var sqlService:ISQLKontomierzService;
 
+        [Inject]
+        public var transactionSuccessfullySavedSignal:TransactionSuccessfullySavedSignal;
+
         /**
-         * Method handle the logic for <code>DeleteTransactionCommand</code>
+         * Method handle the logic for <code>AddTransactionOnlineCommand</code>
          */        
         override public function execute():void    
         {
-            if (model.isConnected)
-            {
-                var promise:IPromise = kontomierzService.deleteTransaction(transactionId, false);
-                promise.completed.addOnce(onDeleteTransaction);
-                promise.failed.addOnce(onError);
-            }
-            else
-            {
-                sqlService.deleteTransaction(transactionId, false);
-            }
+            var promise:IPromise = kontomierzService.createTransaction(transaction);
+            promise.completed.addOnce(onAddTransaction);
+            promise.failed.addOnce(onError);
         }
 
         /*
          *  COMPLETE HANDLER
          */
-        private function onDeleteTransaction(promise:IPromise):void
+        private function onAddTransaction(promise:IPromise):void
         {
-            sqlService.deleteSyncDeletedTransaction(transactionId);
+            sqlService.deleteSyncInsertTransaction(transaction.id);
 
             if (model.totalSyncCount > 0)
             {
@@ -65,6 +61,17 @@ package com.pauluz.bbapps.kontomierz.controller
                     model.syncInProgress = false;
                 }
             }
+
+            model.defaultWallet.isValid = false;
+            transactionSuccessfullySavedSignal.dispatch();
+        }
+
+        /*
+         *  ERROR HANDLER
+         */
+        override protected function onError(promise:IPromise):void
+        {
+            model.syncRequired = true;
         }
     }
 }

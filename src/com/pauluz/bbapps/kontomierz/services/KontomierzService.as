@@ -15,6 +15,10 @@ package com.pauluz.bbapps.kontomierz.services
     import com.pauluz.bbapps.kontomierz.utils.LogUtil;
 
     import flash.desktop.NativeApplication;
+    import flash.net.URLLoader;
+    import flash.net.URLRequest;
+    import flash.net.URLRequestMethod;
+    import flash.net.URLVariables;
 
     import mx.logging.ILogger;
 
@@ -153,28 +157,17 @@ package com.pauluz.bbapps.kontomierz.services
         {
             logger.debug(": createTransaction service call");
 
-//            var loader:URLLoader = new URLLoader();
-//            var urlRequest:URLRequest = prepareRequest();
-//
-//            urlRequest.url = ApplicationConstants.KONTOMIERZ_API_ENDPOINT + "money_transactions" + ApplicationConstants.KONTOMIERZ_API_FORMAT_JSON;
-//            urlRequest.method = URLRequestMethod.POST;
-//
-//            var variables:URLVariables = new URLVariables();
-//            variables["money_transaction[currency_amount]"] = transaction.currencyAmount;
-//            variables["money_transaction[currency_name]"] = transaction.currencyName;
-//            variables["money_transaction[transaction_on]"] = transaction.transactionOn.substr(8, 2) + "-" + transaction.transactionOn.substr(5, 2) + "-" + transaction.transactionOn.substr(0, 4);
-//            variables["money_transaction[name]"] = transaction.description;
-//            variables["money_transaction[category_id]"] = transaction.categoryId;
-//            variables["money_transaction[direction]"] = transaction.direction;
-//            variables["money_transaction[client_assigned_id]"] = new Date().getMilliseconds();
-//            variables["api_key"] = model.apiKey;
-//            urlRequest.data = variables;
-//
-//            loader.addEventListener(Event.COMPLETE, addTransactionCompleteHandler);
-//            addLoaderListeners(loader);
-//
-//            loader.load(urlRequest);
-            return null;
+            var params:Object = {};
+            params["money_transaction[currency_amount]"] = transaction.currencyAmount;
+            params["money_transaction[currency_name]"] = transaction.currencyName;
+            params["money_transaction[transaction_on]"] = transaction.transactionOn.substr(8, 2) + "-" + transaction.transactionOn.substr(5, 2) + "-" + transaction.transactionOn.substr(0, 4);
+            params["money_transaction[name]"] = transaction.description;
+            params["money_transaction[category_id]"] = transaction.categoryId;
+            params["money_transaction[direction]"] = transaction.direction;
+            params["money_transaction[client_assigned_id]"] = new Date().getMilliseconds();
+            params.api_key = model.apiKey;
+
+            return service.post("money_transactions" + ApplicationConstants.KONTOMIERZ_API_FORMAT_JSON, params);
         }
 
 
@@ -185,28 +178,26 @@ package com.pauluz.bbapps.kontomierz.services
         {
             logger.debug(": updateTransaction service call");
 
-//            temporarySelectedTransaction = transaction;
-//
-//            var loader:URLLoader = new URLLoader();
-//            var urlRequest:URLRequest = prepareRequest();
-//
-//            urlRequest.url = ApplicationConstants.KONTOMIERZ_API_ENDPOINT + "money_transactions/" + transaction.transactionId + ApplicationConstants.KONTOMIERZ_API_FORMAT_JSON;
-//            urlRequest.method = URLRequestMethod.PUT;
-//
-//            var variables:URLVariables = new URLVariables();
-//            variables["money_transaction[currency_amount]"] = transaction.currencyAmount;
-//            variables["money_transaction[currency_name]"] = transaction.currencyName;
-//            variables["money_transaction[transaction_on]"] = transaction.transactionOn.substr(8, 2) + "-" + transaction.transactionOn.substr(5, 2) + "-" + transaction.transactionOn.substr(0, 4);
-//            variables["money_transaction[name]"] = transaction.description;
-//            variables["money_transaction[category_id]"] = transaction.categoryId;
-//            variables["money_transaction[direction]"] = transaction.direction;
-//            variables["api_key"] = model.apiKey;
-//            urlRequest.data = variables;
-//
+            var loader:URLLoader = new URLLoader();
+            var urlRequest:URLRequest = new URLRequest();
+
+            urlRequest.url = ApplicationConstants.KONTOMIERZ_API_ENDPOINT + "money_transactions/" + transaction.transactionId + ApplicationConstants.KONTOMIERZ_API_FORMAT_JSON;
+            urlRequest.method = URLRequestMethod.PUT;
+
+            var variables:URLVariables = new URLVariables();
+            variables["money_transaction[currency_amount]"] = transaction.currencyAmount;
+            variables["money_transaction[currency_name]"] = transaction.currencyName;
+            variables["money_transaction[transaction_on]"] = transaction.transactionOn.substr(8, 2) + "-" + transaction.transactionOn.substr(5, 2) + "-" + transaction.transactionOn.substr(0, 4);
+            variables["money_transaction[name]"] = transaction.description;
+            variables["money_transaction[category_id]"] = transaction.categoryId;
+            variables["money_transaction[direction]"] = transaction.direction;
+            variables["api_key"] = model.apiKey;
+            urlRequest.data = variables;
+
 //            loader.addEventListener(Event.COMPLETE, updateTransactionCompleteHandler);
 //            addLoaderListeners(loader);
-//
-//            loader.load(urlRequest);
+
+            loader.load(urlRequest);
             return null;
         }
 

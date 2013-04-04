@@ -113,7 +113,7 @@ package com.pauluz.bbapps.kontomierz.view.mediators
             }
             else
             {
-                deleteTransactionSignal.dispatch(selectedTransaction);
+                deleteTransactionSignal.dispatch(selectedTransaction.transactionId);
             }
         }
 

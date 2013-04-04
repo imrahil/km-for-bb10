@@ -11,9 +11,9 @@ package com.pauluz.bbapps.kontomierz.signals
 
     import org.osflash.signals.Signal;
 
-    public class AddTransactionSignal extends Signal
+    public class AddTransactionOnlineSignal extends Signal
     {
-        public function AddTransactionSignal()
+        public function AddTransactionOnlineSignal()
         {
             super(TransactionVO);
         }

@@ -43,7 +43,7 @@ package com.pauluz.bbapps.kontomierz.services.helpers
         {
             NetworkManager.networkManager.addEventListener(Event.CHANGE, onNetInfoChangeHandler);
 
-            checkNetwork(false);
+            checkNetwork();
 
             nextStepSignal.dispatch();
         }
@@ -53,11 +53,11 @@ package com.pauluz.bbapps.kontomierz.services.helpers
             checkNetwork();
         }
 
-        private function checkNetwork(sync:Boolean = true):void
+        private function checkNetwork():void
         {
             model.isConnected = NetworkManager.networkManager.isConnected();
 
-            if (model.isConnected && sync)
+            if (model.isConnected && model.syncRequired)
             {
                 syncOfflineChangesSignal.dispatch();
             }

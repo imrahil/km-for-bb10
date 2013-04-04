@@ -14,7 +14,5 @@ CREATE TABLE transactions
   tagString      STRING DEFAULT '',
 
   direction      STRING DEFAULT '',
-  isWallet       INTEGER DEFAULT 0,
-
-  modified       INTEGER DEFAULT 0
+  isWallet       INTEGER DEFAULT 0
 );

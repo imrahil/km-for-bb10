@@ -83,6 +83,9 @@ package com.pauluz.bbapps.kontomierz.constants
         [Embed(source="/assets/sql/InsertTransaction.sql", mimeType="application/octet-stream")]
         public static const InsertTransactionStatementText:Class;
 
+        [Embed(source="/assets/sql/InsertTransaction.sql", mimeType="application/octet-stream")]
+        public static const InsertNewTransactionStatementText:Class;
+
         [Embed(source="/assets/sql/DeleteTransactions.sql", mimeType="application/octet-stream")]
         public static const DeleteTransactionsStatementText:Class;
 
@@ -93,6 +96,9 @@ package com.pauluz.bbapps.kontomierz.constants
         public static const LoadTransactionsStatementText:Class;
 
         // TRANSACTIONS SYNC
+        [Embed(source="/assets/sql/sync/CheckSyncStatus.sql", mimeType="application/octet-stream")]
+        public static const CheckSyncStatusStatementText:Class;
+
         [Embed(source="/assets/sql/sync/LoadSyncTransactionsInserted.sql", mimeType="application/octet-stream")]
         public static const LoadSyncTransactionsInsertedStatementText:Class;
 
@@ -105,11 +111,20 @@ package com.pauluz.bbapps.kontomierz.constants
         [Embed(source="/assets/sql/sync/DeleteSyncTransactionsInserted.sql", mimeType="application/octet-stream")]
         public static const DeleteSyncTransactionsInsertedStatementText:Class;
 
+        [Embed(source="/assets/sql/sync/DeleteSyncTransactionsInsertedById.sql", mimeType="application/octet-stream")]
+        public static const DeleteSyncTransactionsInsertedByIdStatementText:Class;
+
         [Embed(source="/assets/sql/sync/DeleteSyncTransactionsUpdated.sql", mimeType="application/octet-stream")]
         public static const DeleteSyncTransactionsUpdatedStatementText:Class;
 
+        [Embed(source="/assets/sql/sync/DeleteSyncTransactionsUpdatedById.sql", mimeType="application/octet-stream")]
+        public static const DeleteSyncTransactionsUpdatedByIdStatementText:Class;
+
         [Embed(source="/assets/sql/sync/DeleteSyncTransactionsDeleted.sql", mimeType="application/octet-stream")]
         public static const DeleteSyncTransactionsDeletedStatementText:Class;
+
+        [Embed(source="/assets/sql/sync/DeleteSyncTransactionsDeletedById.sql", mimeType="application/octet-stream")]
+        public static const DeleteSyncTransactionsDeletedByIdStatementText:Class;
 
 
         // CATEGORIES

@@ -149,6 +149,11 @@ package com.pauluz.bbapps.kontomierz.services.helpers
             return output;
         }
 
+        public function parseOneTransactionsResponse(result:String):TransactionVO
+        {
+            return null;
+        }
+
         public function parseAllCategoriesResponse(result:String):SectionDataProvider
         {
             logger.debug(": parseAllCategoriesResponse");

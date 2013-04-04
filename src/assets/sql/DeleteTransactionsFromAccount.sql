@@ -1,1 +1,1 @@
-DELETE FROM transactions WHERE userAccountId = :userAccountId AND modified = 0;
+DELETE FROM transactions WHERE userAccountId = :userAccountId;

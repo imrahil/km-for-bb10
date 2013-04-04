@@ -5,17 +5,17 @@
  @project  Kontomierz
  @internal
  */
-package com.pauluz.bbapps.kontomierz.signals
+package com.pauluz.bbapps.kontomierz.signals.offline
 {
     import com.pauluz.bbapps.kontomierz.model.vo.TransactionVO;
 
     import org.osflash.signals.Signal;
 
-    public class DeleteTransactionSignal extends Signal
+    public class AddTransactionOfflineSignal extends Signal
     {
-        public function DeleteTransactionSignal()
+        public function AddTransactionOfflineSignal()
         {
-            super(int);
+            super(TransactionVO);
         }
     }
 }
