@@ -611,7 +611,7 @@ package com.pauluz.bbapps.kontomierz.services
 
         private function onDeleteTransactionComplete(results:Vector.<SQLResult>, id:int, isWallet:Boolean):void
         {
-            logger.debug(": onCreateTransactionComplete");
+            logger.debug(": onDeleteTransactionComplete");
 
             if (model.isConnected)
             {

@@ -195,7 +195,7 @@ package com.pauluz.bbapps.kontomierz.services
          */
         public function deleteTransaction(id:int):IPromise
         {
-            logger.debug(": deleteTransaction service call");
+            logger.debug(": deleteTransaction service call - id: " + id);
 
             var params:Object = {};
             params.api_key = model.apiKey;
