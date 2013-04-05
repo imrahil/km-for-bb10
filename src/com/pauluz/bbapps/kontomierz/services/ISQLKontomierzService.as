@@ -22,7 +22,7 @@ package com.pauluz.bbapps.kontomierz.services
 
         function createTransaction(transaction:TransactionVO):void;
         function updateTransaction(transaction:TransactionVO):void;
-        function deleteTransaction(id:int, wallet:Boolean):void;
+        function deleteTransaction(id:int, isWallet:Boolean):void;
 
         function deleteSyncDeletedTransaction(id:int):void;
         function deleteSyncInsertTransaction(id:int):void;

@@ -54,13 +54,15 @@ package com.pauluz.bbapps.kontomierz.controller.bootstraps
             signalCommandMap.mapSignalClass(AddTransactionOfflineSignal, AddTransactionOfflineCommand);
             signalCommandMap.mapSignalClass(AddTransactionOnlineSignal, AddTransactionOnlineCommand);
 
-            signalCommandMap.mapSignalClass(UpdateTransactionSignal, UpdateTransactionCommand);
-            signalCommandMap.mapSignalClass(DeleteTransactionSignal, DeleteTransactionCommand);
+            signalCommandMap.mapSignalClass(UpdateTransactionOfflineSignal, UpdateTransactionOfflineCommand);
+            signalCommandMap.mapSignalClass(UpdateTransactionOnlineSignal, UpdateTransactionOnlineCommand);
+
+            signalCommandMap.mapSignalClass(DeleteTransactionOfflineSignal, DeleteTransactionOfflineCommand);
+            signalCommandMap.mapSignalClass(DeleteTransactionOnlineSignal, DeleteTransactionOnlineCommand);
 
             // wallet
             signalCommandMap.mapSignalClass(StoreDefaultWalletSignal, StoreDefaultWalletCommand);
 
-            signalCommandMap.mapSignalClass(DeleteWalletTransactionSignal, DeleteWalletTransactionCommand);
             signalCommandMap.mapSignalClass(RefreshWalletSignal, RefreshWalletCommand);
 
             // categories
@@ -83,6 +85,10 @@ package com.pauluz.bbapps.kontomierz.controller.bootstraps
 
             signalCommandMap.mapSignalClass(CheckSyncStatusSignal, CheckSyncStatusCommand);
             signalCommandMap.mapSignalClass(SyncOfflineChangesSignal, SyncOfflineChangesCommand);
+
+            signalCommandMap.mapSignalClass(SyncAddTransactionSignal, SyncAddTransactionCommand);
+            signalCommandMap.mapSignalClass(SyncUpdateTransactionSignal, SyncUpdateTransactionCommand);
+            signalCommandMap.mapSignalClass(SyncDeleteTransactionSignal, SyncDeleteTransactionCommand);
 
             nextStepSignal.dispatch();
         }

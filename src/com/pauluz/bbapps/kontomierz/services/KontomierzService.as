@@ -178,55 +178,29 @@ package com.pauluz.bbapps.kontomierz.services
         {
             logger.debug(": updateTransaction service call");
 
-            var loader:URLLoader = new URLLoader();
-            var urlRequest:URLRequest = new URLRequest();
+            var params:Object = {};
+            params["money_transaction[currency_amount]"] = transaction.currencyAmount;
+            params["money_transaction[currency_name]"] = transaction.currencyName;
+            params["money_transaction[transaction_on]"] = transaction.transactionOn.substr(8, 2) + "-" + transaction.transactionOn.substr(5, 2) + "-" + transaction.transactionOn.substr(0, 4);
+            params["money_transaction[name]"] = transaction.description;
+            params["money_transaction[category_id]"] = transaction.categoryId;
+            params["money_transaction[direction]"] = transaction.direction;
+            params.api_key = model.apiKey;
 
-            urlRequest.url = ApplicationConstants.KONTOMIERZ_API_ENDPOINT + "money_transactions/" + transaction.transactionId + ApplicationConstants.KONTOMIERZ_API_FORMAT_JSON;
-            urlRequest.method = URLRequestMethod.PUT;
-
-            var variables:URLVariables = new URLVariables();
-            variables["money_transaction[currency_amount]"] = transaction.currencyAmount;
-            variables["money_transaction[currency_name]"] = transaction.currencyName;
-            variables["money_transaction[transaction_on]"] = transaction.transactionOn.substr(8, 2) + "-" + transaction.transactionOn.substr(5, 2) + "-" + transaction.transactionOn.substr(0, 4);
-            variables["money_transaction[name]"] = transaction.description;
-            variables["money_transaction[category_id]"] = transaction.categoryId;
-            variables["money_transaction[direction]"] = transaction.direction;
-            variables["api_key"] = model.apiKey;
-            urlRequest.data = variables;
-
-//            loader.addEventListener(Event.COMPLETE, updateTransactionCompleteHandler);
-//            addLoaderListeners(loader);
-
-            loader.load(urlRequest);
-            return null;
+            return service.put("money_transactions/" + transaction.transactionId + ApplicationConstants.KONTOMIERZ_API_FORMAT_JSON, params);
         }
 
         /**
          * DELETE TRANSACTION
          */
-        public function deleteTransaction(id:int, wallet:Boolean):IPromise
+        public function deleteTransaction(id:int):IPromise
         {
             logger.debug(": deleteTransaction service call");
 
-//            var loader:URLLoader = new URLLoader();
-//            var urlRequest:URLRequest = prepareRequest();
-//
-//            urlRequest.url = ApplicationConstants.KONTOMIERZ_API_ENDPOINT + "money_transactions/" + id + ApplicationConstants.KONTOMIERZ_API_FORMAT_JSON + "?api_key=" + model.apiKey;
-//            urlRequest.method = URLRequestMethod.DELETE;
-//
-//            if (wallet)
-//            {
-//                loader.addEventListener(Event.COMPLETE, deleteWalletTransactionCompleteHandler);
-//            }
-//            else
-//            {
-//                loader.addEventListener(Event.COMPLETE, deleteTransactionCompleteHandler);
-//            }
-//
-//            addLoaderListeners(loader);
-//
-//            loader.load(urlRequest);
-            return null;
+            var params:Object = {};
+            params.api_key = model.apiKey;
+
+            return service.del("money_transactions/" + id + ApplicationConstants.KONTOMIERZ_API_FORMAT_JSON, params);
         }
 
         /**

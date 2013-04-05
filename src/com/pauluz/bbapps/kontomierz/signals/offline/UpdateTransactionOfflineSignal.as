@@ -5,15 +5,15 @@
  @project  Kontomierz
  @internal
  */
-package com.pauluz.bbapps.kontomierz.signals
+package com.pauluz.bbapps.kontomierz.signals.offline
 {
     import com.pauluz.bbapps.kontomierz.model.vo.TransactionVO;
 
     import org.osflash.signals.Signal;
 
-    public class UpdateTransactionSignal extends Signal
+    public class UpdateTransactionOfflineSignal extends Signal
     {
-        public function UpdateTransactionSignal()
+        public function UpdateTransactionOfflineSignal()
         {
             super(TransactionVO);
         }

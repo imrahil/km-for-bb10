@@ -12,7 +12,8 @@ package com.pauluz.bbapps.kontomierz.view.mediators
     import com.pauluz.bbapps.kontomierz.signals.GetAllCategoriesSignal;
     import com.pauluz.bbapps.kontomierz.signals.GetAllCurrenciesSignal;
     import com.pauluz.bbapps.kontomierz.signals.RequestSelectedTransactionSignal;
-    import com.pauluz.bbapps.kontomierz.signals.UpdateTransactionSignal;
+    import com.pauluz.bbapps.kontomierz.signals.UpdateTransactionOnlineSignal;
+    import com.pauluz.bbapps.kontomierz.signals.offline.UpdateTransactionOfflineSignal;
     import com.pauluz.bbapps.kontomierz.signals.signaltons.ProvideAllCurrenciesSignal;
     import com.pauluz.bbapps.kontomierz.signals.signaltons.ProvideAllDepositCategoriesSignal;
     import com.pauluz.bbapps.kontomierz.signals.signaltons.ProvideAllWithdrawalCategoriesSignal;
@@ -67,7 +68,7 @@ package com.pauluz.bbapps.kontomierz.view.mediators
         public var getAllCurrenciesSignal:GetAllCurrenciesSignal;
 
         [Inject]
-        public var updateTransactionSignal:UpdateTransactionSignal;
+        public var updateTransactionOfflineSignal:UpdateTransactionOfflineSignal;
 
         /** variables **/
         private var logger:ILogger;
@@ -128,7 +129,7 @@ package com.pauluz.bbapps.kontomierz.view.mediators
 
         private function onEditTransaction(transaction:TransactionVO):void
         {
-            updateTransactionSignal.dispatch(transaction);
+            updateTransactionOfflineSignal.dispatch(transaction);
         }
 
         private function onTransactionDetailsData(transaction:TransactionVO):void

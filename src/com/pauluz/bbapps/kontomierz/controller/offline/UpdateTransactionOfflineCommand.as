@@ -12,7 +12,7 @@ package com.pauluz.bbapps.kontomierz.controller.offline
 
     import org.robotlegs.mvcs.SignalCommand;
 
-    public final class AddTransactionOfflineCommand extends SignalCommand
+    public final class UpdateTransactionOfflineCommand extends SignalCommand 
     {
         /** PARAMETERS **/
         [Inject]
@@ -23,11 +23,11 @@ package com.pauluz.bbapps.kontomierz.controller.offline
         public var sqlService:ISQLKontomierzService;
 
         /**
-         * Method handle the logic for <code>AddTransactionOfflineCommand</code>
+         * Method handle the logic for <code>UpdateTransactionOfflineCommand</code>
          */        
         override public function execute():void    
         {
-            sqlService.createTransaction(transaction);
+            sqlService.updateTransaction(transaction);
         }
     }
 }

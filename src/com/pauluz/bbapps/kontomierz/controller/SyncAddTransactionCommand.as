@@ -15,16 +15,17 @@ package com.pauluz.bbapps.kontomierz.controller
 
     import org.robotlegs.mvcs.SignalCommand;
 
-    public final class DeleteTransactionCommand extends BaseOnlineCommand
+    public final class SyncAddTransactionCommand extends BaseOnlineCommand
     {
         /** PARAMETERS **/
         [Inject]
-        public var transactionId:int;
+        public var transaction:TransactionVO;
 
-        /** INJECTIONS **/
+        /** MODEL **/
         [Inject]
         public var model:IKontomierzModel;
 
+        /** INJECTIONS **/
         [Inject]
         public var kontomierzService:IKontomierzService;
 
@@ -32,28 +33,22 @@ package com.pauluz.bbapps.kontomierz.controller
         public var sqlService:ISQLKontomierzService;
 
         /**
-         * Method handle the logic for <code>DeleteTransactionCommand</code>
+         * Method handle the logic for <code>SyncAddTransactionCommand</code>
          */        
         override public function execute():void    
         {
-            if (model.isConnected)
-            {
-                var promise:IPromise = kontomierzService.deleteTransaction(transactionId, false);
-                promise.completed.addOnce(onDeleteTransaction);
-                promise.failed.addOnce(onError);
-            }
-            else
-            {
-                sqlService.deleteTransaction(transactionId, false);
-            }
+            var promise:IPromise = kontomierzService.createTransaction(transaction);
+            promise.completed.addOnce(onAddTransaction);
+            promise.failed.addOnce(onError);
         }
 
-        /*
+        /**
          *  COMPLETE HANDLER
          */
-        private function onDeleteTransaction(promise:IPromise):void
+        private function onAddTransaction(promise:IPromise):void
         {
-            sqlService.deleteSyncDeletedTransaction(transactionId);
+            sqlService.deleteSyncInsertTransaction(transaction.id);
+            sqlService.deleteSyncUpdatedTransaction(transaction.id);
 
             if (model.totalSyncCount > 0)
             {
@@ -65,6 +60,13 @@ package com.pauluz.bbapps.kontomierz.controller
                     model.syncInProgress = false;
                 }
             }
+        }
+
+        /**
+         *  ERROR HANDLER
+         */
+        override protected function onError(promise:IPromise):void
+        {
         }
     }
 }

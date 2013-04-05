@@ -7,27 +7,29 @@
  */
 package com.pauluz.bbapps.kontomierz.controller.offline
 {
-    import com.pauluz.bbapps.kontomierz.model.vo.TransactionVO;
     import com.pauluz.bbapps.kontomierz.services.ISQLKontomierzService;
 
     import org.robotlegs.mvcs.SignalCommand;
 
-    public final class AddTransactionOfflineCommand extends SignalCommand
+    public final class DeleteTransactionOfflineCommand extends SignalCommand 
     {
         /** PARAMETERS **/
         [Inject]
-        public var transaction:TransactionVO;
+        public var transactionId:int;
+
+        [Inject]
+        public var isWallet:Boolean;
 
         /** INJECTIONS **/
         [Inject]
         public var sqlService:ISQLKontomierzService;
 
         /**
-         * Method handle the logic for <code>AddTransactionOfflineCommand</code>
+         * Method handle the logic for <code>DeleteTransactionOfflineCommand</code>
          */        
         override public function execute():void    
         {
-            sqlService.createTransaction(transaction);
+            sqlService.deleteTransaction(transactionId, isWallet);
         }
     }
 }

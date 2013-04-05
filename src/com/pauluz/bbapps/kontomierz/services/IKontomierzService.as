@@ -28,7 +28,7 @@ package com.pauluz.bbapps.kontomierz.services
 
         function createTransaction(transaction:TransactionVO):IPromise;
         function updateTransaction(transaction:TransactionVO):IPromise;
-        function deleteTransaction(id:int, wallet:Boolean):IPromise;
+        function deleteTransaction(id:int):IPromise;
 
         function getAllWithdrawalCategories():IPromise;
         function getAllDepositCategories():IPromise;

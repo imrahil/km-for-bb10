@@ -15,22 +15,9 @@ package com.pauluz.bbapps.kontomierz.services
     import com.pauluz.bbapps.kontomierz.model.vo.CurrencyVO;
     import com.pauluz.bbapps.kontomierz.model.vo.ErrorVO;
     import com.pauluz.bbapps.kontomierz.model.vo.TransactionVO;
-    import com.pauluz.bbapps.kontomierz.signals.AddTransactionOnlineSignal;
-    import com.pauluz.bbapps.kontomierz.signals.GetAllAccountsOnlineSignal;
-    import com.pauluz.bbapps.kontomierz.signals.GetAllCategoriesOnlineSignal;
-    import com.pauluz.bbapps.kontomierz.signals.GetAllCurrenciesOnlineSignal;
-    import com.pauluz.bbapps.kontomierz.signals.GetAllTransactionsOnlineSignal;
-    import com.pauluz.bbapps.kontomierz.signals.GetAllWalletTransactionsOnlineSignal;
-    import com.pauluz.bbapps.kontomierz.signals.StoreDefaultWalletSignal;
+    import com.pauluz.bbapps.kontomierz.signals.*;
     import com.pauluz.bbapps.kontomierz.signals.offline.CheckSyncStatusSignal;
-    import com.pauluz.bbapps.kontomierz.signals.signaltons.ErrorSignal;
-    import com.pauluz.bbapps.kontomierz.signals.signaltons.ProvideAllAccountsDataSignal;
-    import com.pauluz.bbapps.kontomierz.signals.signaltons.ProvideAllCurrenciesSignal;
-    import com.pauluz.bbapps.kontomierz.signals.signaltons.ProvideAllDepositCategoriesSignal;
-    import com.pauluz.bbapps.kontomierz.signals.signaltons.ProvideAllTransactionsSignal;
-    import com.pauluz.bbapps.kontomierz.signals.signaltons.ProvideAllWithdrawalCategoriesSignal;
-    import com.pauluz.bbapps.kontomierz.signals.signaltons.ProvideLoginStatusSignal;
-    import com.pauluz.bbapps.kontomierz.signals.signaltons.TransactionSuccessfullySavedSignal;
+    import com.pauluz.bbapps.kontomierz.signals.signaltons.*;
     import com.pauluz.bbapps.kontomierz.utils.LogUtil;
     import com.probertson.data.QueuedStatement;
     import com.probertson.data.SQLRunner;
@@ -108,6 +95,21 @@ package com.pauluz.bbapps.kontomierz.services
         public var addTransactionOnlineSignal:AddTransactionOnlineSignal;
 
         [Inject]
+        public var updateTransactionOnlineSignal:UpdateTransactionOnlineSignal;
+
+        [Inject]
+        public var deleteTransactionOnlineSignal:DeleteTransactionOnlineSignal;
+
+        [Inject]
+        public var syncAddTransactionSignal:SyncAddTransactionSignal;
+
+        [Inject]
+        public var syncUpdateTransactionSignal:SyncUpdateTransactionSignal;
+
+        [Inject]
+        public var syncDeleteTransactionSignal:SyncDeleteTransactionSignal;
+
+        [Inject]
         public var errorSignal:ErrorSignal;
 
         private static const INSERT_API_KEY_SQL:String = new SQLStatements.InsertAPIKeyStatementText();
@@ -124,6 +126,7 @@ package com.pauluz.bbapps.kontomierz.services
         private static const INSERT_NEW_TRANSACTION_SQL:String = new SQLStatements.InsertNewTransactionStatementText();
         private static const DELETE_TRANSACTIONS_SQL:String = new SQLStatements.DeleteTransactionsStatementText();
         private static const DELETE_TRANSACTIONS_FROM_ACCOUNT_SQL:String = new SQLStatements.DeleteTransactionsFromAccountStatementText();
+        private static const DELETE_TRANSACTION_BY_ID:String = new SQLStatements.DeleteTransactionByIdStatementText();
         private static const LOAD_TRANSACTIONS_SQL:String = new SQLStatements.LoadTransactionsStatementText();
 
         // SYNC STUFF
@@ -478,7 +481,13 @@ package com.pauluz.bbapps.kontomierz.services
 
         private function onSyncDeletedItems(result:SQLResult):void
         {
-
+            if (result.data != null && result.data.length > 0)
+            {
+                for each (var obj:Object in result.data)
+                {
+                    syncDeleteTransactionSignal.dispatch(obj.id);
+                }
+            }
         }
 
         private function syncInsertedItems():void
@@ -494,14 +503,27 @@ package com.pauluz.bbapps.kontomierz.services
              {
                  for each (var transaction:TransactionVO in result.data)
                  {
-                     addTransactionOnlineSignal.dispatch(transaction);
+                     syncAddTransactionSignal.dispatch(transaction);
                  }
              }
         }
 
         private function syncUpdatedItems():void
         {
+            logger.debug(": syncUpdatedItems");
 
+            sqlRunner.execute(LOAD_SYNC_TRANSACTIONS_UPDATED_SQL, null, onSyncUpdatedItems, TransactionVO, databaseErrorHandler);
+        }
+
+        private function onSyncUpdatedItems(result:SQLResult):void
+        {
+             if (result.data != null && result.data.length > 0)
+             {
+                 for each (var transaction:TransactionVO in result.data)
+                 {
+                     syncUpdateTransactionSignal.dispatch(transaction);
+                 }
+             }
         }
 
         /*
@@ -541,7 +563,7 @@ package com.pauluz.bbapps.kontomierz.services
                 if (results && results.length > 0)
                 {
                     transaction.id = results[0].lastInsertRowID;
-                    addTransactionOnlineSignal.dispatch(transaction);
+                    syncAddTransactionSignal.dispatch(transaction);
                 }
             }
             else
@@ -567,12 +589,54 @@ package com.pauluz.bbapps.kontomierz.services
         /*
          *  DELETE TRANSACTION
          */
-        public function deleteTransaction(id:int, wallet:Boolean):void
+        public function deleteTransaction(id:int, isWallet:Boolean):void
         {
             logger.debug(": deleteTransaction");
 
-            throw new Error("Override this method!");
+            var stmts:Vector.<QueuedStatement> = new Vector.<QueuedStatement>();
+
+            if (id == -1)
+            {
+                stmts[stmts.length] = new QueuedStatement(DROP_SYNC_TRANSACTION_DELETE_TRIGGER_SQL);
+                stmts[stmts.length] = new QueuedStatement(DELETE_TRANSACTION_BY_ID, {id: id});
+                stmts[stmts.length] = new QueuedStatement(CREATE_SYNC_TRANSACTION_DELETE_TRIGGER_SQL);
+            }
+            else
+            {
+                stmts[stmts.length] = new QueuedStatement(DELETE_TRANSACTION_BY_ID, {id: id});
+            }
+
+            sqlRunner.executeModify(stmts, function(results:Vector.<SQLResult>):void { onDeleteTransactionComplete(results, id, isWallet) }, databaseErrorHandler);
         }
+
+        private function onDeleteTransactionComplete(results:Vector.<SQLResult>, id:int, isWallet:Boolean):void
+        {
+            logger.debug(": onCreateTransactionComplete");
+
+            if (model.isConnected)
+            {
+                if (results && results.length > 0)
+                {
+                    deleteTransactionOnlineSignal.dispatch(id, isWallet);
+                }
+            }
+            else
+            {
+                model.syncRequired = true;
+
+                if (isWallet)
+                {
+                    model.defaultWallet.isValid = false;
+                    getAllWalletTransactions();
+                }
+                else
+                {
+                    model.selectedAccount.isValid = false;
+                    getAllTransactions(model.selectedAccount.accountId);
+                }
+            }
+        }
+
 
 
         /*

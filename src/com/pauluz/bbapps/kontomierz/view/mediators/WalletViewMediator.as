@@ -8,10 +8,10 @@
 package com.pauluz.bbapps.kontomierz.view.mediators
 {
     import com.pauluz.bbapps.kontomierz.model.vo.TransactionVO;
-    import com.pauluz.bbapps.kontomierz.signals.DeleteWalletTransactionSignal;
     import com.pauluz.bbapps.kontomierz.signals.RefreshWalletSignal;
     import com.pauluz.bbapps.kontomierz.signals.StoreSelectedTransactionForEditSignal;
     import com.pauluz.bbapps.kontomierz.signals.StoreSelectedTransactionSignal;
+    import com.pauluz.bbapps.kontomierz.signals.offline.DeleteTransactionOfflineSignal;
     import com.pauluz.bbapps.kontomierz.signals.offline.GetAllWalletTransactionsOfflineSignal;
     import com.pauluz.bbapps.kontomierz.signals.signaltons.ProvideAllTransactionsSignal;
     import com.pauluz.bbapps.kontomierz.signals.signaltons.SelectedTransactionSuccessfulStoreSignal;
@@ -59,7 +59,7 @@ package com.pauluz.bbapps.kontomierz.view.mediators
         public var storeSelectedTransactionForEditSignal:StoreSelectedTransactionForEditSignal;
 
         [Inject]
-        public var deleteWalletTransactionSignal:DeleteWalletTransactionSignal;
+        public var deleteTransactionOfflineSignal:DeleteTransactionOfflineSignal;
 
         [Inject]
         public var refreshWalletSignal:RefreshWalletSignal;
@@ -126,7 +126,7 @@ package com.pauluz.bbapps.kontomierz.view.mediators
         {
             logger.debug(": onDeleteTransaction");
 
-            deleteWalletTransactionSignal.dispatch(transaction);
+            deleteTransactionOfflineSignal.dispatch(transaction.transactionId, true);
         }
 
         private function onRefreshWallet():void

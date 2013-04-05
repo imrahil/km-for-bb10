@@ -92,6 +92,9 @@ package com.pauluz.bbapps.kontomierz.constants
         [Embed(source="/assets/sql/DeleteTransactionsFromAccount.sql", mimeType="application/octet-stream")]
         public static const DeleteTransactionsFromAccountStatementText:Class;
 
+        [Embed(source="/assets/sql/DeleteTransactionById.sql", mimeType="application/octet-stream")]
+        public static const DeleteTransactionByIdStatementText:Class;
+
         [Embed(source="/assets/sql/LoadTransactions.sql", mimeType="application/octet-stream")]
         public static const LoadTransactionsStatementText:Class;
 

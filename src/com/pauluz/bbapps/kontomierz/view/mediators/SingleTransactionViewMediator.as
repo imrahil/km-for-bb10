@@ -8,10 +8,9 @@
 package com.pauluz.bbapps.kontomierz.view.mediators
 {
     import com.pauluz.bbapps.kontomierz.model.vo.TransactionVO;
-    import com.pauluz.bbapps.kontomierz.signals.DeleteTransactionSignal;
-    import com.pauluz.bbapps.kontomierz.signals.DeleteWalletTransactionSignal;
     import com.pauluz.bbapps.kontomierz.signals.RequestSelectedTransactionSignal;
     import com.pauluz.bbapps.kontomierz.signals.StoreSelectedTransactionForEditSignal;
+    import com.pauluz.bbapps.kontomierz.signals.offline.DeleteTransactionOfflineSignal;
     import com.pauluz.bbapps.kontomierz.signals.signaltons.ProvideSelectedTransactionSignal;
     import com.pauluz.bbapps.kontomierz.signals.signaltons.TransactionForEditSuccessfulStoreSignal;
     import com.pauluz.bbapps.kontomierz.utils.LogUtil;
@@ -49,10 +48,7 @@ package com.pauluz.bbapps.kontomierz.view.mediators
         public var storeSelectedTransactionForEditSignal:StoreSelectedTransactionForEditSignal;
 
         [Inject]
-        public var deleteTransactionSignal:DeleteTransactionSignal;
-
-        [Inject]
-        public var deleteWalletTransactionSignal:DeleteWalletTransactionSignal;
+        public var deleteTransactionOfflineSignal:DeleteTransactionOfflineSignal;
 
         /** variables **/
         private var logger:ILogger;
@@ -107,14 +103,7 @@ package com.pauluz.bbapps.kontomierz.view.mediators
         {
             logger.debug(": onDeleteTransaction");
 
-            if (isWallet)
-            {
-                deleteWalletTransactionSignal.dispatch(selectedTransaction);
-            }
-            else
-            {
-                deleteTransactionSignal.dispatch(selectedTransaction.transactionId);
-            }
+            deleteTransactionOfflineSignal.dispatch(selectedTransaction.transactionId, isWallet);
         }
 
         private function onDetailsData(transaction:TransactionVO):void

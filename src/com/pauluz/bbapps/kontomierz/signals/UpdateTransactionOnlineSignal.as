@@ -11,9 +11,9 @@ package com.pauluz.bbapps.kontomierz.signals
 
     import org.osflash.signals.Signal;
 
-    public class DeleteWalletTransactionSignal extends Signal
+    public class UpdateTransactionOnlineSignal extends Signal
     {
-        public function DeleteWalletTransactionSignal()
+        public function UpdateTransactionOnlineSignal()
         {
             super(TransactionVO);
         }

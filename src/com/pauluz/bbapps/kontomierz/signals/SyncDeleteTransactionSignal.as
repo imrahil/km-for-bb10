@@ -7,13 +7,11 @@
  */
 package com.pauluz.bbapps.kontomierz.signals
 {
-    import com.pauluz.bbapps.kontomierz.model.vo.TransactionVO;
-
     import org.osflash.signals.Signal;
 
-    public class DeleteTransactionSignal extends Signal
+    public class SyncDeleteTransactionSignal extends Signal
     {
-        public function DeleteTransactionSignal()
+        public function SyncDeleteTransactionSignal()
         {
             super(int);
         }

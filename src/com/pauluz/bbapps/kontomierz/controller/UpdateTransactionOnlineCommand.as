@@ -12,19 +12,19 @@ package com.pauluz.bbapps.kontomierz.controller
     import com.pauluz.bbapps.kontomierz.model.vo.TransactionVO;
     import com.pauluz.bbapps.kontomierz.services.IKontomierzService;
     import com.pauluz.bbapps.kontomierz.services.ISQLKontomierzService;
+    import com.pauluz.bbapps.kontomierz.signals.signaltons.ProvideSelectedTransactionSignal;
     import com.pauluz.bbapps.kontomierz.signals.signaltons.TransactionSuccessfullySavedSignal;
 
-    public final class AddTransactionOnlineCommand extends BaseOnlineCommand
+    public final class UpdateTransactionOnlineCommand extends BaseOnlineCommand
     {
         /** PARAMETERS **/
         [Inject]
         public var transaction:TransactionVO;
 
-        /** MODEL **/
+        /** INJECTIONS **/
         [Inject]
         public var model:IKontomierzModel;
 
-        /** INJECTIONS **/
         [Inject]
         public var kontomierzService:IKontomierzService;
 
@@ -34,29 +34,33 @@ package com.pauluz.bbapps.kontomierz.controller
         [Inject]
         public var transactionSuccessfullySavedSignal:TransactionSuccessfullySavedSignal;
 
+        [Inject]
+        public var provideSelectedTransactionSignal:ProvideSelectedTransactionSignal;
+
         /**
-         * Method handle the logic for <code>AddTransactionOnlineCommand</code>
+         * Method handle the logic for <code>UpdateTransactionCommand</code>
          */        
         override public function execute():void    
         {
-            var promise:IPromise = kontomierzService.createTransaction(transaction);
+            var promise:IPromise = kontomierzService.updateTransaction(transaction);
             promise.completed.addOnce(onAddTransaction);
             promise.failed.addOnce(onError);
         }
 
-        /*
+        /**
          *  COMPLETE HANDLER
          */
         private function onAddTransaction(promise:IPromise):void
         {
-            sqlService.deleteSyncInsertTransaction(transaction.id);
             sqlService.deleteSyncUpdatedTransaction(transaction.id);
 
             model.defaultWallet.isValid = false;
             transactionSuccessfullySavedSignal.dispatch();
+
+            provideSelectedTransactionSignal.dispatch(transaction);
         }
 
-        /*
+        /**
          *  ERROR HANDLER
          */
         override protected function onError(promise:IPromise):void
