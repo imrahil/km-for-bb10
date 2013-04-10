@@ -126,7 +126,7 @@ package com.pauluz.bbapps.kontomierz.view.mediators
         {
             logger.debug(": onDeleteTransaction");
 
-            deleteTransactionOfflineSignal.dispatch(transaction.transactionId, true);
+            deleteTransactionOfflineSignal.dispatch(transaction);
         }
 
         private function onRefreshWallet():void

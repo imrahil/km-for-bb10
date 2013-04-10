@@ -66,13 +66,13 @@ package com.pauluz.bbapps.kontomierz.controller.bootstraps
             signalCommandMap.mapSignalClass(RefreshWalletSignal, RefreshWalletCommand);
 
             // categories
-            signalCommandMap.mapSignalClass(GetAllCategoriesSignal, GetAllCategoriesCommand);
+            signalCommandMap.mapSignalClass(GetAllCategoriesOfflineSignal, GetAllCategoriesOfflineCommand);
             signalCommandMap.mapSignalClass(GetAllCategoriesOnlineSignal, GetAllCategoriesOnlineCommand);
             signalCommandMap.mapSignalClass(StoreSelectedCategorySignal, StoreSelectedCategoryCommand);
             signalCommandMap.mapSignalClass(GetAllCategoryTransactionsSignal, GetAllCategoryTransactionsCommand);
 
             // currencies
-            signalCommandMap.mapSignalClass(GetAllCurrenciesSignal, GetAllCurrenciesCommand);
+            signalCommandMap.mapSignalClass(GetAllCurrenciesOfflineSignal, GetAllCurrenciesOfflineCommand);
             signalCommandMap.mapSignalClass(GetAllCurrenciesOnlineSignal, GetAllCurrenciesOnlineCommand);
 
 
@@ -80,8 +80,8 @@ package com.pauluz.bbapps.kontomierz.controller.bootstraps
             signalCommandMap.mapSignalClass(SaveAPIKeySignal, SaveAPIKeyCommand);
             signalCommandMap.mapSignalClass(SaveAccountsSignal, SaveAccountsCommand);
             signalCommandMap.mapSignalClass(SaveTransactionsSignal, SaveTransactionsCommand);
-            signalCommandMap.mapSignalClass(SaveCategoriesSignal, SaveCategoriesCommand);
-            signalCommandMap.mapSignalClass(SaveCurrenciesSignal, SaveCurrenciesCommand);
+            signalCommandMap.mapSignalClass(SaveCategoriesSignal, SaveCategoriesOfflineCommand);
+            signalCommandMap.mapSignalClass(SaveCurrenciesSignal, SaveCurrenciesOfflineCommand);
 
             signalCommandMap.mapSignalClass(CheckSyncStatusSignal, CheckSyncStatusCommand);
             signalCommandMap.mapSignalClass(SyncOfflineChangesSignal, SyncOfflineChangesCommand);

@@ -95,6 +95,9 @@ package com.pauluz.bbapps.kontomierz.constants
         [Embed(source="/assets/sql/DeleteTransactionById.sql", mimeType="application/octet-stream")]
         public static const DeleteTransactionByIdStatementText:Class;
 
+        [Embed(source="/assets/sql/UpdateTransactionById.sql", mimeType="application/octet-stream")]
+        public static const UpdateTransactionByIdStatementText:Class;
+
         [Embed(source="/assets/sql/LoadTransactions.sql", mimeType="application/octet-stream")]
         public static const LoadTransactionsStatementText:Class;
 
@@ -153,5 +156,29 @@ package com.pauluz.bbapps.kontomierz.constants
 
         [Embed(source="/assets/sql/LoadCurrencies.sql", mimeType="application/octet-stream")]
         public static const LoadCurrenciesStatementText:Class;
+
+
+        // TRANSACTIONS
+        public static const UPDATE_TRANSACTION_BY_ID:String = new UpdateTransactionByIdStatementText();
+        public static const DELETE_TRANSACTION_BY_ID:String = new DeleteTransactionByIdStatementText();
+
+        // SYNC STUFF
+        public static const CREATE_SYNC_TRANSACTION_INSERT_TRIGGER_SQL:String = new CreateSyncTransactionInsertTriggerStatementText();
+        public static const CREATE_SYNC_TRANSACTION_UPDATE_TRIGGER_SQL:String = new CreateSyncTransactionUpdateTriggerStatementText();
+        public static const CREATE_SYNC_TRANSACTION_DELETE_TRIGGER_SQL:String = new CreateSyncTransactionDeleteTriggerStatementText();
+        public static const DROP_SYNC_TRANSACTION_INSERT_TRIGGER_SQL:String = new DropSyncTransactionInsertTriggerStatementText();
+        public static const DROP_SYNC_TRANSACTION_UPDATE_TRIGGER_SQL:String = new DropSyncTransactionUpdateTriggerStatementText();
+        public static const DROP_SYNC_TRANSACTION_DELETE_TRIGGER_SQL:String = new DropSyncTransactionDeleteTriggerStatementText();
+
+        // CATEGORIES
+        public static const INSERT_CATEGORY_SQL:String = new InsertCategoryStatementText();
+        public static const DELETE_CATEGORIES_SQL:String = new DeleteCategoriesStatementText();
+        public static const LOAD_CATEGORIES_SQL:String = new LoadCategoriesStatementText();
+        public static const LOAD_USED_CATEGORIES_SQL:String = new LoadUsedCategoriesStatementText();
+
+        // CURRENCIES
+        public static const INSERT_CURRENCY_SQL:String = new InsertCurrencyStatementText();
+        public static const DELETE_CURRENCIES_SQL:String = new DeleteCurrenciesStatementText();
+        public static const LOAD_CURRENCIES_SQL:String = new LoadCurrenciesStatementText();
     }
 }

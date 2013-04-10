@@ -179,23 +179,7 @@ package com.pauluz.bbapps.kontomierz.view
         public function showDetails(transaction:TransactionVO):void
         {
             var amountLabel:String = transaction.currencyAmountString;
-            if (transaction.direction)
-            {
-                // jesli robimy refresh - znamy direction i mozemy ustawic czy plus czy minus
-                if (transaction.direction == ApplicationConstants.TRANSACTION_DIRECTION_WITHDRAWAL)
-                {
-                    amountLbl.text = "-" + amountLabel + " " + transaction.currencyName;
-                }
-                else
-                {
-                    amountLbl.text = amountLabel + " " + transaction.currencyName;
-                }
-            }
-            else
-            {
-                // transakcja z API - nie ma direction - wyswietlamy tak jak jest
-                amountLbl.text = amountLabel + " " + transaction.currencyName;
-            }
+            amountLbl.text = amountLabel + " " + transaction.currencyName;
 
             dateLbl.text = transaction.transactionOn;
             descriptionLbl.text = transaction.description;

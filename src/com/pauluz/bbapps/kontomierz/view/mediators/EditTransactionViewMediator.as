@@ -9,10 +9,9 @@ package com.pauluz.bbapps.kontomierz.view.mediators
 {
     import com.pauluz.bbapps.kontomierz.constants.ApplicationConstants;
     import com.pauluz.bbapps.kontomierz.model.vo.TransactionVO;
-    import com.pauluz.bbapps.kontomierz.signals.GetAllCategoriesSignal;
-    import com.pauluz.bbapps.kontomierz.signals.GetAllCurrenciesSignal;
     import com.pauluz.bbapps.kontomierz.signals.RequestSelectedTransactionSignal;
-    import com.pauluz.bbapps.kontomierz.signals.UpdateTransactionOnlineSignal;
+    import com.pauluz.bbapps.kontomierz.signals.offline.GetAllCategoriesOfflineSignal;
+    import com.pauluz.bbapps.kontomierz.signals.offline.GetAllCurrenciesOfflineSignal;
     import com.pauluz.bbapps.kontomierz.signals.offline.UpdateTransactionOfflineSignal;
     import com.pauluz.bbapps.kontomierz.signals.signaltons.ProvideAllCurrenciesSignal;
     import com.pauluz.bbapps.kontomierz.signals.signaltons.ProvideAllDepositCategoriesSignal;
@@ -20,11 +19,11 @@ package com.pauluz.bbapps.kontomierz.view.mediators
     import com.pauluz.bbapps.kontomierz.signals.signaltons.ProvideSelectedTransactionSignal;
     import com.pauluz.bbapps.kontomierz.signals.signaltons.TransactionSuccessfullySavedSignal;
     import com.pauluz.bbapps.kontomierz.utils.LogUtil;
+    import com.pauluz.bbapps.kontomierz.view.EditTransactionView;
     import com.useitbetter.uDash;
 
     import mx.logging.ILogger;
-    
-    import com.pauluz.bbapps.kontomierz.view.EditTransactionView;
+
     import org.robotlegs.mvcs.SignalMediator;
 
     import qnx.ui.data.SectionDataProvider;
@@ -62,10 +61,10 @@ package com.pauluz.bbapps.kontomierz.view.mediators
         public var requestSelectedTransactionSignal:RequestSelectedTransactionSignal;
 
         [Inject]
-        public var getAllCategoriesSignal:GetAllCategoriesSignal;
+        public var getAllCategoriesSignal:GetAllCategoriesOfflineSignal;
 
         [Inject]
-        public var getAllCurrenciesSignal:GetAllCurrenciesSignal;
+        public var getAllCurrenciesSignal:GetAllCurrenciesOfflineSignal;
 
         [Inject]
         public var updateTransactionOfflineSignal:UpdateTransactionOfflineSignal;

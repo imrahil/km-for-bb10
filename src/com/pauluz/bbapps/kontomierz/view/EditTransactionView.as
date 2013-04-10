@@ -86,19 +86,36 @@ package com.pauluz.bbapps.kontomierz.view
             form.currenciesDP = _currenciesData;
 
             var tempDP:SectionDataProvider;
-            if (transaction.currencyAmount > 0)
+            if (transaction.direction != "")
             {
-                form.direction = ApplicationConstants.TRANSACTION_DIRECTION_DEPOSIT;
-                form.directionLbl.text = "Przychód";
-
-                tempDP = _depositCategoriesData;
+                form.direction = transaction.direction;
+                if (transaction.direction == ApplicationConstants.TRANSACTION_DIRECTION_WITHDRAWAL)
+                {
+                    form.directionLbl.text = "Wydatek";
+                    tempDP = _withdrawalCategoriesData;
+                }
+                else
+                {
+                    form.directionLbl.text = "Przychód";
+                    tempDP = _depositCategoriesData;
+                }
             }
             else
             {
-                form.direction = ApplicationConstants.TRANSACTION_DIRECTION_WITHDRAWAL;
-                form.directionLbl.text = "Wydatek";
+                if (transaction.currencyAmount > 0)
+                {
+                    form.direction = ApplicationConstants.TRANSACTION_DIRECTION_DEPOSIT;
+                    form.directionLbl.text = "Przychód";
 
-                tempDP = _withdrawalCategoriesData;
+                    tempDP = _depositCategoriesData;
+                }
+                else
+                {
+                    form.direction = ApplicationConstants.TRANSACTION_DIRECTION_WITHDRAWAL;
+                    form.directionLbl.text = "Wydatek";
+
+                    tempDP = _withdrawalCategoriesData;
+                }
             }
 
             form.amountTextInput.text = transaction.currencyAmount.toString().replace("-", "");
@@ -170,7 +187,7 @@ package com.pauluz.bbapps.kontomierz.view
 
                 progressActivity = new ActivityIndicator();
                 progressActivity.animate(true);
-                progressActivity.setPosition(this.stage.stageWidth - 150, 130);
+                progressActivity.setPosition(this.stage.stageWidth - 300, 10);
                 progressActivity.setSkin(ActivityIndicatorSkinMedium);
                 this.addChild(progressActivity);
 

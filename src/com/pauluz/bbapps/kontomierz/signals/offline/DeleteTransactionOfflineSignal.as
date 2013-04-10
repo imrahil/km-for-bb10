@@ -7,13 +7,15 @@
  */
 package com.pauluz.bbapps.kontomierz.signals.offline
 {
+    import com.pauluz.bbapps.kontomierz.model.vo.TransactionVO;
+
     import org.osflash.signals.Signal;
 
     public class DeleteTransactionOfflineSignal extends Signal
     {
         public function DeleteTransactionOfflineSignal()
         {
-            super(int, Boolean);
+            super(TransactionVO);
         }
     }
 }

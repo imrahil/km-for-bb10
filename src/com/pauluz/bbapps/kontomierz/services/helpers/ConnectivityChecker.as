@@ -55,7 +55,7 @@ package com.pauluz.bbapps.kontomierz.services.helpers
 
         private function checkNetwork():void
         {
-            model.isConnected = NetworkManager.networkManager.isConnected();
+            model.isConnected = false;  //NetworkManager.networkManager.isConnected();
 
             if (model.isConnected && model.syncRequired)
             {

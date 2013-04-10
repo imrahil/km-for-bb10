@@ -302,6 +302,11 @@ package com.pauluz.bbapps.kontomierz.view.components
 
             selectedTransaction.direction = direction;
 
+            if (direction == ApplicationConstants.TRANSACTION_DIRECTION_WITHDRAWAL)
+            {
+                selectedTransaction.currencyAmount *= -1;
+            }
+
             selectedTransaction.currencyName = (selectedCurrency) ? selectedCurrency.name : ApplicationConstants.DEFAULT_CURRENCY_NAME;
             selectedTransaction.categoryId = selectedCategory.categoryId;
             selectedTransaction.categoryName = (selectedCategory) ? categoryBtn.label : "";

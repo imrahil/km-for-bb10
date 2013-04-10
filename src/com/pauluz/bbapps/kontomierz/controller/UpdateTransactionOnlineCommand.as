@@ -12,6 +12,8 @@ package com.pauluz.bbapps.kontomierz.controller
     import com.pauluz.bbapps.kontomierz.model.vo.TransactionVO;
     import com.pauluz.bbapps.kontomierz.services.IKontomierzService;
     import com.pauluz.bbapps.kontomierz.services.ISQLKontomierzService;
+    import com.pauluz.bbapps.kontomierz.signals.offline.GetAllTransactionsOfflineSignal;
+    import com.pauluz.bbapps.kontomierz.signals.offline.GetAllWalletTransactionsOfflineSignal;
     import com.pauluz.bbapps.kontomierz.signals.signaltons.ProvideSelectedTransactionSignal;
     import com.pauluz.bbapps.kontomierz.signals.signaltons.TransactionSuccessfullySavedSignal;
 
@@ -37,26 +39,41 @@ package com.pauluz.bbapps.kontomierz.controller
         [Inject]
         public var provideSelectedTransactionSignal:ProvideSelectedTransactionSignal;
 
+        [Inject]
+        public var getAllTransactionsOfflineSignal:GetAllTransactionsOfflineSignal;
+
+        [Inject]
+        public var getAllWalletTransactionsOfflineSignal:GetAllWalletTransactionsOfflineSignal;
+
         /**
          * Method handle the logic for <code>UpdateTransactionCommand</code>
          */        
         override public function execute():void    
         {
             var promise:IPromise = kontomierzService.updateTransaction(transaction);
-            promise.completed.addOnce(onAddTransaction);
+            promise.completed.addOnce(onUpdateTransaction);
             promise.failed.addOnce(onError);
         }
 
         /**
          *  COMPLETE HANDLER
          */
-        private function onAddTransaction(promise:IPromise):void
+        private function onUpdateTransaction(promise:IPromise):void
         {
             sqlService.deleteSyncUpdatedTransaction(transaction.id);
 
-            model.defaultWallet.isValid = false;
-            transactionSuccessfullySavedSignal.dispatch();
+            if (transaction.isWallet)
+            {
+                model.defaultWallet.isValid = false;
+                getAllWalletTransactionsOfflineSignal.dispatch();
+            }
+            else
+            {
+                model.selectedAccount.isValid = false;
+                getAllTransactionsOfflineSignal.dispatch();
+            }
 
+            transactionSuccessfullySavedSignal.dispatch();
             provideSelectedTransactionSignal.dispatch(transaction);
         }
 

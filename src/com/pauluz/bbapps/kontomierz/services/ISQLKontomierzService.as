@@ -21,19 +21,11 @@ package com.pauluz.bbapps.kontomierz.services
         function syncOfflineChanges():void;
 
         function createTransaction(transaction:TransactionVO):void;
-        function updateTransaction(transaction:TransactionVO):void;
-        function deleteTransaction(id:int, isWallet:Boolean):void;
+        function deleteTransaction(transaction:TransactionVO):void;
 
         function deleteSyncDeletedTransaction(id:int):void;
         function deleteSyncInsertTransaction(id:int):void;
         function deleteSyncUpdatedTransaction(id:int):void;
-
-        function saveCategories(categoriesList:SectionDataProvider, direction:String):void;
-        function loadCategories(direction:String):void;
-        function loadUsedCategories():void;
-
-        function saveCurrencies(currenciesList:Array):void;
-        function loadCurrencies():void;
 
         function deleteOnLogout():void;
     }

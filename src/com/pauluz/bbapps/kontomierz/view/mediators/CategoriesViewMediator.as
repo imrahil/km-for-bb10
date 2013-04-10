@@ -9,16 +9,16 @@ package com.pauluz.bbapps.kontomierz.view.mediators
 {
     import com.pauluz.bbapps.kontomierz.constants.ApplicationConstants;
     import com.pauluz.bbapps.kontomierz.model.vo.CategoryVO;
-    import com.pauluz.bbapps.kontomierz.signals.GetAllCategoriesSignal;
     import com.pauluz.bbapps.kontomierz.signals.StoreSelectedCategorySignal;
+    import com.pauluz.bbapps.kontomierz.signals.offline.GetAllCategoriesOfflineSignal;
     import com.pauluz.bbapps.kontomierz.signals.signaltons.ProvideAllWithdrawalCategoriesSignal;
     import com.pauluz.bbapps.kontomierz.signals.signaltons.SelectedCategorySuccessfulStoreSignal;
     import com.pauluz.bbapps.kontomierz.utils.LogUtil;
+    import com.pauluz.bbapps.kontomierz.view.CategoriesView;
     import com.useitbetter.uDash;
 
     import mx.logging.ILogger;
-    
-    import com.pauluz.bbapps.kontomierz.view.CategoriesView;
+
     import org.robotlegs.mvcs.SignalMediator;
 
     import qnx.ui.data.SectionDataProvider;
@@ -44,7 +44,7 @@ package com.pauluz.bbapps.kontomierz.view.mediators
          * SIGNAL -> COMMAND
          */
         [Inject]
-        public var getAllCategoriesSignal:GetAllCategoriesSignal;
+        public var getAllCategoriesSignal:GetAllCategoriesOfflineSignal;
 
         [Inject]
         public var storeSelectedCategorySignal:StoreSelectedCategorySignal;

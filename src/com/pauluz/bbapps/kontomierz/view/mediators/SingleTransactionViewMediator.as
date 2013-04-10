@@ -103,7 +103,7 @@ package com.pauluz.bbapps.kontomierz.view.mediators
         {
             logger.debug(": onDeleteTransaction");
 
-            deleteTransactionOfflineSignal.dispatch(selectedTransaction.transactionId, isWallet);
+            deleteTransactionOfflineSignal.dispatch(selectedTransaction);
         }
 
         private function onDetailsData(transaction:TransactionVO):void
