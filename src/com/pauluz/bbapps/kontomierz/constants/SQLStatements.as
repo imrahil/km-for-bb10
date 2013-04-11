@@ -162,6 +162,10 @@ package com.pauluz.bbapps.kontomierz.constants
         public static const UPDATE_TRANSACTION_BY_ID:String = new UpdateTransactionByIdStatementText();
         public static const DELETE_TRANSACTION_BY_ID:String = new DeleteTransactionByIdStatementText();
 
+        public static const DELETE_SYNC_TRANSACTIONS_INSERTED_BY_ID_SQL:String = new DeleteSyncTransactionsInsertedByIdStatementText();
+        public static const DELETE_SYNC_TRANSACTIONS_UPDATED_BY_ID_SQL:String = new DeleteSyncTransactionsUpdatedByIdStatementText();
+        public static const DELETE_SYNC_TRANSACTIONS_DELETED_BY_ID_SQL:String = new DeleteSyncTransactionsDeletedByIdStatementText();
+
         // SYNC STUFF
         public static const CREATE_SYNC_TRANSACTION_INSERT_TRIGGER_SQL:String = new CreateSyncTransactionInsertTriggerStatementText();
         public static const CREATE_SYNC_TRANSACTION_UPDATE_TRIGGER_SQL:String = new CreateSyncTransactionUpdateTriggerStatementText();

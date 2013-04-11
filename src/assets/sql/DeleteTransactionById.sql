@@ -1,1 +1,1 @@
-DELETE FROM transactions WHERE transactionId = :id;
+DELETE FROM transactions WHERE id = :id;

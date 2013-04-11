@@ -28,6 +28,7 @@ package com.pauluz.bbapps.kontomierz.controller.bootstraps
             injector.mapSingleton(ProvideLoginStatusSignal);
             injector.mapSingleton(LoginSuccessfulSignal);
             injector.mapSingleton(ErrorSignal);
+            injector.mapSingleton(InfoSignal);
 
             injector.mapSingleton(ProvideAllAccountsDataSignal);
             injector.mapSingleton(ProvideAllTransactionsSignal);

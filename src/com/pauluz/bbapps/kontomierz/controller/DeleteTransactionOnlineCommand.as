@@ -9,6 +9,7 @@ package com.pauluz.bbapps.kontomierz.controller
 {
     import com.destroytoday.core.IPromise;
     import com.pauluz.bbapps.kontomierz.model.IKontomierzModel;
+    import com.pauluz.bbapps.kontomierz.model.vo.TransactionVO;
     import com.pauluz.bbapps.kontomierz.services.IKontomierzService;
     import com.pauluz.bbapps.kontomierz.services.ISQLKontomierzService;
     import com.pauluz.bbapps.kontomierz.signals.offline.GetAllTransactionsOfflineSignal;
@@ -18,10 +19,7 @@ package com.pauluz.bbapps.kontomierz.controller
     {
         /** PARAMETERS **/
         [Inject]
-        public var transactionId:int;
-
-        [Inject]
-        public var isWallet:Boolean;
+        public var transaction:TransactionVO;
 
         /** INJECTIONS **/
         [Inject]
@@ -45,7 +43,7 @@ package com.pauluz.bbapps.kontomierz.controller
          */        
         override public function execute():void    
         {
-            var promise:IPromise = kontomierzService.deleteTransaction(transactionId);
+            var promise:IPromise = kontomierzService.deleteTransaction(transaction.transactionId);
             promise.completed.addOnce(onDeleteTransaction);
             promise.failed.addOnce(onError);
         }
@@ -55,9 +53,9 @@ package com.pauluz.bbapps.kontomierz.controller
          */
         private function onDeleteTransaction(promise:IPromise):void
         {
-            sqlService.deleteSyncDeletedTransaction(transactionId);
+            sqlService.deleteSyncDeletedTransaction(transaction.transactionId);
 
-            if (isWallet)
+            if (transaction.isWallet)
             {
                 model.defaultWallet.isValid = false;
                 getAllWalletTransactionsOfflineSignal.dispatch();

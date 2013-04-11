@@ -8,6 +8,7 @@ Copyright (c) 2013 pauluZ
 *klasa DatePicker* - [http://supportforums.blackberry.com/t5/Adobe-AIR-Development/BB10-Date-Picker-class/m-p/1996999#M40295](http://supportforums.blackberry.com/t5/Adobe-AIR-Development/BB10-Date-Picker-class/m-p/1996999#M40295)
 
 Wersje:
+* 0.2.0 - dodana synchronizacja online/offline.
 * 0.1.6 - przebudowany i asynchroniczny startup. Dodana obsluga SQLite. Dodane keszowanie oflline dla kategorii i walut
 * 0.1.5 - poprawki formularza dodawania transakcji - ulepszona lista kategorii
 * 0.1.4 - poprawiony formularz dodawania/edycji transakcji

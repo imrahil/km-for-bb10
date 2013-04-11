@@ -66,7 +66,7 @@ package com.pauluz.bbapps.kontomierz.controller.offline
 
             var stmts:Vector.<QueuedStatement> = new Vector.<QueuedStatement>();
 
-            if (transaction.id == -1)
+            if (transaction.transactionId == -1)
             {
                 stmts[stmts.length] = new QueuedStatement(SQLStatements.DROP_SYNC_TRANSACTION_UPDATE_TRIGGER_SQL);
                 stmts[stmts.length] = new QueuedStatement(SQLStatements.UPDATE_TRANSACTION_BY_ID, params);

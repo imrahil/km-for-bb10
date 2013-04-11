@@ -9,10 +9,6 @@ package com.pauluz.bbapps.kontomierz.services
 {
     import com.pauluz.bbapps.kontomierz.constants.ApplicationConstants;
     import com.pauluz.bbapps.kontomierz.constants.SQLStatements;
-    import com.pauluz.bbapps.kontomierz.constants.SQLStatements;
-    import com.pauluz.bbapps.kontomierz.constants.SQLStatements;
-    import com.pauluz.bbapps.kontomierz.constants.SQLStatements;
-    import com.pauluz.bbapps.kontomierz.constants.SQLStatements;
     import com.pauluz.bbapps.kontomierz.model.IKontomierzModel;
     import com.pauluz.bbapps.kontomierz.model.vo.AccountVO;
     import com.pauluz.bbapps.kontomierz.model.vo.ErrorVO;
@@ -102,6 +98,9 @@ package com.pauluz.bbapps.kontomierz.services
         [Inject]
         public var errorSignal:ErrorSignal;
 
+        [Inject]
+        public var infoSignal:InfoSignal;
+
         private static const INSERT_API_KEY_SQL:String = new SQLStatements.InsertAPIKeyStatementText();
         private static const LOAD_API_KEY_SQL:String = new SQLStatements.LoadAPIKeyStatementText();
         private static const DELETE_API_KEY_SQL:String = new SQLStatements.DeleteAPIKeyStatementText();
@@ -126,11 +125,8 @@ package com.pauluz.bbapps.kontomierz.services
         private static const LOAD_SYNC_TRANSACTIONS_DELETED_SQL:String = new SQLStatements.LoadSyncTransactionsDeletedStatementText();
 
         private static const DELETE_SYNC_TRANSACTIONS_INSERTED_SQL:String = new SQLStatements.DeleteSyncTransactionsInsertedStatementText();
-        private static const DELETE_SYNC_TRANSACTIONS_INSERTED_BY_ID_SQL:String = new SQLStatements.DeleteSyncTransactionsInsertedByIdStatementText();
         private static const DELETE_SYNC_TRANSACTIONS_UPDATED_SQL:String = new SQLStatements.DeleteSyncTransactionsUpdatedStatementText();
-        private static const DELETE_SYNC_TRANSACTIONS_UPDATED_BY_ID_SQL:String = new SQLStatements.DeleteSyncTransactionsUpdatedByIdStatementText();
         private static const DELETE_SYNC_TRANSACTIONS_DELETED_SQL:String = new SQLStatements.DeleteSyncTransactionsDeletedStatementText();
-        private static const DELETE_SYNC_TRANSACTIONS_DELETED_BY_ID_SQL:String = new SQLStatements.DeleteSyncTransactionsDeletedByIdStatementText();
 
 
 
@@ -438,6 +434,9 @@ package com.pauluz.bbapps.kontomierz.services
         {
             logger.debug(": syncOfflineChanges");
 
+            var info:ErrorVO = new ErrorVO("Trwa synchronizacja danych offline...");
+            infoSignal.dispatch(info);
+
             model.syncInProgress = true;
 
             syncDeletedItems();
@@ -568,7 +567,7 @@ package com.pauluz.bbapps.kontomierz.services
         {
             logger.debug(": deleteSyncDeletedTransaction");
 
-            sqlRunner.executeModify(Vector.<QueuedStatement>([new QueuedStatement(DELETE_SYNC_TRANSACTIONS_DELETED_BY_ID_SQL, {id: id})]), null, databaseErrorHandler);
+            sqlRunner.executeModify(Vector.<QueuedStatement>([new QueuedStatement(SQLStatements.DELETE_SYNC_TRANSACTIONS_DELETED_BY_ID_SQL, {id: id})]), null, databaseErrorHandler);
         }
 
 
@@ -579,7 +578,7 @@ package com.pauluz.bbapps.kontomierz.services
         {
             logger.debug(": deleteSyncInsertTransaction");
 
-            sqlRunner.executeModify(Vector.<QueuedStatement>([new QueuedStatement(DELETE_SYNC_TRANSACTIONS_INSERTED_BY_ID_SQL, {id: id})]), null, databaseErrorHandler);
+            sqlRunner.executeModify(Vector.<QueuedStatement>([new QueuedStatement(SQLStatements.DELETE_SYNC_TRANSACTIONS_INSERTED_BY_ID_SQL, {id: id})]), null, databaseErrorHandler);
         }
 
 
@@ -590,7 +589,7 @@ package com.pauluz.bbapps.kontomierz.services
         {
             logger.debug(": deleteSyncUpdatedTransaction");
 
-            sqlRunner.executeModify(Vector.<QueuedStatement>([new QueuedStatement(DELETE_SYNC_TRANSACTIONS_UPDATED_BY_ID_SQL, {id: id})]), null, databaseErrorHandler);
+            sqlRunner.executeModify(Vector.<QueuedStatement>([new QueuedStatement(SQLStatements.DELETE_SYNC_TRANSACTIONS_UPDATED_BY_ID_SQL, {id: id})]), null, databaseErrorHandler);
         }
 
 
