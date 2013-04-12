@@ -18,22 +18,19 @@ package com.pauluz.bbapps.kontomierz.view.components
     import flash.events.MouseEvent;
 
     import qnx.fuse.ui.buttons.LabelButton;
-
     import qnx.fuse.ui.buttons.RadioButton;
-
     import qnx.fuse.ui.buttons.RadioButtonGroup;
     import qnx.fuse.ui.core.Container;
     import qnx.fuse.ui.core.SizeOptions;
-
     import qnx.fuse.ui.dialog.ListDialog;
     import qnx.fuse.ui.events.ExpandableEvent;
     import qnx.fuse.ui.layouts.gridLayout.GridData;
-    import qnx.fuse.ui.layouts.gridLayout.GridLayout;
     import qnx.fuse.ui.listClasses.ScrollDirection;
     import qnx.fuse.ui.skins.SkinStates;
     import qnx.fuse.ui.text.KeyboardType;
     import qnx.fuse.ui.text.Label;
     import qnx.fuse.ui.text.TextInput;
+    import qnx.ui.data.SectionDataProvider;
 
     public class AddEditTransactionForm
     {
@@ -49,8 +46,12 @@ package com.pauluz.bbapps.kontomierz.view.components
         public var categoryBtn:LabelButton;
         public var currencyBtn:LabelButton;
 
-        public var withdrawalCategoriesDP:Array = [];
-        public var depositCategoriesDP:Array = [];
+        public var selectedTransaction:TransactionVO = new TransactionVO();
+
+        public var withdrawalCategoriesDP:SectionDataProvider;
+        public var withdrawalCategoriesLength:int;
+        public var depositCategoriesDP:SectionDataProvider;
+        public var depositCategoriesLength:int;
         public var currenciesDP:Array = [];
 
         public var direction:String = ApplicationConstants.TRANSACTION_DIRECTION_WITHDRAWAL;
@@ -69,19 +70,15 @@ package com.pauluz.bbapps.kontomierz.view.components
             container.layoutData = gridData;
 
             // TRANSACTION DIRECTION
+            var multiColumnContainer:Container = ContainerHelper.createMultiColumnContainer(3);
+
+            textLabel = new Label();
+            textLabel.text = "Kierunek:";
+            textLabel.format = TextFormatUtil.setFormat(textLabel.format, 45);
+            multiColumnContainer.addChild(textLabel);
+
             if (createDirection)
             {
-                textLabel = new Label();
-                textLabel.text = "Kierunek:";
-                textLabel.format = TextFormatUtil.setFormat(textLabel.format, 45);
-                container.addChild(textLabel);
-
-                var directionsGrid:GridLayout = new GridLayout();
-                directionsGrid.numColumns = 2;
-                directionsGrid.hSpacing = 40;
-                var directionsContainer:Container = new Container();
-                directionsContainer.layout = directionsGrid;
-
                 withdrawalRadio = new RadioButton();
                 withdrawalRadio.label = "Wydatek";
                 withdrawalRadio.selected = true;
@@ -101,30 +98,20 @@ package com.pauluz.bbapps.kontomierz.view.components
                 depositRadio.setTextFormatForState(TextFormatUtil.setFormat(depositRadio.getTextFormatForState(SkinStates.SELECTED), 45), SkinStates.SELECTED);
                 depositRadio.setTextFormatForState(TextFormatUtil.setFormat(depositRadio.getTextFormatForState(SkinStates.DISABLED), 45), SkinStates.DISABLED);
 
-                directionsContainer.addChild(withdrawalRadio);
-                directionsContainer.addChild(depositRadio);
-
-                container.addChild(directionsContainer);
+                multiColumnContainer.addChild(withdrawalRadio);
+                multiColumnContainer.addChild(depositRadio);
 
                 directionRadioGroup = RadioButtonGroup.getGroup("direction");
                 directionRadioGroup.addEventListener(Event.CHANGE, onDirectionChange);
             }
             else
             {
-                var twoColumnContainer:Container = new Container();
-                twoColumnContainer.layout = ContainerHelper.createTwoColumnGridData();
-
-                textLabel = new Label();
-                textLabel.text = "Kierunek:";
-                textLabel.format = TextFormatUtil.setFormat(textLabel.format, 45);
-                twoColumnContainer.addChild(textLabel);
-
                 directionLbl = new Label();
                 directionLbl.format = TextFormatUtil.setFormat(textLabel.format, 45);
-                twoColumnContainer.addChild(directionLbl);
-
-                container.addChild(twoColumnContainer)
+                multiColumnContainer.addChild(directionLbl);
             }
+
+            container.addChild(multiColumnContainer);
 
             // AMOUNT LABEL
             textLabel = new Label();
@@ -208,6 +195,8 @@ package com.pauluz.bbapps.kontomierz.view.components
 
         private function onDirectionChange(event:Event):void
         {
+            selectedCategory = null;
+
             if (directionRadioGroup.selection == withdrawalRadio)
             {
                 amountTextInput.prompt = "Wysokość wydatku";
@@ -228,35 +217,23 @@ package com.pauluz.bbapps.kontomierz.view.components
 
         private function onCategoryBtnClick(event:MouseEvent):void
         {
-            var listDialog:CustomListDialog = new CustomListDialog();
+            var listDialog:CategoryListDialog = new CategoryListDialog();
             listDialog.title = "Kategoria";
             listDialog.addButton("OK");
             listDialog.addButton("Anuluj");
 
-            var category:CategoryVO;
             if (direction == ApplicationConstants.TRANSACTION_DIRECTION_WITHDRAWAL)
             {
-                if (selectedCategory)
-                {
-                    for each (category in withdrawalCategoriesDP)
-                    {
-                        category.selected = (category.id == selectedCategory.id);
-                    }
-                }
-
-                listDialog.list = withdrawalCategoriesDP;
+                listDialog.items(withdrawalCategoriesDP, withdrawalCategoriesLength);
             }
             else
             {
-                if (selectedCategory)
-                {
-                    for each (category in depositCategoriesDP)
-                    {
-                        category.selected = (category.id == selectedCategory.id);
-                    }
-                }
+                listDialog.items(depositCategoriesDP, depositCategoriesLength);
+            }
 
-                listDialog.list = depositCategoriesDP;
+            if (selectedCategory)
+            {
+                listDialog.list.selectedItem = selectedCategory;
             }
 
             listDialog.addEventListener(Event.SELECT, onCategorySelect);
@@ -265,23 +242,17 @@ package com.pauluz.bbapps.kontomierz.view.components
 
         private function onCategorySelect(event:Event):void
         {
-            var listDialog:ListDialog = event.currentTarget as ListDialog;
+            var listDialog:CategoryListDialog = event.currentTarget as CategoryListDialog;
             listDialog.removeEventListener(Event.SELECT, onCategorySelect);
 
-            // jesli wybrano OK
             if (listDialog.selectedIndex == 0)
             {
-                if (direction == ApplicationConstants.TRANSACTION_DIRECTION_WITHDRAWAL)
+                // jesli wybrano OK
+                if (listDialog && listDialog.list && listDialog.list.selectedItem)
                 {
-                    selectedCategory = withdrawalCategoriesDP[listDialog.listSelectedIndex] as CategoryVO;
-                }
-                else
-                {
-                    selectedCategory = depositCategoriesDP[listDialog.listSelectedIndex] as CategoryVO;
-                }
+                    selectedCategory = listDialog.selectedItem as CategoryVO;
+                    selectedCategory.selected = true;
 
-                if (selectedCategory)
-                {
                     categoryBtn.label = selectedCategory.name;
                 }
             }
@@ -325,17 +296,22 @@ package com.pauluz.bbapps.kontomierz.view.components
 
         public function provideTransactionData():TransactionVO
         {
-            var newTransaction:TransactionVO = new TransactionVO();
-            newTransaction.currencyAmount = parseFloat(amountTextInput.text);
-            newTransaction.transactionOn = datePicker.value;
-            newTransaction.description = descriptionTextInput.text;
+            selectedTransaction.currencyAmount = parseFloat(amountTextInput.text);
+            selectedTransaction.transactionOn = datePicker.value;
+            selectedTransaction.description = descriptionTextInput.text;
 
-            newTransaction.direction = direction;
+            selectedTransaction.direction = direction;
 
-            newTransaction.currencyName = (selectedCurrency) ? selectedCurrency.name : ApplicationConstants.DEFAULT_CURRENCY_NAME;
-            newTransaction.categoryId = selectedCategory.id;
+            if (direction == ApplicationConstants.TRANSACTION_DIRECTION_WITHDRAWAL)
+            {
+                selectedTransaction.currencyAmount *= -1;
+            }
 
-            return newTransaction;
+            selectedTransaction.currencyName = (selectedCurrency) ? selectedCurrency.name : ApplicationConstants.DEFAULT_CURRENCY_NAME;
+            selectedTransaction.categoryId = selectedCategory.categoryId;
+            selectedTransaction.categoryName = (selectedCategory) ? categoryBtn.label : "";
+
+            return selectedTransaction;
         }
 
         public function removeListeners():void

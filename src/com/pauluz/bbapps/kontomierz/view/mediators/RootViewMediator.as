@@ -14,6 +14,7 @@ package com.pauluz.bbapps.kontomierz.view.mediators
     import com.pauluz.bbapps.kontomierz.signals.LogoutSignal;
     import com.pauluz.bbapps.kontomierz.signals.RegisterSignal;
     import com.pauluz.bbapps.kontomierz.signals.signaltons.ErrorSignal;
+    import com.pauluz.bbapps.kontomierz.signals.signaltons.InfoSignal;
     import com.pauluz.bbapps.kontomierz.signals.signaltons.LoginSuccessfulSignal;
     import com.pauluz.bbapps.kontomierz.signals.signaltons.ProvideLoginStatusSignal;
     import com.pauluz.bbapps.kontomierz.utils.LogUtil;
@@ -39,6 +40,9 @@ package com.pauluz.bbapps.kontomierz.view.mediators
 
         [Inject]
         public var errorSignal:ErrorSignal;
+
+        [Inject]
+        public var infoSignal:InfoSignal;
 
         [Inject]
         public var logoutSignal:LogoutSignal;
@@ -80,6 +84,7 @@ package com.pauluz.bbapps.kontomierz.view.mediators
             addToSignal(provideLoginStatusSignal, startupLoginStatus);
             addToSignal(loginSignal, onLoginSignal);
             addToSignal(errorSignal, onErrorSignal);
+            addToSignal(infoSignal, onInfoSignal);
             addToSignal(loginSuccessfulSignal, onLoginSuccessfulSignal);
             addToSignal(logoutSignal, onLogout);
         }
@@ -87,7 +92,7 @@ package com.pauluz.bbapps.kontomierz.view.mediators
         /** methods **/
         private function startupLoginStatus(status:String):void
         {
-            logger.debug(":startupLoginStatuss");
+            logger.debug(": startupLoginStatus - " + status);
 
             if (status == ApplicationConstants.LOGIN_STATUS_NEW)
             {
@@ -111,6 +116,13 @@ package com.pauluz.bbapps.kontomierz.view.mediators
             logger.debug(": onErrorSignal");
 
             view.showError(error.message, error.popScreen);
+        }
+
+        private function onInfoSignal(info:ErrorVO):void
+        {
+            logger.debug(": onInfoSignal");
+
+            view.showInfo(info.message);
         }
 
         private function onLoginSuccessfulSignal():void

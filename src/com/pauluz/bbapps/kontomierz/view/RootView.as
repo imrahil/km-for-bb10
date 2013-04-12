@@ -18,6 +18,7 @@ package com.pauluz.bbapps.kontomierz.view
 
     import qnx.fuse.ui.dialog.AlertDialog;
     import qnx.fuse.ui.dialog.PasswordChangeDialog;
+    import qnx.fuse.ui.dialog.ToastBase;
     import qnx.fuse.ui.navigation.NavigationPane;
 
     public class RootView extends Sprite
@@ -242,6 +243,13 @@ package com.pauluz.bbapps.kontomierz.view
         private function onErrorDialogClicked(event:Event):void
         {
             errorDialog = null;
+        }
+
+        public function showInfo(message:String):void
+        {
+            var infoToast:ToastBase = new ToastBase();
+            infoToast.message = message;
+            infoToast.show();
         }
     }
 }

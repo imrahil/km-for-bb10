@@ -52,11 +52,11 @@ package com.pauluz.bbapps.kontomierz.services.helpers
             }
         }
 
-        public function parseAllAccountsResponse(result:String):DataProvider
+        public function parseAllAccountsResponse(result:String):Array
         {
             logger.debug(": parseAllAccountsResponse");
 
-            var output:DataProvider = new DataProvider();
+            var output:Array = [];
 
             try {
                 var resultObject:Object = JSON.parse(result);
@@ -70,12 +70,12 @@ package com.pauluz.bbapps.kontomierz.services.helpers
             {
                 for each (var item:Object in resultObject)
                 {
-                    if (item && item.user_account && item.user_account.bank_plugin_name != ApplicationConstants.WALLET_ACCOUNT_NAME)
+                    if (item && item.user_account)
                     {
                         var rawAccount:Object = item.user_account;
                         var account:AccountVO = new AccountVO();
 
-                        account.id = rawAccount.id;
+                        account.accountId = rawAccount.id;
                         account.balance = rawAccount.balance;
                         account.bankName = rawAccount.bank_name;
                         account.bankPluginName = rawAccount.bank_plugin_name;
@@ -86,7 +86,7 @@ package com.pauluz.bbapps.kontomierz.services.helpers
                         account.ibanChecksum = rawAccount.iban_checksum;
                         account.is_default_wallet = rawAccount.is_default_wallet;
 
-                        output.addItem(account);
+                        output.push(account);
                     }
                 }
             }
@@ -94,38 +94,17 @@ package com.pauluz.bbapps.kontomierz.services.helpers
             return output;
         }
 
-        public function parseAllAccountsResponseAndFindDefaultWalletId(result:String):int
+        public function parseAllTransactionsResponse(result:String):DataProvider
         {
-            logger.debug(": parseAllAccountsResponseAndFindDefaultWalletId");
-
-            try {
-                var resultObject:Object = JSON.parse(result);
-            }
-            catch (e:Error)
-            {
-                logger.error("JSON Parse Error - parseAllAccountsResponseAndFindDefaultWalletId");
-            }
-
-            if (resultObject && resultObject is Array && resultObject.length > 0)
-            {
-                for each (var item:Object in resultObject)
-                {
-                    if (item && item.user_account)
-                    {
-                        var rawAccount:Object = item.user_account;
-
-                        if (rawAccount.bank_plugin_name == ApplicationConstants.WALLET_ACCOUNT_NAME && rawAccount.is_default_wallet)
-                        {
-                            return rawAccount.id;
-                        }
-                    }
-                }
-            }
-
-            return -1;
+            return parseAllTransactionsGeneric(result)
         }
 
-        public function parseAllTransactionsResponse(result:String):DataProvider
+        public function parseAllWalletTransactionsResponse(result:String):DataProvider
+        {
+            return parseAllTransactionsGeneric(result, true)
+        }
+
+        private function parseAllTransactionsGeneric(result:String, isWallet:Boolean = false):DataProvider
         {
             logger.debug(": parseAllTransactionsResponse");
 
@@ -148,7 +127,7 @@ package com.pauluz.bbapps.kontomierz.services.helpers
                         var rawTransaction:Object = item.money_transaction;
                         var transaction:TransactionVO = new TransactionVO();
 
-                        transaction.id = rawTransaction.id;
+                        transaction.transactionId = rawTransaction.id;
                         transaction.userAccountId = rawTransaction.user_account_id;
                         transaction.currencyAmount = rawTransaction.currency_amount;
                         transaction.currencyName = rawTransaction.currency_name;
@@ -160,6 +139,8 @@ package com.pauluz.bbapps.kontomierz.services.helpers
                         transaction.categoryId = rawTransaction.category_id;
                         transaction.tagString = rawTransaction.tag_string;
 
+                        transaction.isWallet = isWallet;
+
                         output.addItem(transaction);
                     }
                 }
@@ -168,11 +149,16 @@ package com.pauluz.bbapps.kontomierz.services.helpers
             return output;
         }
 
-        public function parseAllCategoriesResponse(result:String):Array
+        public function parseOneTransactionsResponse(result:String):TransactionVO
+        {
+            return null;
+        }
+
+        public function parseAllCategoriesResponse(result:String):SectionDataProvider
         {
             logger.debug(": parseAllCategoriesResponse");
 
-            var output:Array = [];
+            var output:SectionDataProvider = new SectionDataProvider();
 
             try {
                 var resultObject:Object = JSON.parse(result);
@@ -188,13 +174,13 @@ package com.pauluz.bbapps.kontomierz.services.helpers
                 {
                     var category:CategoryVO = new CategoryVO();
 
-                    category.id = item.id;
+                    category.categoryId = item.id;
                     category.name = item.name;
                     category.position = item.position;
                     category.color = item.color;
                     category.header = true;
 
-                    output.push(category);
+                    output.addItem(category);
 
                     if (item.categories && item.categories is Array && item.categories.length > 0)
                     {
@@ -202,12 +188,13 @@ package com.pauluz.bbapps.kontomierz.services.helpers
                         {
                             var subCategory:CategoryVO = new CategoryVO();
 
-                            subCategory.id = subItem.id;
+                            subCategory.categoryId = subItem.id;
                             subCategory.name = subItem.name;
                             subCategory.position = subItem.position;
                             subCategory.color = subItem.color;
+                            subCategory.parentId = item.id;
 
-                            output.push(subCategory);
+                            output.addChildToItem(subCategory, category);
                         }
                     }
                 }
@@ -235,7 +222,7 @@ package com.pauluz.bbapps.kontomierz.services.helpers
                 for each (var item:Object in resultObject.currencies)
                 {
                     var currency:CurrencyVO = new CurrencyVO();
-                    currency.id = item.id;
+                    currency.currencyId = item.id;
                     currency.name = item.name;
                     currency.fullName = item.full_name;
 

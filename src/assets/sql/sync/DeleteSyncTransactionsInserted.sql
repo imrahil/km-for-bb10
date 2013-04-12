@@ -1,0 +1,1 @@
+DELETE FROM sync_insert_elements;

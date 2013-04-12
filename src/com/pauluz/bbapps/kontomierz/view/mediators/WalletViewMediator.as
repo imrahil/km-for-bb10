@@ -8,11 +8,11 @@
 package com.pauluz.bbapps.kontomierz.view.mediators
 {
     import com.pauluz.bbapps.kontomierz.model.vo.TransactionVO;
-    import com.pauluz.bbapps.kontomierz.signals.DeleteWalletTransactionSignal;
-    import com.pauluz.bbapps.kontomierz.signals.GetAllWalletTransactionsSignal;
     import com.pauluz.bbapps.kontomierz.signals.RefreshWalletSignal;
     import com.pauluz.bbapps.kontomierz.signals.StoreSelectedTransactionForEditSignal;
     import com.pauluz.bbapps.kontomierz.signals.StoreSelectedTransactionSignal;
+    import com.pauluz.bbapps.kontomierz.signals.offline.DeleteTransactionOfflineSignal;
+    import com.pauluz.bbapps.kontomierz.signals.offline.GetAllWalletTransactionsOfflineSignal;
     import com.pauluz.bbapps.kontomierz.signals.signaltons.ProvideAllTransactionsSignal;
     import com.pauluz.bbapps.kontomierz.signals.signaltons.SelectedTransactionSuccessfulStoreSignal;
     import com.pauluz.bbapps.kontomierz.signals.signaltons.TransactionForEditSuccessfulStoreSignal;
@@ -50,7 +50,7 @@ package com.pauluz.bbapps.kontomierz.view.mediators
          * SIGNAL -> COMMAND
          */
         [Inject]
-        public var getAllWalletTransactionsSignal:GetAllWalletTransactionsSignal;
+        public var getAllWalletTransactionsOfflineSignal:GetAllWalletTransactionsOfflineSignal;
 
         [Inject]
         public var storeSelectedTransactionSignal:StoreSelectedTransactionSignal;
@@ -59,7 +59,7 @@ package com.pauluz.bbapps.kontomierz.view.mediators
         public var storeSelectedTransactionForEditSignal:StoreSelectedTransactionForEditSignal;
 
         [Inject]
-        public var deleteWalletTransactionSignal:DeleteWalletTransactionSignal;
+        public var deleteTransactionOfflineSignal:DeleteTransactionOfflineSignal;
 
         [Inject]
         public var refreshWalletSignal:RefreshWalletSignal;
@@ -103,7 +103,7 @@ package com.pauluz.bbapps.kontomierz.view.mediators
         {
             logger.debug(": onViewAdded");
 
-            getAllWalletTransactionsSignal.dispatch();
+            getAllWalletTransactionsOfflineSignal.dispatch();
         }
 
         private function onStoreSelectedTransaction(transaction:TransactionVO):void
@@ -126,7 +126,7 @@ package com.pauluz.bbapps.kontomierz.view.mediators
         {
             logger.debug(": onDeleteTransaction");
 
-            deleteWalletTransactionSignal.dispatch(transaction);
+            deleteTransactionOfflineSignal.dispatch(transaction);
         }
 
         private function onRefreshWallet():void

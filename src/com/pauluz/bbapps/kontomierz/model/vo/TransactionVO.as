@@ -16,6 +16,7 @@ package com.pauluz.bbapps.kontomierz.model.vo
     public class TransactionVO
     {
         public var id:int;
+        public var transactionId:int;
         public var userAccountId:int;
         public var currencyAmount:Number = 0;
         public var currencyName:String = "";
@@ -28,6 +29,7 @@ package com.pauluz.bbapps.kontomierz.model.vo
         public var tagString:String = "";
 
         public var direction:String = "";
+        public var isWallet:Boolean;
 
         public function get currencyAmountString():String
         {

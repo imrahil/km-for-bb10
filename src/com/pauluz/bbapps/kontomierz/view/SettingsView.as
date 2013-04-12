@@ -32,6 +32,7 @@ package com.pauluz.bbapps.kontomierz.view
         private var aboutAction:Action;
 
         public var logoutSignal:Signal = new Signal();
+        public var refreshSignal:Signal = new Signal();
 
         public function SettingsView()
         {
@@ -81,6 +82,14 @@ package com.pauluz.bbapps.kontomierz.view
             container.addChild(labelButton);
 
             labelButton = new LabelButton();
+            labelButton.label = "Odśwież listę kategorii i walut";
+            gridDataHolder = new GridData();
+            gridDataHolder.setOptions(SizeOptions.RESIZE_HORIZONTAL);
+            labelButton.layoutData = gridDataHolder;
+            labelButton.addEventListener(MouseEvent.CLICK, onRefreshCategoriesAndCurrenciesClick);
+            container.addChild(labelButton);
+
+            labelButton = new LabelButton();
             labelButton.label = "Wyloguj";
             gridDataHolder = new GridData();
             gridDataHolder.setOptions(SizeOptions.RESIZE_HORIZONTAL);
@@ -89,6 +98,11 @@ package com.pauluz.bbapps.kontomierz.view
             container.addChild(labelButton);
 
             content = container;
+        }
+
+        private function onRefreshCategoriesAndCurrenciesClick(event:MouseEvent):void
+        {
+            refreshSignal.dispatch();
         }
 
         private function onWylogujClick(event:MouseEvent):void

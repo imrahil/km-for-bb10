@@ -16,8 +16,12 @@ package com.pauluz.bbapps.kontomierz.view
 
     import org.osflash.signals.Signal;
 
+    import qnx.fuse.ui.buttons.ToggleSwitch;
+    import qnx.fuse.ui.core.Action;
+
     import qnx.fuse.ui.core.Container;
     import qnx.fuse.ui.core.SizeOptions;
+    import qnx.fuse.ui.events.ActionEvent;
     import qnx.fuse.ui.events.ListEvent;
     import qnx.fuse.ui.layouts.Align;
     import qnx.fuse.ui.layouts.gridLayout.GridData;
@@ -32,7 +36,10 @@ package com.pauluz.bbapps.kontomierz.view
         private var container:Container;
         private var categoriesList:SectionList;
 
+        private var filterAction:Action;
+
         public var viewAddedSignal:Signal = new Signal();
+        public var filterSignal:Signal = new Signal();
         public var storeSelectedCategory:Signal = new Signal(CategoryVO);
 
         public function CategoriesView()
@@ -53,6 +60,10 @@ package com.pauluz.bbapps.kontomierz.view
 
             container = ContainerHelper.createEmptyContainer(0xFFFFFF);
 
+            filterAction = new Action("Używane");
+            titleBar.acceptAction = filterAction;
+            titleBar.addEventListener(ActionEvent.ACTION_SELECTED, onRefreshAction);
+
             categoriesList = new SectionList();
             categoriesList.headerHeight = 80;
             categoriesList.headerSkin = CustomSectionHeaderRenderer;
@@ -70,40 +81,47 @@ package com.pauluz.bbapps.kontomierz.view
             viewAddedSignal.dispatch();
         }
 
+        private function onRefreshAction(event:ActionEvent):void
+        {
+            logger.debug(": onRefreshAction");
+
+            filterSignal.dispatch();
+
+            filterAction.label = (filterAction.label == "Używane") ? "Wszystkie" : "Używane";
+        }
+
         private function categoryListClicked(event:ListEvent):void
         {
-            storeSelectedCategory.dispatch(event.data as CategoryVO);
+            logger.debug(": categoryListClicked");
+
+            var category:CategoryVO = event.data as CategoryVO;
+
+            if (!category.header)
+            {
+                storeSelectedCategory.dispatch(category);
+            }
         }
 
         public function addCategoryTransactionsView(title:String):void
         {
+            logger.debug(": addCategoryTransactionsView");
+
             var categoryTransactionsView:CategoryAllTransactionsView = new CategoryAllTransactionsView();
             categoryTransactionsView.title = title;
 
             pushPage(categoryTransactionsView);
         }
 
-        public function addData(data:Array):void
+        public function addData(categories:SectionDataProvider):void
         {
-            content = container;
+            logger.debug(": addData");
 
-            var provider:SectionDataProvider = new SectionDataProvider();
-            var tempHeader:CategoryVO;
-
-            for each (var category:CategoryVO in data)
+            if (content != container)
             {
-                if (category.header)
-                {
-                    tempHeader = category;
-                    provider.addItem(category);
-                }
-                else
-                {
-                    provider.addChildToItem(category, tempHeader);
-                }
+                content = container;
             }
 
-            categoriesList.dataProvider = provider;
+            categoriesList.dataProvider = categories;
         }
     }
 }

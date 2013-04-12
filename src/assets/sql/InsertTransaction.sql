@@ -1,0 +1,32 @@
+INSERT INTO transactions
+(
+  transactionId,
+  userAccountId,
+  currencyAmount,
+  currencyName,
+  amount,
+  transactionOn,
+  bookedOn,
+  description,
+  categoryName,
+  categoryId,
+  tagString,
+  direction,
+  isWallet
+)
+  VALUES
+  (
+    :transactionId,
+    :userAccountId,
+    :currencyAmount,
+    :currencyName,
+    :amount,
+    :transactionOn,
+    :bookedOn,
+    :description,
+    :categoryName,
+    :categoryId,
+    :tagString,
+    :direction,
+    :isWallet
+  )

@@ -26,6 +26,7 @@ package com.pauluz.bbapps.kontomierz.view
     import qnx.fuse.ui.buttons.LabelButton;
     import qnx.fuse.ui.core.Container;
     import qnx.fuse.ui.core.SizeOptions;
+    import qnx.fuse.ui.dialog.ToastBase;
     import qnx.fuse.ui.layouts.gridLayout.GridData;
     import qnx.fuse.ui.layouts.gridLayout.GridLayout;
     import qnx.fuse.ui.listClasses.ScrollDirection;
@@ -45,7 +46,6 @@ package com.pauluz.bbapps.kontomierz.view
         private var emailTextInput:TextInput;
         private var passwordTextInput:TextInput;
         private var rememberMeCheckbox:CheckBox;
-        private var errorLabel:Label;
 
         public function LoginView()
         {
@@ -120,11 +120,6 @@ package com.pauluz.bbapps.kontomierz.view
             checkboxContainer.addChild(rememberMeCheckbox);
             container.addChild(checkboxContainer);
 
-            // ERROR LABEL
-            errorLabel = new Label();
-            errorLabel.format = TextFormatUtil.setErrorFormat(textLabel.format);
-            container.addChild(errorLabel);
-
             // LAYOUT DLA PRZYCISKOW
             var buttonsGrid:GridLayout = new GridLayout();
             buttonsGrid.numColumns = 3;
@@ -198,25 +193,28 @@ package com.pauluz.bbapps.kontomierz.view
 
         private function zaloguj():void
         {
+            var errorDialog:ToastBase = new ToastBase();
+
             var email:String = StringHelper.trim(emailTextInput.text);
             var password:String = StringHelper.trim(passwordTextInput.text);
 
             if (!email)
             {
-                errorLabel.text = "Proszę podać e-mail!";
+                errorDialog.message = "Proszę podać e-mail!";
+                errorDialog.show();
             }
             else if (!StringHelper.checkEmail(email))
             {
-                errorLabel.text = "Podany e-mail jest niepoprawny!";
+                errorDialog.message = "Podany e-mail jest niepoprawny!!";
+                errorDialog.show();
             }
             else if (!password)
             {
-                errorLabel.text = "Proszę podać hasło!";
+                errorDialog.message = "Proszę podać hasło!";
+                errorDialog.show();
             }
             else
             {
-                errorLabel.text = "";
-
                 var user:UserVO = new UserVO();
                 user.email = email;
                 user.password = password;

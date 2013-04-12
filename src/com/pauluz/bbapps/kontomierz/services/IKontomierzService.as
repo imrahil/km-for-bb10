@@ -7,32 +7,32 @@
  */
 package com.pauluz.bbapps.kontomierz.services
 {
+    import com.destroytoday.core.IPromise;
     import com.pauluz.bbapps.kontomierz.model.vo.TransactionVO;
     import com.pauluz.bbapps.kontomierz.model.vo.UserVO;
 
     public interface IKontomierzService
     {
-        function login(user:UserVO):void;
-        function register(user:UserVO):void;
-        function demo():void;
+        function login(user:UserVO):IPromise;
+        function register(user:UserVO):IPromise;
 
-        function getAllAccounts():void
+        function getAllAccounts():IPromise
 
-        function createWallet(name:String, balance:Number, currency:String, liquid:Boolean):void
-        function updateWallet(id:int, name:String, balance:Number, currency:String, liquid:Boolean):void
-        function deleteWallet(id:int):void
+//        function createWallet(name:String, balance:Number, currency:String, liquid:Boolean):void
+//        function updateWallet(id:int, name:String, balance:Number, currency:String, liquid:Boolean):void
+//        function deleteWallet(id:int):void
 
-        function getAllTransactions(accountId:int, wallet:Boolean):void;
-        function getAllTransactionsForCategory(categoryId:int):void;
+        function getAllTransactions(accountId:int):IPromise;
+        function getAllWalletTransactions():IPromise;
+        function getAllTransactionsForCategory(categoryId:int):IPromise;
 
-        function createTransaction(transaction:TransactionVO):void;
-        function updateTransaction(transaction:TransactionVO):void;
-        function deleteTransaction(id:int, wallet:Boolean):void;
+        function createTransaction(transaction:TransactionVO):IPromise;
+        function updateTransaction(transaction:TransactionVO):IPromise;
+        function deleteTransaction(id:int):IPromise;
 
-        function getAllWithdrawalCategories():void;
-        function getAllDepositCategories():void;
+        function getAllWithdrawalCategories():IPromise;
+        function getAllDepositCategories():IPromise;
 //        function getAllTags():void;
-        function getAllCurrencies():void;
-
+        function getAllCurrencies():IPromise;
     }
 }
