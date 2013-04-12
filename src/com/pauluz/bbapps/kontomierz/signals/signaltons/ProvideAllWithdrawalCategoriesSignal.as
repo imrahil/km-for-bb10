@@ -15,7 +15,7 @@ package com.pauluz.bbapps.kontomierz.signals.signaltons
     {
         public function ProvideAllWithdrawalCategoriesSignal()
         {
-            super(Array);
+            super(SectionDataProvider);
         }
     }
 }

@@ -7,6 +7,7 @@
  */
 package com.pauluz.bbapps.kontomierz.view
 {
+    import com.pauluz.bbapps.kontomierz.constants.ApplicationConstants;
     import com.pauluz.bbapps.kontomierz.constants.Resources;
     import com.pauluz.bbapps.kontomierz.model.vo.TransactionVO;
     import com.pauluz.bbapps.kontomierz.utils.ContainerHelper;
@@ -179,7 +180,8 @@ package com.pauluz.bbapps.kontomierz.view
         {
             var amountLabel:String = transaction.currencyAmountString;
             amountLbl.text = amountLabel + " " + transaction.currencyName;
-            dateLbl.text = transaction.bookedOn;
+
+            dateLbl.text = transaction.transactionOn;
             descriptionLbl.text = transaction.description;
             categoryLbl.text = transaction.categoryName;
         }

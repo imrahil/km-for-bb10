@@ -7,11 +7,7 @@
  */
 package com.pauluz.bbapps.kontomierz.controller 
 {
-    import com.pauluz.bbapps.kontomierz.constants.ApplicationConstants;
-    import com.pauluz.bbapps.kontomierz.model.IKontomierzModel;
-    import com.pauluz.bbapps.kontomierz.signals.signaltons.ProvideLoginStatusSignal;
-
-    import flash.net.SharedObject;
+    import com.pauluz.bbapps.kontomierz.services.ISQLKontomierzService;
 
     import org.robotlegs.mvcs.SignalCommand;
 
@@ -19,28 +15,14 @@ package com.pauluz.bbapps.kontomierz.controller
     {
         /** INJECTIONS **/
         [Inject]
-        public var model:IKontomierzModel;
-
-        [Inject]
-        public var provideLoginStatusSignal:ProvideLoginStatusSignal;
+        public var sqlService:ISQLKontomierzService;
 
         /**
          * Method handle the logic for <code>ProvideLoginStatusCommand</code>
          */        
         override public function execute():void    
         {
-            var sessionSO:SharedObject = SharedObject.getLocal(ApplicationConstants.KONTOMIERZ_SO_NAME);
-
-            if (sessionSO.data.apiKey != undefined)
-            {
-                model.apiKey = sessionSO.data.apiKey;
-
-                provideLoginStatusSignal.dispatch(ApplicationConstants.LOGIN_STATUS_REMEMBERED);
-            }
-            else
-            {
-                provideLoginStatusSignal.dispatch(ApplicationConstants.LOGIN_STATUS_NEW);
-            }
+            sqlService.loadUserAPIKey();
         }
     }
 }

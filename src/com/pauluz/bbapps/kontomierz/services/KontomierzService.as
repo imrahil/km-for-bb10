@@ -7,300 +7,243 @@
  */
 package com.pauluz.bbapps.kontomierz.services
 {
+    import com.destroytoday.core.IPromise;
     import com.pauluz.bbapps.kontomierz.constants.ApplicationConstants;
+    import com.pauluz.bbapps.kontomierz.model.IKontomierzModel;
     import com.pauluz.bbapps.kontomierz.model.vo.TransactionVO;
     import com.pauluz.bbapps.kontomierz.model.vo.UserVO;
     import com.pauluz.bbapps.kontomierz.utils.LogUtil;
 
-    import flash.events.Event;
-
+    import flash.desktop.NativeApplication;
     import flash.net.URLLoader;
     import flash.net.URLRequest;
     import flash.net.URLRequestMethod;
     import flash.net.URLVariables;
 
-    public class KontomierzService extends KontomierzServiceBase
+    import mx.logging.ILogger;
+
+    import org.robotlegs.oil.rest.IRestClient;
+    import org.robotlegs.oil.rest.RestClientBase;
+
+    public class KontomierzService implements IKontomierzService
     {
+        /** MODEL **/
+        [Inject]
+        public var model:IKontomierzModel;
+
+        protected var service:IRestClient;
+
+        protected var userAgent:String;
+        protected var logger:ILogger;
+
         public function KontomierzService()
         {
-            super();
-
             logger = LogUtil.getLogger(this);
             logger.debug(": constructor");
+
+            var app_xml:XML = NativeApplication.nativeApplication.applicationDescriptor;
+            var ns:Namespace = app_xml.namespace();
+            var versionNumber:String = app_xml.ns::versionNumber;
+            var userAgent:String = ApplicationConstants.WYDATKI_USER_AGENT + versionNumber;
+
+            service = new RestClientBase(ApplicationConstants.KONTOMIERZ_API_ENDPOINT, userAgent);
         }
+
 
         /**
          * LOGIN
          */
-        override public function login(user:UserVO):void
+        public function login(user:UserVO):IPromise
         {
             logger.debug(": login service call - email: " + user.email + ", password: " + user.password);
 
-            // save value for future
-            rememberMe = user.rememberMe;
+            var params:Object = {};
+            params.email = user.email;
+            params.password = user.password;
 
-            var loader:URLLoader = new URLLoader();
-            var urlRequest:URLRequest = new URLRequest();
-
-            urlRequest.url = ApplicationConstants.KONTOMIERZ_API_ENDPOINT + "session" + ApplicationConstants.KONTOMIERZ_API_FORMAT_JSON;
-            urlRequest.method = URLRequestMethod.POST;
-
-            var variables:URLVariables = new URLVariables();
-            variables.email = user.email;
-            variables.password = user.password;
-            urlRequest.data = variables;
-
-            loader.addEventListener(Event.COMPLETE, loginCompleteHandler);
-            addLoaderListeners(loader);
-
-            loader.load(urlRequest);
+            return service.post("session" + ApplicationConstants.KONTOMIERZ_API_FORMAT_JSON, params);
         }
 
         /**
          * REGISTER
          */
-        override public function register(user:UserVO):void
+        public function register(user:UserVO):IPromise
         {
-            logger.debug(": register service call");
-
-            var loader:URLLoader = new URLLoader();
-            var urlRequest:URLRequest = new URLRequest();
-
-            urlRequest.url = ApplicationConstants.KONTOMIERZ_API_ENDPOINT + "users" + ApplicationConstants.KONTOMIERZ_API_FORMAT_JSON;
-            urlRequest.method = URLRequestMethod.POST;
-
-            var variables:URLVariables = new URLVariables();
-            variables.email = user.email;
-            variables.password = user.password;
-            urlRequest.data = variables;
-
-            loader.addEventListener(Event.COMPLETE, loginCompleteHandler);
-            addLoaderListeners(loader);
-
-            loader.load(urlRequest);
+//            logger.debug(": register service call");
+//
+//            var loader:URLLoader = new URLLoader();
+//            var urlRequest:URLRequest = prepareRequest();
+//
+//            urlRequest.url = ApplicationConstants.KONTOMIERZ_API_ENDPOINT + "users" + ApplicationConstants.KONTOMIERZ_API_FORMAT_JSON;
+//            urlRequest.method = URLRequestMethod.POST;
+//
+//            var variables:URLVariables = new URLVariables();
+//            variables.email = user.email;
+//            variables.password = user.password;
+//            urlRequest.data = variables;
+//
+//            loader.addEventListener(Event.COMPLETE, loginCompleteHandler);
+//            addLoaderListeners(loader);
+//
+//            loader.load(urlRequest);
+            return null;
         }
 
         /**
-         * DEMO
+         * GET ALL ACCOUNTS
          */
-        override public function demo():void
-        {
-            logger.debug(": demo service call");
-
-            model.apiKey = ApplicationConstants.KONTOMIERZ_DEMO_API_KEY;
-
-            loginSuccessfulSignal.dispatch();
-        }
-
-        override public function getAllAccounts():void
+        public function getAllAccounts():IPromise
         {
             logger.debug(": getAllAccounts service call");
 
-            var loader:URLLoader = new URLLoader();
-            var urlRequest:URLRequest = new URLRequest();
+            var params:Object = {};
+            params.api_key = model.apiKey;
 
-            urlRequest.url = ApplicationConstants.KONTOMIERZ_API_ENDPOINT + "user_accounts" + ApplicationConstants.KONTOMIERZ_API_FORMAT_JSON + "?api_key=" + model.apiKey;
-
-            loader.addEventListener(Event.COMPLETE, getAllAccountsCompleteHandler);
-            addLoaderListeners(loader);
-
-            loader.load(urlRequest);
+            return service.get("user_accounts" + ApplicationConstants.KONTOMIERZ_API_FORMAT_JSON, params);
         }
 
-        override public function createWallet(name:String, balance:Number, currency:String, liquid:Boolean):void
-        {
-            logger.debug(": createWallet service call");
 
-        }
-
-        override public function updateWallet(id:int, name:String, balance:Number, currency:String, liquid:Boolean):void
-        {
-            logger.debug(": updateWallet service call");
-
-        }
-
-        override public function deleteWallet(id:int):void
-        {
-            logger.debug(": deleteWallet service call");
-
-        }
-
-        override public function getAllTransactions(accountId:int, wallet:Boolean):void
+        /**
+         * GET ALL TRANSACTIONS
+         */
+        public function getAllTransactions(accountId:int):IPromise
         {
             logger.debug(": getAllTransactions service call");
 
-            var loader:URLLoader = new URLLoader();
-            var urlRequest:URLRequest = new URLRequest();
+            var params:Object = {};
+            params.user_account_id = accountId;
+            params.start_on = "01-01-2011";
+            params.api_key = model.apiKey;
 
-            var url:String = ApplicationConstants.KONTOMIERZ_API_ENDPOINT + "money_transactions" + ApplicationConstants.KONTOMIERZ_API_FORMAT_JSON;
-            url += "?user_account_id=" + accountId;
-            url += "&start_on=01-01-2011";
-            url += "&api_key=" + model.apiKey;
-            urlRequest.url = url;
-
-            if (wallet)
-            {
-                loader.addEventListener(Event.COMPLETE, getAllTransactionsForWalletCompleteHandler);
-            }
-            else
-            {
-                loader.addEventListener(Event.COMPLETE, getAllTransactionsCompleteHandler);
-            }
-
-            addLoaderListeners(loader);
-
-            loader.load(urlRequest);
+            return service.get("money_transactions" + ApplicationConstants.KONTOMIERZ_API_FORMAT_JSON, params);
         }
 
-        override public function getAllTransactionsForCategory(categoryId:int):void
+
+        /**
+         * GET ALL WALLET TRANSACTIONS
+         */
+        public function getAllWalletTransactions():IPromise
+        {
+            logger.debug(": getAllWalletTransactions service call");
+
+            var params:Object = {};
+            params.user_account_id = model.defaultWallet.accountId;
+            params.start_on = "01-01-2011";
+            params.api_key = model.apiKey;
+
+            return service.get("money_transactions" + ApplicationConstants.KONTOMIERZ_API_FORMAT_JSON, params);
+        }
+
+        /**
+         * GET ALL TRANSACTIONS FOR CATEGORY
+         */
+        public function getAllTransactionsForCategory(categoryId:int):IPromise
         {
             logger.debug(": getAllTransactionsForCategory service call");
 
-            var loader:URLLoader = new URLLoader();
-            var urlRequest:URLRequest = new URLRequest();
+            var params:Object = {};
+            params.category_id = categoryId;
+            params.start_on = "01-01-2011";
+            params.api_key = model.apiKey;
 
-            var url:String = ApplicationConstants.KONTOMIERZ_API_ENDPOINT + "money_transactions" + ApplicationConstants.KONTOMIERZ_API_FORMAT_JSON;
-            url += "?category_id=" + categoryId;
-            url += "&start_on=01-01-2011";
-            url += "&api_key=" + model.apiKey;
-            urlRequest.url = url;
-
-            loader.addEventListener(Event.COMPLETE, getAllTransactionsCompleteHandler);
-            addLoaderListeners(loader);
-
-            loader.load(urlRequest);
+            return service.get("money_transactions" + ApplicationConstants.KONTOMIERZ_API_FORMAT_JSON, params);
         }
 
 
-        override public function createTransaction(transaction:TransactionVO):void
+        /**
+         * CREATE TRANSACTION
+         */
+        public function createTransaction(transaction:TransactionVO):IPromise
         {
             logger.debug(": createTransaction service call");
 
-            var loader:URLLoader = new URLLoader();
-            var urlRequest:URLRequest = new URLRequest();
+            var params:Object = {};
+            params["money_transaction[currency_amount]"] = transaction.currencyAmount;
+            params["money_transaction[currency_name]"] = transaction.currencyName;
+            params["money_transaction[transaction_on]"] = transaction.transactionOn.substr(8, 2) + "-" + transaction.transactionOn.substr(5, 2) + "-" + transaction.transactionOn.substr(0, 4);
+            params["money_transaction[name]"] = transaction.description;
+            params["money_transaction[category_id]"] = transaction.categoryId;
+            params["money_transaction[direction]"] = transaction.direction;
+            params["money_transaction[client_assigned_id]"] = new Date().getMilliseconds();
+            params.api_key = model.apiKey;
 
-            urlRequest.url = ApplicationConstants.KONTOMIERZ_API_ENDPOINT + "money_transactions" + ApplicationConstants.KONTOMIERZ_API_FORMAT_JSON;
-            urlRequest.method = URLRequestMethod.POST;
-
-            var variables:URLVariables = new URLVariables();
-            variables["money_transaction[currency_amount]"] = transaction.currencyAmount;
-            variables["money_transaction[name]"] = transaction.description;
-            variables["money_transaction[transaction_on]"] = transaction.transactionOn.substr(8, 2) + "-" + transaction.transactionOn.substr(5, 2) + "-" + transaction.transactionOn.substr(0, 4);
-            variables["money_transaction[direction]"] = transaction.direction;
-            variables["money_transaction[category_id]"] = transaction.categoryId;
-            variables["money_transaction[currency_name]"] = transaction.currencyName;
-            variables["money_transaction[client_assigned_id]"] = new Date().getMilliseconds();
-            variables["api_key"] = model.apiKey;
-            urlRequest.data = variables;
-
-            loader.addEventListener(Event.COMPLETE, addTransactionCompleteHandler);
-            addLoaderListeners(loader);
-
-            loader.load(urlRequest);
+            return service.post("money_transactions" + ApplicationConstants.KONTOMIERZ_API_FORMAT_JSON, params);
         }
 
 
-        override public function updateTransaction(transaction:TransactionVO):void
+        /**
+         * UPDATE TRANSACTION
+         */
+        public function updateTransaction(transaction:TransactionVO):IPromise
         {
             logger.debug(": updateTransaction service call");
 
-            var loader:URLLoader = new URLLoader();
-            var urlRequest:URLRequest = new URLRequest();
+            var params:Object = {};
+            params["money_transaction[currency_amount]"] = transaction.currencyAmount;
+            params["money_transaction[currency_name]"] = transaction.currencyName;
+            params["money_transaction[transaction_on]"] = transaction.transactionOn.substr(8, 2) + "-" + transaction.transactionOn.substr(5, 2) + "-" + transaction.transactionOn.substr(0, 4);
+            params["money_transaction[name]"] = transaction.description;
+            params["money_transaction[category_id]"] = transaction.categoryId;
+            params["money_transaction[direction]"] = transaction.direction;
+            params.api_key = model.apiKey;
 
-            urlRequest.url = ApplicationConstants.KONTOMIERZ_API_ENDPOINT + "money_transactions/" + transaction.id + ApplicationConstants.KONTOMIERZ_API_FORMAT_JSON;
-            urlRequest.method = URLRequestMethod.PUT;
-
-            var variables:URLVariables = new URLVariables();
-            variables["money_transaction[currency_amount]"] = transaction.currencyAmount;
-            variables["money_transaction[name]"] = transaction.description;
-            variables["money_transaction[transaction_on]"] = transaction.transactionOn.substr(8, 2) + "-" + transaction.transactionOn.substr(5, 2) + "-" + transaction.transactionOn.substr(0, 4);
-            variables["money_transaction[direction]"] = transaction.direction;
-            variables["money_transaction[category_id]"] = transaction.categoryId;
-            variables["money_transaction[currency_name]"] = transaction.currencyName;
-            variables["api_key"] = model.apiKey;
-            urlRequest.data = variables;
-
-            loader.addEventListener(Event.COMPLETE, updateTransactionCompleteHandler);
-            addLoaderListeners(loader);
-
-            loader.load(urlRequest);
+            return service.put("money_transactions/" + transaction.transactionId + ApplicationConstants.KONTOMIERZ_API_FORMAT_JSON, params);
         }
 
-        override public function deleteTransaction(id:int, wallet:Boolean):void
+        /**
+         * DELETE TRANSACTION
+         */
+        public function deleteTransaction(id:int):IPromise
         {
-            logger.debug(": deleteTransaction service call");
+            logger.debug(": deleteTransaction service call - id: " + id);
 
-            var loader:URLLoader = new URLLoader();
-            var urlRequest:URLRequest = new URLRequest();
+            var params:Object = {};
+            params.api_key = model.apiKey;
 
-            urlRequest.url = ApplicationConstants.KONTOMIERZ_API_ENDPOINT + "money_transactions/" + id + ApplicationConstants.KONTOMIERZ_API_FORMAT_JSON + "?api_key=" + model.apiKey;
-            urlRequest.method = URLRequestMethod.DELETE;
-
-            if (wallet)
-            {
-                loader.addEventListener(Event.COMPLETE, deleteWalletTransactionCompleteHandler);
-            }
-            else
-            {
-                loader.addEventListener(Event.COMPLETE, deleteTransactionCompleteHandler);
-            }
-
-            addLoaderListeners(loader);
-
-            loader.load(urlRequest);
+            return service.del("money_transactions/" + id + ApplicationConstants.KONTOMIERZ_API_FORMAT_JSON, params);
         }
 
-        override public function getAllWithdrawalCategories():void
+        /**
+         * GET ALL WITHDRAWAL CATEGORIES
+         */
+        public function getAllWithdrawalCategories():IPromise
         {
             logger.debug(": getAllCategoriesWithdrawal service call");
 
-            var loader:URLLoader = new URLLoader();
-            var urlRequest:URLRequest = new URLRequest();
+            var params:Object = {};
+            params.direction = "withdrawal";
+            params.in_wallet = true;
+            params.api_key = model.apiKey;
 
-            var url:String = ApplicationConstants.KONTOMIERZ_API_ENDPOINT + "categories" + ApplicationConstants.KONTOMIERZ_API_FORMAT_JSON;
-            url += "?direction=withdrawal&in_wallet=true";
-            url += "&api_key=" + model.apiKey;
-            urlRequest.url = url;
-
-            loader.addEventListener(Event.COMPLETE, getAllCategoriesWithdrawalCompleteHandler);
-            addLoaderListeners(loader);
-
-            loader.load(urlRequest);
+            return service.get("categories" + ApplicationConstants.KONTOMIERZ_API_FORMAT_JSON, params);
         }
 
-        override public function getAllDepositCategories():void
+        /**
+         * GET ALL DEPOSIT ATEGORIES
+         */
+        public function getAllDepositCategories():IPromise
         {
             logger.debug(": getAllCategoriesDeposit service call");
 
-            var loader:URLLoader = new URLLoader();
-            var urlRequest:URLRequest = new URLRequest();
+            var params:Object = {};
+            params.direction = "deposit";
+            params.in_wallet = true;
+            params.api_key = model.apiKey;
 
-            var url:String = ApplicationConstants.KONTOMIERZ_API_ENDPOINT + "categories" + ApplicationConstants.KONTOMIERZ_API_FORMAT_JSON;
-            url += "?direction=deposit&in_wallet=true";
-            url += "&api_key=" + model.apiKey;
-            urlRequest.url = url;
-
-            loader.addEventListener(Event.COMPLETE, getAllCategoriesDepositCompleteHandler);
-            addLoaderListeners(loader);
-
-            loader.load(urlRequest);
+            return service.get("categories" + ApplicationConstants.KONTOMIERZ_API_FORMAT_JSON, params);
         }
 
-        override public function getAllCurrencies():void
+        /**
+         * GET ALL CURRENCIES
+         */
+        public function getAllCurrencies():IPromise
         {
             logger.debug(": getAllCurrencies service call");
 
-            var loader:URLLoader = new URLLoader();
-            var urlRequest:URLRequest = new URLRequest();
+            var params:Object = {};
+            params.api_key = model.apiKey;
 
-            var url:String = ApplicationConstants.KONTOMIERZ_API_ENDPOINT + "currencies" + ApplicationConstants.KONTOMIERZ_API_FORMAT_JSON;
-            url += "?api_key=" + model.apiKey;
-            urlRequest.url = url;
-
-            loader.addEventListener(Event.COMPLETE, getAllCurrenciesCompleteHandler);
-            addLoaderListeners(loader);
-
-            loader.load(urlRequest);
+            return service.get("currencies" + ApplicationConstants.KONTOMIERZ_API_FORMAT_JSON, params);
         }
     }
 }

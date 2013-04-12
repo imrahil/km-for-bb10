@@ -24,6 +24,7 @@ package com.pauluz.bbapps.kontomierz.view
     import qnx.fuse.ui.navigation.TitlePage;
     import qnx.fuse.ui.progress.ActivityIndicator;
     import qnx.fuse.ui.skins.progress.ActivityIndicatorSkinMedium;
+    import qnx.ui.data.SectionDataProvider;
 
     public class AddTransactionView extends TitlePage
     {
@@ -62,7 +63,7 @@ package com.pauluz.bbapps.kontomierz.view
             viewAddedSignal.dispatch();
         }
 
-        public function addData(_withdrawalCategoriesData:Array, _depositCategoriesData:Array, _currenciesData:Array):void
+        public function addData(_withdrawalCategoriesData:SectionDataProvider, _depositCategoriesData:SectionDataProvider, _currenciesData:Array):void
         {
             titleBar.acceptAction.enabled = true;
 
@@ -70,8 +71,25 @@ package com.pauluz.bbapps.kontomierz.view
             form.currencyBtn.enabled = true;
 
             form.withdrawalCategoriesDP = _withdrawalCategoriesData;
+            form.withdrawalCategoriesLength = provideDataProviderLength(_withdrawalCategoriesData);
+
             form.depositCategoriesDP = _depositCategoriesData;
+            form.depositCategoriesLength = provideDataProviderLength(_depositCategoriesData);
+
             form.currenciesDP = _currenciesData;
+        }
+
+        private static function provideDataProviderLength(list:SectionDataProvider):int
+        {
+            var itemCount:int = list.length;
+            var childrenCount:int = 0;
+
+            for (var x:int = 0; x < itemCount; x++)
+            {
+                childrenCount += list.getChildrenLengthAtIndex(x);
+            }
+
+            return (itemCount + childrenCount);
         }
 
         private function onAddExpenseAction(event:ActionEvent):void
@@ -121,17 +139,6 @@ package com.pauluz.bbapps.kontomierz.view
 
             form.selectedCategory = null;
             form.selectedCurrency = null;
-
-            var category:CategoryVO;
-            for each (category in form.withdrawalCategoriesDP)
-            {
-                category.selected = false;
-            }
-
-            for each (category in form.depositCategoriesDP)
-            {
-                category.selected = false;
-            }
 
             form.currencyBtn.label = ApplicationConstants.DEFAULT_CURRENCY_NAME + " (" + ApplicationConstants.DEFAULT_CURRENCY_FULL_NAME + ")";
 

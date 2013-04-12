@@ -7,6 +7,9 @@
  */
 package com.pauluz.bbapps.kontomierz.view.mediators
 {
+    import com.pauluz.bbapps.kontomierz.constants.ApplicationConstants;
+    import com.pauluz.bbapps.kontomierz.signals.GetAllCategoriesOnlineSignal;
+    import com.pauluz.bbapps.kontomierz.signals.GetAllCurrenciesOnlineSignal;
     import com.pauluz.bbapps.kontomierz.signals.LogoutSignal;
     import com.pauluz.bbapps.kontomierz.utils.LogUtil;
     import com.pauluz.bbapps.kontomierz.view.SettingsView;
@@ -25,15 +28,16 @@ package com.pauluz.bbapps.kontomierz.view.mediators
         public var view:SettingsView;
 
         /**
-         * SIGNALTONS
-         */
-
-
-        /**
          * SIGNAL -> COMMAND
          */
         [Inject]
         public var logoutSignal:LogoutSignal;
+
+        [Inject]
+        public var getAllCategoriesOnlineSignal:GetAllCategoriesOnlineSignal;
+
+        [Inject]
+        public var getAllCurrenciesOnlineSignal:GetAllCurrenciesOnlineSignal;
 
         /** variables **/
         private var logger:ILogger;
@@ -59,7 +63,16 @@ package com.pauluz.bbapps.kontomierz.view.mediators
         {
             logger.debug(": onRegister");
 
+            addToSignal(view.refreshSignal, onRefresh);
             addToSignal(view.logoutSignal, onLogout);
+        }
+
+        private function onRefresh():void
+        {
+            getAllCategoriesOnlineSignal.dispatch(ApplicationConstants.TRANSACTION_DIRECTION_WITHDRAWAL);
+            getAllCategoriesOnlineSignal.dispatch(ApplicationConstants.TRANSACTION_DIRECTION_DEPOSIT);
+
+            getAllCurrenciesOnlineSignal.dispatch();
         }
 
         private function onLogout():void

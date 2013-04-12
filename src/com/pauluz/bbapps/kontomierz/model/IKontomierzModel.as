@@ -8,11 +8,23 @@ package com.pauluz.bbapps.kontomierz.model
 
     public interface IKontomierzModel
     {
+        function get isConnected():Boolean;
+        function set isConnected(value:Boolean):void;
+
+        function get demoMode():Boolean;
+        function set demoMode(value:Boolean):void;
+
+        function get rememberMe():Boolean;
+        function set rememberMe(value:Boolean):void;
+
         function get apiKey():String;
         function set apiKey(value:String):void;
 
         function get selectedAccount():AccountVO;
         function set selectedAccount(value:AccountVO):void;
+
+        function get defaultWallet():AccountVO;
+        function set defaultWallet(value:AccountVO):void;
 
         function get accountsList():DataProvider;
         function set accountsList(value:DataProvider):void;
@@ -20,25 +32,29 @@ package com.pauluz.bbapps.kontomierz.model
         function get selectedTransaction():TransactionVO;
         function set selectedTransaction(value:TransactionVO):void;
 
-        function get defaultWalletId():int;
-        function set defaultWalletId(value:int):void;
-
         function get walletTransactionsList():DataProvider;
         function set walletTransactionsList(value:DataProvider):void;
-        function get isWalletListExpired():Boolean;
-        function set isWalletListExpired(value:Boolean):void;
 
-        function get withdrawalCategoriesList():Array;
-        function set withdrawalCategoriesList(value:Array):void;
+        function get withdrawalCategoriesList():SectionDataProvider;
+        function set withdrawalCategoriesList(value:SectionDataProvider):void;
 
-        function get depositCategoriesList():Array;
-        function set depositCategoriesList(value:Array):void;
+        function get depositCategoriesList():SectionDataProvider;
+        function set depositCategoriesList(value:SectionDataProvider):void;
 
         function get selectedCategory():CategoryVO;
         function set selectedCategory(value:CategoryVO):void;
 
         function get currenciesList():Array;
         function set currenciesList(value:Array):void;
+
+        function get syncRequired():Boolean;
+        function set syncRequired(value:Boolean):void;
+
+        function get syncInProgress():Boolean;
+        function set syncInProgress(value:Boolean):void;
+
+        function get totalSyncCount():int;
+        function set totalSyncCount(value:int):void;
 
     }
 }

@@ -7,17 +7,18 @@
  */
 package com.pauluz.bbapps.kontomierz.view.mediators
 {
+    import com.pauluz.bbapps.kontomierz.constants.ApplicationConstants;
     import com.pauluz.bbapps.kontomierz.model.vo.CategoryVO;
-    import com.pauluz.bbapps.kontomierz.signals.GetAllCategoriesSignal;
     import com.pauluz.bbapps.kontomierz.signals.StoreSelectedCategorySignal;
+    import com.pauluz.bbapps.kontomierz.signals.offline.GetAllCategoriesOfflineSignal;
     import com.pauluz.bbapps.kontomierz.signals.signaltons.ProvideAllWithdrawalCategoriesSignal;
     import com.pauluz.bbapps.kontomierz.signals.signaltons.SelectedCategorySuccessfulStoreSignal;
     import com.pauluz.bbapps.kontomierz.utils.LogUtil;
+    import com.pauluz.bbapps.kontomierz.view.CategoriesView;
     import com.useitbetter.uDash;
 
     import mx.logging.ILogger;
-    
-    import com.pauluz.bbapps.kontomierz.view.CategoriesView;
+
     import org.robotlegs.mvcs.SignalMediator;
 
     import qnx.ui.data.SectionDataProvider;
@@ -43,13 +44,14 @@ package com.pauluz.bbapps.kontomierz.view.mediators
          * SIGNAL -> COMMAND
          */
         [Inject]
-        public var getAllCategoriesSignal:GetAllCategoriesSignal;
+        public var getAllCategoriesSignal:GetAllCategoriesOfflineSignal;
 
         [Inject]
         public var storeSelectedCategorySignal:StoreSelectedCategorySignal;
 
         /** variables **/
         private var logger:ILogger;
+        private var filterFlag:String = ApplicationConstants.CATEGORIES_ALL;
 
         /** 
          * CONSTRUCTOR 
@@ -73,9 +75,10 @@ package com.pauluz.bbapps.kontomierz.view.mediators
             logger.debug(": onRegister");
 
             addToSignal(view.viewAddedSignal, onViewAdded);
+            addToSignal(view.filterSignal, onFilter);
             addToSignal(view.storeSelectedCategory, onStoreSelectedCategory);
 
-            addOnceToSignal(provideAllWithdrawalCategoriesSignal, onCategoriesData);
+            addToSignal(provideAllWithdrawalCategoriesSignal, onCategoriesData);
             addToSignal(selectedCategorySuccessfulStoreSignal, onCategorySuccessfulStore);
         }
 
@@ -83,7 +86,13 @@ package com.pauluz.bbapps.kontomierz.view.mediators
         {
             logger.debug(": onViewAdded");
 
-            getAllCategoriesSignal.dispatch();
+            getAllCategoriesSignal.dispatch(filterFlag);
+        }
+
+        private function onFilter():void
+        {
+            filterFlag = (filterFlag == ApplicationConstants.CATEGORIES_ALL) ? ApplicationConstants.CATEGORIES_USED : ApplicationConstants.CATEGORIES_ALL;
+            getAllCategoriesSignal.dispatch(filterFlag);
         }
 
         private function onStoreSelectedCategory(category:CategoryVO):void
@@ -93,7 +102,7 @@ package com.pauluz.bbapps.kontomierz.view.mediators
             storeSelectedCategorySignal.dispatch(category);
         }
 
-        private function onCategoriesData(data:Array):void
+        private function onCategoriesData(data:SectionDataProvider):void
         {
             logger.debug(": onCategoriesData");
 

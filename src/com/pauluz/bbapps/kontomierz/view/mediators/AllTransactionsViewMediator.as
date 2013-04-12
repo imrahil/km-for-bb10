@@ -8,17 +8,16 @@
 package com.pauluz.bbapps.kontomierz.view.mediators
 {
     import com.pauluz.bbapps.kontomierz.model.vo.TransactionVO;
-    import com.pauluz.bbapps.kontomierz.signals.DeleteTransactionSignal;
-    import com.pauluz.bbapps.kontomierz.signals.GetAllTransactionsSignal;
+    import com.pauluz.bbapps.kontomierz.signals.DeleteTransactionOnlineSignal;
     import com.pauluz.bbapps.kontomierz.signals.StoreSelectedTransactionForEditSignal;
     import com.pauluz.bbapps.kontomierz.signals.StoreSelectedTransactionSignal;
+    import com.pauluz.bbapps.kontomierz.signals.offline.DeleteTransactionOfflineSignal;
+    import com.pauluz.bbapps.kontomierz.signals.offline.GetAllTransactionsOfflineSignal;
     import com.pauluz.bbapps.kontomierz.signals.signaltons.ProvideAllTransactionsSignal;
     import com.pauluz.bbapps.kontomierz.signals.signaltons.SelectedTransactionSuccessfulStoreSignal;
     import com.pauluz.bbapps.kontomierz.signals.signaltons.TransactionForEditSuccessfulStoreSignal;
     import com.pauluz.bbapps.kontomierz.utils.LogUtil;
     import com.pauluz.bbapps.kontomierz.view.AllTransactionsView;
-    import com.pauluz.bbapps.kontomierz.view.EditTransactionView;
-    import com.pauluz.bbapps.kontomierz.view.components.AddEditTransactionForm;
     import com.useitbetter.uDash;
 
     import mx.logging.ILogger;
@@ -51,7 +50,7 @@ package com.pauluz.bbapps.kontomierz.view.mediators
          * SIGNAL -> COMMAND
          */
         [Inject]
-        public var getAllTransactionsSignal:GetAllTransactionsSignal;
+        public var getAllTransactionsOfflineSignal:GetAllTransactionsOfflineSignal;
 
         [Inject]
         public var storeSelectedTransactionSignal:StoreSelectedTransactionSignal;
@@ -60,7 +59,7 @@ package com.pauluz.bbapps.kontomierz.view.mediators
         public var storeSelectedTransactionForEditSignal:StoreSelectedTransactionForEditSignal;
 
         [Inject]
-        public var deleteTransactionSignal:DeleteTransactionSignal;
+        public var deleteTransactionOfflineSignal:DeleteTransactionOfflineSignal;
 
         /** variables **/
         private var logger:ILogger;
@@ -100,7 +99,7 @@ package com.pauluz.bbapps.kontomierz.view.mediators
         {
             logger.debug(": onViewAdded");
 
-            getAllTransactionsSignal.dispatch();
+            getAllTransactionsOfflineSignal.dispatch();
         }
 
         private function onStoreSelectedTransaction(transaction:TransactionVO):void
@@ -123,7 +122,7 @@ package com.pauluz.bbapps.kontomierz.view.mediators
         {
             logger.debug(": onDeleteTransaction");
 
-            deleteTransactionSignal.dispatch(transaction);
+            deleteTransactionOfflineSignal.dispatch(transaction);
         }
 
         private function onTransactionsData(data:DataProvider):void

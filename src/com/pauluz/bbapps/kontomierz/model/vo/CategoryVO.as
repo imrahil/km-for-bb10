@@ -16,9 +16,13 @@ package com.pauluz.bbapps.kontomierz.model.vo
     public class CategoryVO extends ListDialogBaseVO
     {
         public var id:int;
+        public var categoryId:int;
         public var name:String;
         public var position:int;
         public var color:String;
+
+        public var direction:String;
+        public var parentId:int;
 
         public function get label():String
         {

@@ -7,23 +7,22 @@
  */
 package com.pauluz.bbapps.kontomierz.view.mediators
 {
+    import com.pauluz.bbapps.kontomierz.constants.ApplicationConstants;
     import com.pauluz.bbapps.kontomierz.model.vo.TransactionVO;
-    import com.pauluz.bbapps.kontomierz.signals.AddTransactionSignal;
-    import com.pauluz.bbapps.kontomierz.signals.GetAllCategoriesSignal;
-    import com.pauluz.bbapps.kontomierz.signals.GetAllCurrenciesSignal;
+    import com.pauluz.bbapps.kontomierz.signals.offline.AddTransactionOfflineSignal;
+    import com.pauluz.bbapps.kontomierz.signals.offline.GetAllCategoriesOfflineSignal;
+    import com.pauluz.bbapps.kontomierz.signals.offline.GetAllCurrenciesOfflineSignal;
+    import com.pauluz.bbapps.kontomierz.signals.signaltons.ProvideAllCurrenciesSignal;
     import com.pauluz.bbapps.kontomierz.signals.signaltons.ProvideAllDepositCategoriesSignal;
     import com.pauluz.bbapps.kontomierz.signals.signaltons.ProvideAllWithdrawalCategoriesSignal;
-    import com.pauluz.bbapps.kontomierz.signals.signaltons.ProvideAllCurrenciesSignal;
     import com.pauluz.bbapps.kontomierz.signals.signaltons.TransactionSuccessfullySavedSignal;
     import com.pauluz.bbapps.kontomierz.utils.LogUtil;
+    import com.pauluz.bbapps.kontomierz.view.AddTransactionView;
     import com.useitbetter.uDash;
 
     import mx.logging.ILogger;
-    
-    import com.pauluz.bbapps.kontomierz.view.AddTransactionView;
-    import org.robotlegs.mvcs.SignalMediator;
 
-    import qnx.ui.data.DataProvider;
+    import org.robotlegs.mvcs.SignalMediator;
 
     import qnx.ui.data.SectionDataProvider;
 
@@ -54,21 +53,21 @@ package com.pauluz.bbapps.kontomierz.view.mediators
          * SIGNAL -> COMMAND
          */
         [Inject]
-        public var getAllCategoriesSignal:GetAllCategoriesSignal;
+        public var getAllCategoriesSignal:GetAllCategoriesOfflineSignal;
 
         [Inject]
-        public var getAllCurrenciesSignal:GetAllCurrenciesSignal;
+        public var getAllCurrenciesSignal:GetAllCurrenciesOfflineSignal;
 
         [Inject]
-        public var addTransactionSignal:AddTransactionSignal;
+        public var addTransactionOfflineSignal:AddTransactionOfflineSignal;
 
         /** variables **/
         private var logger:ILogger;
 
         private var dataFlag:int = 0;
 
-        private var withdrawalCategoriesDP:Array = [];
-        private var depositCategoriesDP:Array = [];
+        private var withdrawalCategoriesDP:SectionDataProvider;
+        private var depositCategoriesDP:SectionDataProvider;
         private var currenciesDP:Array = [];
 
         /**
@@ -97,8 +96,8 @@ package com.pauluz.bbapps.kontomierz.view.mediators
 
             addOnceToSignal(provideAllWithdrawalCategoriesSignal, onWithdrawalCategoriesData);
             addOnceToSignal(provideAllDepositCategoriesSignal, onDepositCategoriesData);
-
             addOnceToSignal(provideAllCurrenciesSignal, onCurrenciesData);
+
             addToSignal(transactionSuccessfullySavedSignal, onSuccessfulSave);
         }
 
@@ -108,7 +107,7 @@ package com.pauluz.bbapps.kontomierz.view.mediators
 
             dataFlag = 0;
 
-            getAllCategoriesSignal.dispatch();
+            getAllCategoriesSignal.dispatch(ApplicationConstants.CATEGORIES_ALL);
             getAllCurrenciesSignal.dispatch();
         }
 
@@ -116,10 +115,10 @@ package com.pauluz.bbapps.kontomierz.view.mediators
         {
             logger.debug(":onAddTransactione");
 
-            addTransactionSignal.dispatch(transaction);
+            addTransactionOfflineSignal.dispatch(transaction);
         }
 
-        private function onWithdrawalCategoriesData(data:Array):void
+        private function onWithdrawalCategoriesData(data:SectionDataProvider):void
         {
             logger.debug(": onWithdrawalCategoriesData");
 
@@ -134,7 +133,7 @@ package com.pauluz.bbapps.kontomierz.view.mediators
             }
         }
 
-        private function onDepositCategoriesData(data:Array):void
+        private function onDepositCategoriesData(data:SectionDataProvider):void
         {
             logger.debug(": onDepositCategoriesData");
 

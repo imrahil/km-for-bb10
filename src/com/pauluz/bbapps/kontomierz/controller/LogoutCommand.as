@@ -7,10 +7,8 @@
  */
 package com.pauluz.bbapps.kontomierz.controller 
 {
-    import com.pauluz.bbapps.kontomierz.constants.ApplicationConstants;
     import com.pauluz.bbapps.kontomierz.model.IKontomierzModel;
-
-    import flash.net.SharedObject;
+    import com.pauluz.bbapps.kontomierz.services.ISQLKontomierzService;
 
     import org.robotlegs.mvcs.SignalCommand;
 
@@ -20,21 +18,29 @@ package com.pauluz.bbapps.kontomierz.controller
         [Inject]
         public var model:IKontomierzModel;
 
+        [Inject]
+        public var sqlService:ISQLKontomierzService;
+
         /**
          * Method handle the logic for <code>LogoutCommand</code>
          */        
         override public function execute():void    
         {
-            var sessionSO:SharedObject = SharedObject.getLocal(ApplicationConstants.KONTOMIERZ_SO_NAME);
-            sessionSO.clear();
+            sqlService.deleteOnLogout();
+
+            model.demoMode = false;
+            model.rememberMe = false;
 
             model.apiKey = "";
 
             model.selectedAccount = null;
+            model.defaultWallet = null;
             model.accountsList = null;
             model.selectedTransaction = null;
-            model.defaultWalletId = 0;
             model.walletTransactionsList = null;
+
+            model.withdrawalCategoriesList = null;
+            model.depositCategoriesList = null;
 
             model.selectedCategory = null;
         }

@@ -1,0 +1,1 @@
+DELETE FROM sync_update_elements WHERE id = :id;

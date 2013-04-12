@@ -24,6 +24,8 @@ package com.pauluz.bbapps.kontomierz.view
     import qnx.fuse.ui.navigation.TitlePage;
     import qnx.fuse.ui.progress.ActivityIndicator;
     import qnx.fuse.ui.skins.progress.ActivityIndicatorSkinMedium;
+    import qnx.ui.data.IDataProvider;
+    import qnx.ui.data.SectionDataProvider;
 
     public class EditTransactionView extends TitlePage
     {
@@ -67,25 +69,53 @@ package com.pauluz.bbapps.kontomierz.view
             viewAddedSignal.dispatch();
         }
 
-        public function addData(transaction:TransactionVO, _withdrawalCategoriesData:Array, _depositCategoriesData:Array, _currenciesData:Array):void
+        public function addData(transaction:TransactionVO, _withdrawalCategoriesData:SectionDataProvider, _depositCategoriesData:SectionDataProvider, _currenciesData:Array):void
         {
             titleBar.acceptAction.enabled = true;
             form.categoryBtn.enabled = true;
             form.currencyBtn.enabled = true;
 
+            form.selectedTransaction = transaction;
+
             form.withdrawalCategoriesDP = _withdrawalCategoriesData;
+            form.withdrawalCategoriesLength = provideDataProviderLength(_withdrawalCategoriesData);
+
             form.depositCategoriesDP = _depositCategoriesData;
+            form.depositCategoriesLength = provideDataProviderLength(_depositCategoriesData);
+
             form.currenciesDP = _currenciesData;
 
-            if (transaction.currencyAmount > 0)
+            var tempDP:SectionDataProvider;
+            if (transaction.direction != "")
             {
-                form.direction = ApplicationConstants.TRANSACTION_DIRECTION_DEPOSIT;
-                form.directionLbl.text = "Przychód";
+                form.direction = transaction.direction;
+                if (transaction.direction == ApplicationConstants.TRANSACTION_DIRECTION_WITHDRAWAL)
+                {
+                    form.directionLbl.text = "Wydatek";
+                    tempDP = _withdrawalCategoriesData;
+                }
+                else
+                {
+                    form.directionLbl.text = "Przychód";
+                    tempDP = _depositCategoriesData;
+                }
             }
             else
             {
-                form.direction = ApplicationConstants.TRANSACTION_DIRECTION_WITHDRAWAL;
-                form.directionLbl.text = "Wydatek";
+                if (transaction.currencyAmount > 0)
+                {
+                    form.direction = ApplicationConstants.TRANSACTION_DIRECTION_DEPOSIT;
+                    form.directionLbl.text = "Przychód";
+
+                    tempDP = _depositCategoriesData;
+                }
+                else
+                {
+                    form.direction = ApplicationConstants.TRANSACTION_DIRECTION_WITHDRAWAL;
+                    form.directionLbl.text = "Wydatek";
+
+                    tempDP = _withdrawalCategoriesData;
+                }
             }
 
             form.amountTextInput.text = transaction.currencyAmount.toString().replace("-", "");
@@ -94,11 +124,35 @@ package com.pauluz.bbapps.kontomierz.view
             form.categoryBtn.label = transaction.categoryName;
             form.currencyBtn.label = transaction.currencyName;
 
-            form.selectedCategory = new CategoryVO();
-            form.selectedCategory.id = transaction.categoryId;
+            // przeszukujemy liste kategorii po categoryId i zaznaczamy wybrana dla transakcji
+            for each (var category:CategoryVO in tempDP.data)
+            {
+                var subTempDP:IDataProvider = tempDP.getChildrenForItem(category);
+                for each (var subCategory:CategoryVO in subTempDP.data)
+                {
+                    if (subCategory.categoryId == transaction.categoryId)
+                    {
+                        form.selectedCategory = subCategory;
+                        break;
+                    }
+                }
+            }
 
             form.selectedCurrency = new CurrencyVO();
             form.selectedCurrency.name = transaction.currencyName;
+        }
+
+        private static function provideDataProviderLength(list:SectionDataProvider):int
+        {
+            var itemCount:int = list.length;
+            var childrenCount:int = 0;
+
+            for (var x:int = 0; x < itemCount; x++)
+            {
+                childrenCount += list.getChildrenLengthAtIndex(x);
+            }
+
+            return (itemCount + childrenCount);
         }
 
         private function onSaveAction(event:ActionEvent):void
@@ -133,7 +187,7 @@ package com.pauluz.bbapps.kontomierz.view
 
                 progressActivity = new ActivityIndicator();
                 progressActivity.animate(true);
-                progressActivity.setPosition(this.stage.stageWidth - 150, 130);
+                progressActivity.setPosition(this.stage.stageWidth - 300, 10);
                 progressActivity.setSkin(ActivityIndicatorSkinMedium);
                 this.addChild(progressActivity);
 

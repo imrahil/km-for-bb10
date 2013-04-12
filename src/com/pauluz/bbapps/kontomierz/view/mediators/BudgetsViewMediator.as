@@ -8,11 +8,11 @@
 package com.pauluz.bbapps.kontomierz.view.mediators
 {
     import com.pauluz.bbapps.kontomierz.utils.LogUtil;
+    import com.pauluz.bbapps.kontomierz.view.BudgetsView;
     import com.useitbetter.uDash;
 
     import mx.logging.ILogger;
 
-    import com.pauluz.bbapps.kontomierz.view.TagsView;
     import org.robotlegs.mvcs.SignalMediator;
 
     public class BudgetsViewMediator extends SignalMediator
@@ -21,7 +21,7 @@ package com.pauluz.bbapps.kontomierz.view.mediators
          * VIEW
          */
         [Inject]
-        public var view:TagsView;
+        public var view:BudgetsView;
 
         /**
          * SIGNALTONS

@@ -1,0 +1,3 @@
+SELECT
+  apiKEY
+FROM user;

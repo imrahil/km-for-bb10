@@ -137,13 +137,16 @@ package com.pauluz.bbapps.kontomierz.utils
             return container;
         }
 
-        public static function createTwoColumnGridData():GridLayout
+        public static function createMultiColumnContainer(numColumns:int, hSpacing:int = 20):Container
         {
-            var labelGrid:GridLayout = new GridLayout();
-            labelGrid.numColumns = 2;
-            labelGrid.hSpacing = 20;
+            var container:Container = new Container();
 
-            return labelGrid;
+            var layout:GridLayout = new GridLayout();
+            layout.numColumns = numColumns;
+            layout.hSpacing = hSpacing;
+            container.layout = layout;
+
+            return container;
         }
     }
 }
