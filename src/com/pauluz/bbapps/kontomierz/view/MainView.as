@@ -54,7 +54,6 @@ package com.pauluz.bbapps.kontomierz.view
 //            tabs.push(ContainerHelper.createTab("Budżety", new Resources.ICON_BUDGETS(), BudgetsView));
 //            tabs.push(ContainerHelper.createTab("Płatności", new Resources.ICON_SCHEDULES(), ScheduleView));
             tabs.push(ContainerHelper.createNavPane("Kategorie", new Resources.ICON_CATEGORIES(), CategoriesView));
-//            tabs.push(ContainerHelper.createTab("Tagi", new Resources.ICON_TAGS(), TagsView));
 //            tabs.push(ContainerHelper.createTab("Wykresy", new Resources.ICON_CHARTS(), ChartsView));
             tabs.push(ContainerHelper.createNavPane("Ustawienia", new Resources.ICON_SETTINGS(), SettingsView));
 

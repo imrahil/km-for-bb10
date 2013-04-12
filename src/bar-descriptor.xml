@@ -5,6 +5,10 @@
         <image>kontomierz-icon.png</image>
     </icon>
 
-    <splashscreen>kontomierz-splash-portrait.png</splashscreen>
+    <splashScreens>
+        <image>kontomierz-splash-768x1280.png</image>
+        <image>kontomierz-splash-1280x768.png</image>
+        <image>kontomierz-splash-720x720.png</image>
+    </splashScreens>
     <buildId>1</buildId>
 </qnx>

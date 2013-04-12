@@ -45,7 +45,6 @@ package com.pauluz.bbapps.kontomierz.controller.bootstraps
             mediatorMap.mapView(CategoriesView, CategoriesViewMediator);
             mediatorMap.mapView(CategoryAllTransactionsView, CategoryAllTransactionsMediator);
 
-            mediatorMap.mapView(TagsView, TagsViewMediator);
             mediatorMap.mapView(ChartsView, ChartsViewMediator);
             mediatorMap.mapView(SettingsView, SettingsViewMediator);
 
